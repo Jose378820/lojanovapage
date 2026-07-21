@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registro de productor - Lojanova</title>
-<link rel="icon" href="data:,">
 <link rel="stylesheet" href="admin/css/admin.css">
 </head>
 <body>
@@ -12,42 +11,103 @@
 <div class="login-screen">
   <div class="login-card auth-card-wide">
     <div class="logo">Loja<span>nova</span></div>
-    <p class="sub">Registro de productores y emprendedores</p>
+    <p class="sub">Registro de productores</p>
 
-    <div class="error-msg" id="errorMsg"></div>
-    <div class="success-msg" id="successMsg"></div>
+    <div class="error-msg" id="errorMsg" style="display:none"></div>
+    <div class="success-msg" id="successMsg" style="display:none"></div>
 
-    <form id="authForm" data-mode="registro">
+    <form id="authForm">
       <div class="field">
-        <label for="nombre">Nombre completo</label>
-        <input type="text" id="nombre" required autocomplete="name">
+        <label>Nombre completo</label>
+        <input type="text" id="nombre" required>
       </div>
+
       <div class="field">
-        <label for="emprendimiento">Nombre del emprendimiento</label>
+        <label>Nombre del emprendimiento</label>
         <input type="text" id="emprendimiento" required>
       </div>
+
       <div class="field">
-        <label for="email">Correo</label>
-        <input type="email" id="email" required autocomplete="username" placeholder="juan@gmail.com">
+        <label>Correo</label>
+        <input type="email" id="email" required>
       </div>
+
       <div class="field">
-        <label for="password">Contrasena</label>
-        <input type="password" id="password" required autocomplete="new-password" minlength="6">
+        <label>Contraseña</label>
+        <input type="password" id="password" required minlength="6">
       </div>
-      <div class="field">
-        <label for="confirmPassword">Confirmar contrasena</label>
-        <input type="password" id="confirmPassword" required autocomplete="new-password" minlength="6">
-      </div>
+
       <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta</button>
     </form>
-    <p style="text-align:center;margin-top:22px;font-size:.82rem">Ya tienes cuenta? <a href="login.html" style="color:var(--verde-bosque);font-weight:700">Ingresa aqui</a></p>
-    <p style="text-align:center;margin-top:10px;font-size:.82rem"><a href="index.html" style="color:var(--verde-bosque)">Volver al sitio publico</a></p>
+
+    <p style="text-align:center;margin-top:20px">
+      <a href="index.html">Volver al sitio público</a>
+    </p>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js"></script>
-<script src="js/supabase-client.js"></script>
-<script src="js/productor-auth.js"></script>
+
+<script>
+const SUPABASE_URL = "https://pfdyxxavadiyoaxduibp.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_sz0f8pdxD7zLaKqx1xykfQ_MGZN7h6y";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const form = document.getElementById("authForm");
+const errorMsg = document.getElementById("errorMsg");
+const successMsg = document.getElementById("successMsg");
+const submitBtn = document.getElementById("submitBtn");
+
+function showError(error) {
+  console.error("Error Supabase:", error);
+  errorMsg.textContent = error?.message || error?.error_description || "No se pudo crear la cuenta. Revisa Supabase Auth.";
+  errorMsg.style.display = "block";
+}
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  errorMsg.style.display = "none";
+  successMsg.style.display = "none";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Creando cuenta...";
+
+  const nombre = document.getElementById("nombre").value.trim();
+  const emprendimiento = document.getElementById("emprendimiento").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    const { data, error } = await db.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          rol: "productor",
+          nombre,
+          emprendimiento
+        }
+      }
+    });
+
+    if (error) {
+      showError(error);
+      return;
+    }
+
+    successMsg.textContent = "Cuenta creada correctamente. Ahora puedes iniciar sesión.";
+    successMsg.style.display = "block";
+    form.reset();
+
+  } catch (error) {
+    showError(error);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Crear cuenta";
+  }
+});
+</script>
+
 </body>
 </html>
