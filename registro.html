@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de productor - Lojanova</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="admin/css/admin.css">
+</head>
+<body>
+
+<div class="login-screen">
+  <div class="login-card auth-card-wide">
+    <div class="logo">Loja<span>nova</span></div>
+    <p class="sub">Registro de productores y emprendedores</p>
+
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <form id="authForm" data-mode="registro">
+      <div class="field">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" required autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="emprendimiento">Nombre del emprendimiento</label>
+        <input type="text" id="emprendimiento" required>
+      </div>
+      <div class="field">
+        <label for="email">Correo</label>
+        <input type="email" id="email" required autocomplete="username" placeholder="juan@gmail.com">
+      </div>
+      <div class="field">
+        <label for="password">Contrasena</label>
+        <input type="password" id="password" required autocomplete="new-password" minlength="6">
+      </div>
+      <div class="field">
+        <label for="confirmPassword">Confirmar contrasena</label>
+        <input type="password" id="confirmPassword" required autocomplete="new-password" minlength="6">
+      </div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta</button>
+    </form>
+    <p style="text-align:center;margin-top:22px;font-size:.82rem">Ya tienes cuenta? <a href="login.html" style="color:var(--verde-bosque);font-weight:700">Ingresa aqui</a></p>
+    <p style="text-align:center;margin-top:10px;font-size:.82rem"><a href="index.html" style="color:var(--verde-bosque)">Volver al sitio publico</a></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/productor-auth.js"></script>
+</body>
+</html>
