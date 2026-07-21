@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi panel — Lojanova</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="admin/css/admin.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="mobile-topbar">
+  <span style="font-family:'Playfair Display',serif">Loja<span style="color:var(--dorado)">nova</span></span>
+  <button id="mobileToggle" style="color:#fff"><i data-lucide="menu"></i></button>
+</div>
+
+<div class="app producer-app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Loja<span>nova</span></div>
+    <div style="padding:0 10px 20px">
+      <div style="color:#fff;font-weight:700;font-size:1rem" id="producerName">—</div>
+      <div style="color:var(--dorado);font-size:.82rem;margin-top:2px" id="producerBusiness">—</div>
+    </div>
+    <nav>
+      <a href="#panel-perfil" class="nav-link"><i data-lucide="user" class="icon"></i> Mi perfil</a>
+      <a href="#panel-productos" class="nav-link"><i data-lucide="package" class="icon"></i> Mis productos</a>
+      <a href="index.html" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio público</a>
+    </nav>
+    <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesión</button>
+  </aside>
+
+  <main class="main">
+    <div class="main-header">
+      <div><h1>Mi panel de productor</h1><p>Administra tu perfil y tus productos en Lojanova</p></div>
+    </div>
+
+    <div id="statusBox" class="panel-message" style="display:none"></div>
+
+    <div class="kpi-grid producer-kpis">
+      <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos registrados</div></div>
+      <div class="kpi-card"><div class="kpi-num" id="kpiPublicados">—</div><div class="kpi-label">Productos publicados</div></div>
+    </div>
+
+    <!-- ============ MI PERFIL ============ -->
+    <section id="panel-perfil" class="panel panel-section">
+      <div class="panel-title"><h3>Mi perfil</h3></div>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="field"><label>Nombre completo *</label><input type="text" id="perfilNombre" required></div>
+          <div class="field"><label>Nombre del emprendimiento *</label><input type="text" id="perfilEmprendimiento" required></div>
+          <div class="field"><label>Cantón</label><select id="perfilCanton"></select></div>
+          <div class="field"><label>Años de experiencia</label><input type="number" id="perfilAnios" min="0"></div>
+          <div class="field full"><label>Historia</label><textarea id="perfilHistoria"></textarea></div>
+          <div class="field"><label>Teléfono</label><input type="text" id="perfilTelefono"></div>
+          <div class="field"><label>WhatsApp (con código de país)</label><input type="text" id="perfilWhatsapp" placeholder="593999999999"></div>
+          <div class="field"><label>Correo</label><input type="email" id="perfilCorreo"></div>
+          <div class="field"><label>Ubicación</label><input type="text" id="perfilUbicacion"></div>
+          <div class="field"><label>Facebook (URL)</label><input type="text" id="perfilFacebook"></div>
+          <div class="field"><label>Instagram (URL)</label><input type="text" id="perfilInstagram"></div>
+          <div class="field full"><label>URL de fotografía</label><input type="text" id="perfilFoto" placeholder="https://..."></div>
+        </div>
+        <div class="modal-actions" style="margin-top:20px">
+          <button type="submit" class="btn btn-primary auto-width">Guardar perfil</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============ MIS PRODUCTOS ============ -->
+    <section id="panel-productos" class="panel panel-section">
+      <div class="panel-title">
+        <h3>Mis productos</h3>
+        <button class="btn btn-primary auto-width btn-sm" id="btnNuevoProducto"><i data-lucide="plus" class="icon"></i> Nuevo producto</button>
+      </div>
+      <table>
+        <thead><tr><th></th><th>Nombre</th><th>Categoría</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tablaProductos"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
+      </table>
+    </section>
+
+    <!-- ============ FORMULARIO DE PRODUCTO ============ -->
+    <section class="panel panel-section" id="productFormPanel">
+      <div class="panel-title"><h3 id="productFormTitle">Nuevo producto</h3></div>
+      <form id="productForm">
+        <input type="hidden" id="productoId">
+        <div class="form-grid">
+          <div class="field full"><label>Nombre del producto *</label><input type="text" id="productoNombre" required></div>
+          <div class="field"><label>Categoría *</label><select id="productoCategoria" required></select></div>
+          <div class="field"><label>Cantón *</label><select id="productoCanton" required></select></div>
+          <div class="field full"><label>Descripción corta (para tarjeta)</label><textarea id="productoDescCorta" maxlength="160"></textarea></div>
+          <div class="field full"><label>Descripción extensa</label><textarea id="productoDescLarga"></textarea></div>
+          <div class="field full"><label>Proceso de elaboración</label><textarea id="productoProceso"></textarea></div>
+          <div class="field"><label>Ingredientes / materiales</label><input type="text" id="productoIngredientes"></div>
+          <div class="field"><label>Presentación</label><input type="text" id="productoPresentacion"></div>
+          <div class="field"><label>Disponibilidad</label><input type="text" id="productoDisponibilidad"></div>
+          <div class="field"><label>Mercados donde se comercializa</label><input type="text" id="productoMercados"></div>
+          <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="productoEtiquetas" placeholder="orgánico, gourmet, exportación"></div>
+          <div class="field full"><label>URL de imagen principal</label><input type="text" id="productoImagen" placeholder="https://..."></div>
+          <div class="field full">
+            <div class="checkbox-row"><input type="checkbox" id="productoExportacion"><label for="productoExportacion">Producto de exportación</label></div>
+            <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="productoArtesanal"><label for="productoArtesanal">Producto artesanal</label></div>
+            <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="productoActivo" checked><label for="productoActivo">Publicado (visible en el sitio)</label></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline auto-width" id="btnCancelarProducto">Cancelar</button>
+          <button type="submit" class="btn btn-primary auto-width">Guardar producto</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/mi-panel.js"></script>
+<script>
+document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
+</script>
+</body>
+</html>

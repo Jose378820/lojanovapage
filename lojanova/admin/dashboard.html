@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración — Lojanova</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/admin.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="mobile-topbar">
+  <span style="font-family:'Playfair Display',serif">Loja<span style="color:var(--dorado)">nova</span></span>
+  <button id="mobileToggle" style="color:#fff"><i data-lucide="menu"></i></button>
+</div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Loja<span>nova</span></div>
+    <nav>
+      <button data-view="resumen" class="active"><i data-lucide="layout-dashboard" class="icon"></i> Resumen</button>
+      <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
+      <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
+      <button data-view="categorias"><i data-lucide="tags" class="icon"></i> Categorías</button>
+      <button data-view="noticias"><i data-lucide="newspaper" class="icon"></i> Noticias</button>
+      <button data-view="cantones"><i data-lucide="map" class="icon"></i> Cantones</button>
+    </nav>
+    <a href="../index.html" class="logout" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio público</a>
+    <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesión</button>
+  </aside>
+
+  <main class="main">
+
+    <!-- ============ RESUMEN ============ -->
+    <section id="view-resumen" class="view">
+      <div class="main-header">
+        <div><h1>Resumen</h1><p>Estado general de la plataforma Lojanova</p></div>
+      </div>
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos publicados</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiEmprendedores">—</div><div class="kpi-label">Emprendedores activos</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiCategorias">—</div><div class="kpi-label">Categorías</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiNoticias">—</div><div class="kpi-label">Noticias publicadas</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Primeros pasos</h3></div>
+        <p style="font-size:.9rem;color:#666;line-height:1.7">
+          1. Crea las categorías de productos.<br>
+          2. Registra a los emprendedores.<br>
+          3. Publica productos asociándolos a un emprendedor y una categoría.<br>
+          4. Comparte novedades en la sección de Noticias.<br>
+          Los cambios aparecen de inmediato en el sitio público.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTOS ============ -->
+    <section id="view-productos" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Productos</h1><p>Catálogo publicado en la vitrina digital</p></div>
+        <button class="btn btn-primary" id="btnNuevoProducto"><i data-lucide="plus" class="icon"></i> Nuevo producto</button>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th></th><th>Nombre</th><th>Categoría</th><th>Cantón</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaProductos"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ EMPRENDEDORES ============ -->
+    <section id="view-emprendedores" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Emprendedores</h1><p>Perfiles de productores lojanos</p></div>
+        <button class="btn btn-primary" id="btnNuevoEmprendedor"><i data-lucide="plus" class="icon"></i> Nuevo emprendedor</button>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Cantón</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaEmprendedores"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ CATEGORIAS ============ -->
+    <section id="view-categorias" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Categorías</h1><p>Clasificación del catálogo</p></div>
+        <button class="btn btn-primary" id="btnNuevaCategoria"><i data-lucide="plus" class="icon"></i> Nueva categoría</button>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th></th><th>Nombre</th><th>Slug</th><th>Orden</th><th></th></tr></thead>
+          <tbody id="tablaCategorias"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ NOTICIAS ============ -->
+    <section id="view-noticias" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Noticias</h1><p>Ferias, capacitaciones y convocatorias</p></div>
+        <button class="btn btn-primary" id="btnNuevaNoticia"><i data-lucide="plus" class="icon"></i> Nueva noticia</button>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th></th><th>Título</th><th>Tipo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaNoticias"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ CANTONES ============ -->
+    <section id="view-cantones" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Cantones</h1><p>Los 16 cantones de la provincia de Loja (precargados)</p></div>
+      </div>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Nombre</th><th>Orden</th></tr></thead>
+          <tbody id="tablaCantones"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ MODAL PRODUCTO ============ -->
+<div class="modal-overlay" id="modalProducto">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tituloModalProducto">Nuevo producto</h3><button data-close>&times;</button></div>
+    <form id="formProducto">
+      <input type="hidden" id="p_id">
+      <div class="form-grid">
+        <div class="field full"><label>Nombre del producto *</label><input type="text" id="p_nombre" required></div>
+        <div class="field"><label>Categoría *</label><select id="p_categoria" required></select></div>
+        <div class="field"><label>Cantón *</label><select id="p_canton" required></select></div>
+        <div class="field full"><label>Emprendedor *</label><select id="p_emprendedor" required></select></div>
+        <div class="field full"><label>Descripción corta (para tarjeta)</label><textarea id="p_desc_corta" maxlength="160"></textarea></div>
+        <div class="field full"><label>Descripción extensa</label><textarea id="p_desc_larga"></textarea></div>
+        <div class="field full"><label>Historia del producto</label><textarea id="p_historia"></textarea></div>
+        <div class="field full"><label>Proceso de elaboración</label><textarea id="p_proceso"></textarea></div>
+        <div class="field"><label>Ingredientes / materiales</label><input type="text" id="p_ingredientes"></div>
+        <div class="field"><label>Certificaciones</label><input type="text" id="p_certificaciones"></div>
+        <div class="field"><label>Capacidad de producción</label><input type="text" id="p_capacidad"></div>
+        <div class="field"><label>Presentación</label><input type="text" id="p_presentacion"></div>
+        <div class="field"><label>Peso</label><input type="text" id="p_peso"></div>
+        <div class="field"><label>Disponibilidad</label><input type="text" id="p_disponibilidad"></div>
+        <div class="field full"><label>Mercados donde se comercializa</label><input type="text" id="p_mercados"></div>
+        <div class="field"><label>Tipo de emprendimiento</label><input type="text" id="p_tipo" placeholder="Artesanal, Agroindustrial…"></div>
+        <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="p_etiquetas" placeholder="orgánico, gourmet, exportación"></div>
+        <div class="field full"><label>URL de imagen principal</label><input type="text" id="p_imagen" placeholder="https://..."></div>
+        <div class="field full">
+          <div class="checkbox-row"><input type="checkbox" id="p_exportacion"><label for="p_exportacion">Producto de exportación</label></div>
+          <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="p_artesanal"><label for="p_artesanal">Producto artesanal</label></div>
+          <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="p_activo" checked><label for="p_activo">Publicado (visible en el sitio)</label></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar producto</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL EMPRENDEDOR ============ -->
+<div class="modal-overlay" id="modalEmprendedor">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tituloModalEmprendedor">Nuevo emprendedor</h3><button data-close>&times;</button></div>
+    <form id="formEmprendedor">
+      <input type="hidden" id="e_id">
+      <div class="form-grid">
+        <div class="field"><label>Nombre completo *</label><input type="text" id="e_nombre" required></div>
+        <div class="field"><label>Nombre del emprendimiento *</label><input type="text" id="e_emprendimiento" required></div>
+        <div class="field"><label>Cantón</label><select id="e_canton"></select></div>
+        <div class="field"><label>Años de experiencia</label><input type="number" id="e_anios" min="0"></div>
+        <div class="field full"><label>Historia</label><textarea id="e_historia"></textarea></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="e_telefono"></div>
+        <div class="field"><label>WhatsApp (con código de país)</label><input type="text" id="e_whatsapp" placeholder="593999999999"></div>
+        <div class="field"><label>Correo</label><input type="email" id="e_correo"></div>
+        <div class="field"><label>Ubicación</label><input type="text" id="e_ubicacion"></div>
+        <div class="field"><label>Facebook (URL)</label><input type="text" id="e_facebook"></div>
+        <div class="field"><label>Instagram (URL)</label><input type="text" id="e_instagram"></div>
+        <div class="field full"><label>URL de fotografía</label><input type="text" id="e_foto" placeholder="https://..."></div>
+        <div class="field full"><div class="checkbox-row"><input type="checkbox" id="e_activo" checked><label for="e_activo">Publicado (visible en el sitio)</label></div></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar emprendedor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL CATEGORIA ============ -->
+<div class="modal-overlay" id="modalCategoria">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tituloModalCategoria">Nueva categoría</h3><button data-close>&times;</button></div>
+    <form id="formCategoria">
+      <input type="hidden" id="c_id">
+      <div class="form-grid">
+        <div class="field"><label>Nombre *</label><input type="text" id="c_nombre" required></div>
+        <div class="field"><label>Orden</label><input type="number" id="c_orden" value="0"></div>
+        <div class="field full"><label>Descripción</label><textarea id="c_descripcion"></textarea></div>
+        <div class="field full"><label>URL de imagen</label><input type="text" id="c_imagen" placeholder="https://..."></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar categoría</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL NOTICIA ============ -->
+<div class="modal-overlay" id="modalNoticia">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tituloModalNoticia">Nueva noticia</h3><button data-close>&times;</button></div>
+    <form id="formNoticia">
+      <input type="hidden" id="n_id">
+      <div class="form-grid">
+        <div class="field full"><label>Título *</label><input type="text" id="n_titulo" required></div>
+        <div class="field"><label>Tipo</label>
+          <select id="n_tipo">
+            <option value="feria">Feria</option>
+            <option value="rueda_negocios">Rueda de negocios</option>
+            <option value="capacitacion">Capacitación</option>
+            <option value="convocatoria">Convocatoria</option>
+            <option value="evento">Evento</option>
+          </select>
+        </div>
+        <div class="field"><label>Fecha del evento</label><input type="date" id="n_fecha"></div>
+        <div class="field full"><label>Resumen</label><textarea id="n_resumen" maxlength="160"></textarea></div>
+        <div class="field full"><label>Contenido completo</label><textarea id="n_contenido"></textarea></div>
+        <div class="field full"><label>URL de imagen</label><input type="text" id="n_imagen" placeholder="https://..."></div>
+        <div class="field full"><div class="checkbox-row"><input type="checkbox" id="n_activo" checked><label for="n_activo">Publicada</label></div></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar noticia</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/supabase-client.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

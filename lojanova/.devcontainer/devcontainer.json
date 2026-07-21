@@ -1,0 +1,21 @@
+{
+  "name": "Lojanova — Sitio estático + Supabase",
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "supabase.supabase-vscode",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install -g live-server",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": { "label": "Lojanova (live-server)", "onAutoForward": "openPreview" }
+  }
+}
