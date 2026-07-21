@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Producto — Lojanova</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">Loja<span>nova</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#sobre">Sobre el proyecto</a>
+      <a href="index.html#categorias">Categorías</a>
+      <a href="index.html#catalogo">Productos</a>
+      <a href="index.html#emprendedores">Emprendedores</a>
+      <a href="index.html#loja">Loja</a>
+      <a href="index.html#noticias">Noticias</a>
+    </nav>
+    <a href="index.html#catalogo" class="btn btn-primary btn-sm nav-cta">Explorar productos</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Inicio</a> / <a href="index.html#catalogo">Productos</a> / <span id="bcNombre">Cargando…</span>
+  </div>
+</div>
+
+<section style="padding-top:0" id="productoWrap">
+  <div class="container">
+    <div class="loading-spinner" id="loadingState">Cargando producto…</div>
+    <div class="product-detail" id="productDetail" style="display:none">
+
+      <div class="pd-gallery">
+        <div class="gallery-main"><img id="imgPrincipal" src="" alt=""></div>
+        <div class="gallery-thumbs" id="galleryThumbs"></div>
+
+        <div class="pd-block">
+          <h4>Descripción</h4>
+          <p id="descLarga"></p>
+        </div>
+        <div class="pd-block" id="bloqueHistoria">
+          <h4>Historia del producto</h4>
+          <p id="historia"></p>
+        </div>
+        <div class="pd-block" id="bloqueProceso">
+          <h4>Proceso de elaboración</h4>
+          <p id="proceso"></p>
+        </div>
+        <div class="pd-block" id="bloqueDatos">
+          <h4>Ficha técnica</h4>
+          <dl class="pd-datos" id="fichaTecnica"></dl>
+        </div>
+      </div>
+
+      <div class="pd-info">
+        <div class="card-meta"><span id="metaCategoria"></span><span id="metaCanton"></span></div>
+        <h1 id="nombreProducto"></h1>
+        <div class="tag-row" id="tagRow"></div>
+
+        <div class="emp-sticky" id="empSticky">
+          <img class="emp-photo" id="empFoto" src="" alt="">
+          <h4 id="empNombre"></h4>
+          <div class="emprend" id="empEmprendimiento"></div>
+          <p id="empExtra" style="font-size:.85rem"></p>
+          <div class="emp-contact-list" id="empContactos"></div>
+          <a href="#" id="btnContactar" class="btn btn-primary" target="_blank" rel="noopener">
+            <i data-lucide="message-circle" class="icon"></i> Contactar al emprendedor
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" id="notFoundState" style="display:none">
+      No encontramos este producto. <a href="index.html#catalogo">Volver al catálogo</a>.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2026 Lojanova · Prefectura de Loja. Todos los derechos reservados.</span>
+      <a href="index.html">Volver al inicio</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/producto.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lojanova — Productos y emprendedores de Loja, Ecuador</title>
+<meta name="description" content="Vitrina digital oficial de la Prefectura de Loja para promover los productos y emprendedores de la provincia en mercados nacionales e internacionales.">
+<meta property="og:title" content="Lojanova — Loja al mundo">
+<meta property="og:description" content="Descubre productos únicos elaborados por emprendedores de la provincia de Loja y conecta directamente con quienes los producen.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">Loja<span>nova</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#sobre">Sobre el proyecto</a>
+      <a href="#categorias">Categorías</a>
+      <a href="#catalogo">Productos</a>
+      <a href="#emprendedores">Emprendedores</a>
+      <a href="#loja">Loja</a>
+      <a href="#noticias">Noticias</a>
+      <a href="login.html">Productores</a>
+    </nav>
+    <a href="#catalogo" class="btn btn-primary btn-sm nav-cta">Explorar productos</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=2000')"></div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <span class="eyebrow" style="color:var(--dorado)">Prefectura de Loja</span>
+    <h1>Loja al Mundo</h1>
+    <p>Descubre productos únicos elaborados por emprendedores de la provincia de Loja y conecta directamente con quienes los producen.</p>
+    <div class="hero-actions">
+      <a href="#catalogo" class="btn btn-primary">Explorar productos</a>
+      <a href="registro.html" class="btn btn-ghost">Registrarme como productor</a>
+      <a href="#emprendedores" class="btn btn-outline">Conocer emprendedores</a>
+    </div>
+  </div>
+  <span class="hero-scroll">Desplázate</span>
+</section>
+
+<!-- ===================== SOBRE EL PROYECTO ===================== -->
+<section id="sobre" class="about">
+  <div class="container about-grid">
+    <div class="about-media reveal">
+      <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=1200" alt="Paisaje agrícola de la provincia de Loja">
+    </div>
+    <div class="about-text reveal">
+      <span class="eyebrow">Sobre el proyecto</span>
+      <h2>Una iniciativa de la Prefectura de Loja</h2>
+      <p>Lojanova es la plataforma oficial que conecta la riqueza productiva de la provincia con compradores, distribuidores, turistas y público general, a nivel nacional e internacional.</p>
+      <p>No es una tienda en línea: es una vitrina digital pensada para dar visibilidad a cada emprendedor y facilitar el contacto directo, fortaleciendo la economía local y proyectando el talento lojano al mundo.</p>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-num" data-stat="emprendedores">—</div><div class="stat-label">Emprendedores</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="productos">—</div><div class="stat-label">Productos</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="cantones">—</div><div class="stat-label">Cantones participantes</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="categorias">—</div><div class="stat-label">Categorías</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CATEGORÍAS ===================== -->
+<section id="categorias">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Explora por categoría</span>
+      <h2>La riqueza productiva de Loja</h2>
+      <p>Desde el café de altura hasta la cerámica artesanal: doce categorías que reúnen lo mejor de la provincia.</p>
+    </div>
+    <div class="cat-grid" id="catGrid">
+      <!-- Las categorías se cargan dinámicamente desde Supabase -->
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CATÁLOGO ===================== -->
+<section id="catalogo" class="catalog">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Catálogo</span>
+      <h2>Productos destacados</h2>
+      <p>Un showroom permanente de la oferta productiva lojana, lista para conectar con el mundo.</p>
+    </div>
+
+    <div class="filters reveal">
+      <input type="text" id="fBuscar" placeholder="Buscar producto...">
+      <select id="fCategoria"><option value="">Categoría</option></select>
+      <select id="fCanton"><option value="">Cantón</option></select>
+      <select id="fTipo">
+        <option value="">Tipo de emprendimiento</option>
+        <option value="exportacion">Producto de exportación</option>
+        <option value="artesanal">Producto artesanal</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+      <div class="loading-spinner">Cargando productos…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EMPRENDEDORES ===================== -->
+<section id="emprendedores" style="background:var(--gris-claro)">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Rostros de Lojanova</span>
+      <h2>Emprendedores lojanos</h2>
+      <p>Historias de esfuerzo, tradición e innovación detrás de cada producto.</p>
+    </div>
+    <div class="emp-grid" id="empGrid">
+      <div class="loading-spinner">Cargando emprendedores…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LOJA ===================== -->
+<section id="loja" class="loja-section">
+  <div class="container loja-grid">
+    <div class="reveal">
+      <span class="eyebrow">La provincia</span>
+      <h2>16 cantones, una sola tierra fértil</h2>
+      <p>Loja combina bosques secos, valles andinos y páramos australes: una geografía diversa que da origen a productos igual de diversos, desde el café orgánico hasta las artesanías en cerámica.</p>
+      <div class="canton-list" id="cantonList" style="margin-top:32px"></div>
+    </div>
+    <div class="loja-media reveal">
+      <img src="https://images.unsplash.com/photo-1531880558861-4d5b0d9c0f0e?q=80&w=1200" alt="Paisaje turístico de Loja, Ecuador">
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BENEFICIOS ===================== -->
+<section id="beneficios">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Por qué Lojanova</span>
+      <h2>Beneficios de comprar lojano</h2>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal"><i data-lucide="map-pin" class="benefit-icon"></i><h4>Productos locales</h4><p>Origen verificado, directo de la provincia de Loja.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="badge-check" class="benefit-icon"></i><h4>Calidad garantizada</h4><p>Emprendedores comprometidos con procesos de calidad.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="handshake" class="benefit-icon"></i><h4>Contacto directo</h4><p>Habla directamente con quien produce, sin intermediarios.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="trending-up" class="benefit-icon"></i><h4>Economía local</h4><p>Cada contacto impulsa el desarrollo de la provincia.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="globe" class="benefit-icon"></i><h4>Proyección internacional</h4><p>Un puente entre Loja y mercados de todo el mundo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NOTICIAS ===================== -->
+<section id="noticias" style="background:var(--gris-claro)">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Agenda</span>
+      <h2>Noticias y eventos</h2>
+      <p>Ferias, ruedas de negocio, capacitaciones y convocatorias para emprendedores lojanos.</p>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <div class="loading-spinner">Cargando noticias…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section>
+  <div class="cta-final reveal">
+    <h2>¿Eres un emprendedor lojano?</h2>
+    <p>Súmate a Lojanova y lleva tus productos a nuevos mercados nacionales e internacionales.</p>
+    <a href="registro.html" class="btn btn-primary" style="background:var(--dorado)">Crear cuenta de productor</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Loja<span>nova</span></div>
+        <p style="max-width:280px;font-size:.9rem">Iniciativa de la Prefectura de Loja para promover la comercialización y visibilidad de los productos de la provincia.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i data-lucide="facebook" class="icon"></i></a>
+          <a href="#" aria-label="Instagram"><i data-lucide="instagram" class="icon"></i></a>
+          <a href="#" aria-label="YouTube"><i data-lucide="youtube" class="icon"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Mapa del sitio</h4>
+        <ul>
+          <li><a href="#sobre">Sobre el proyecto</a></li>
+          <li><a href="#categorias">Categorías</a></li>
+          <li><a href="#catalogo">Productos</a></li>
+          <li><a href="#emprendedores">Emprendedores</a></li>
+          <li><a href="#noticias">Noticias</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Institucional</h4>
+        <ul>
+          <li><a href="#">Prefectura de Loja</a></li>
+          <li><a href="#">Aviso legal</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="admin/index.html">Acceso administrador</a></li>
+          <li><a href="login.html">Acceso productores</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li>Prefectura de Loja, Ecuador</li>
+          <li>contacto@lojanova.gob.ec</li>
+          <li>+593 7 000 0000</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Lojanova · Prefectura de Loja. Todos los derechos reservados.</span>
+      <span>Hecho en Loja, Ecuador 🇪🇨</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
