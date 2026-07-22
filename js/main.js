@@ -105,7 +105,7 @@ async function cargarCategorias(){
   CATEGORIAS = data;
   grid.innerHTML = data.map(c => `
     <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${urlImagen(c.imagen_url, "category")}" alt="${escapeHtml(c.nombre)}" loading="lazy">
+      <img src="${urlImagenCategoria(c.imagen_url, c.nombre)}" alt="${escapeHtml(c.nombre)}" loading="lazy">
       <div class="cat-card-label">
         <h3>${escapeHtml(c.nombre)}</h3>
         <span>Ver productos</span>
