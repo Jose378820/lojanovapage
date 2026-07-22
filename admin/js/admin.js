@@ -56,7 +56,7 @@ document.querySelectorAll(".modal-overlay").forEach(ov => {
 async function iniciarDashboard(){
   lucide.createIcons();
   await cargarListasBase();
-  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones()]);
+  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes()]);
 }
 
 async function cargarListasBase(){
@@ -416,6 +416,87 @@ document.getElementById("formNoticia").addEventListener("submit", async (e) => {
   cerrarModal("modalNoticia");
   cargarNoticias(); cargarKPIs();
 });
+
+/* =========================================================
+   SOLICITUDES DE PRODUCTORES (Edge Functions)
+   ========================================================= */
+async function llamarEdgeFunction(nombre, payload){
+  const { data: { session } } = await db.auth.getSession();
+  const resp = await fetch(`${SUPABASE_URL}/functions/v1/${nombre}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${session.access_token}`,
+      "apikey": SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(data.error || "Ocurrió un error inesperado.");
+  return data;
+}
+
+async function cargarSolicitudes(){
+  const { data, error } = await db.from("emprendedores").select("*, cantones(nombre)").order("created_at", { ascending: false });
+  const tPend = document.getElementById("tablaSolicitudes");
+  const tHist = document.getElementById("tablaHistorialSolicitudes");
+  if (error || !data){
+    tPend.innerHTML = `<tr class="empty-row"><td colspan="6">No se pudieron cargar las solicitudes.</td></tr>`;
+    return;
+  }
+
+  const pendientes = data.filter(e => e.estado === "pendiente" || !e.estado);
+  const historial = data.filter(e => e.estado === "aprobado" || e.estado === "rechazado");
+
+  tPend.innerHTML = pendientes.length ? pendientes.map(e => `
+    <tr>
+      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td>${escapeHtml(e.nombre)}</td>
+      <td>${escapeHtml(e.emprendimiento)}</td>
+      <td>${escapeHtml(e.correo || '—')}</td>
+      <td>${new Date(e.created_at).toLocaleDateString('es-EC')}</td>
+      <td class="row-actions">
+        <button class="btn btn-primary btn-sm" onclick="aprobarSolicitud('${e.id}')">Aprobar</button>
+        <button class="btn btn-outline btn-sm" onclick="rechazarSolicitud('${e.id}')">Rechazar</button>
+      </td>
+    </tr>
+  `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes 🎉</td></tr>`;
+
+  tHist.innerHTML = historial.length ? historial.map(e => `
+    <tr>
+      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td>${escapeHtml(e.nombre)}</td>
+      <td>${escapeHtml(e.emprendimiento)}</td>
+      <td><span class="status-pill ${e.estado === 'aprobado' ? 'on' : 'off'}">${e.estado === 'aprobado' ? 'Aprobado' : 'Rechazado'}</span></td>
+      <td class="row-actions">
+        <button class="btn btn-danger btn-sm" onclick="eliminarSolicitud('${e.id}','${escapeHtml(e.nombre)}')">Eliminar cuenta</button>
+      </td>
+    </tr>
+  `).join("") : `<tr class="empty-row"><td colspan="5">Aún no hay historial.</td></tr>`;
+}
+
+window.aprobarSolicitud = async function(id){
+  try{
+    await llamarEdgeFunction("aprobar-productor", { emprendedor_id: id });
+    cargarSolicitudes(); cargarEmprendedores(); cargarKPIs(); cargarListasBase();
+  }catch(err){ alert("No se pudo aprobar: " + err.message); }
+};
+
+window.rechazarSolicitud = async function(id){
+  if (!confirm("¿Rechazar esta solicitud? El productor no verá sus productos publicados.")) return;
+  try{
+    await llamarEdgeFunction("rechazar-productor", { emprendedor_id: id });
+    cargarSolicitudes(); cargarKPIs();
+  }catch(err){ alert("No se pudo rechazar: " + err.message); }
+};
+
+window.eliminarSolicitud = async function(id, nombre){
+  if (!confirm(`¿Eliminar por completo a "${nombre}"? Esto borra su perfil, sus productos y su acceso al sistema. No se puede deshacer.`)) return;
+  try{
+    await llamarEdgeFunction("eliminar-productor", { emprendedor_id: id });
+    cargarSolicitudes(); cargarEmprendedores(); cargarKPIs(); cargarListasBase();
+  }catch(err){ alert("No se pudo eliminar: " + err.message); }
+};
 
 /* =========================================================
    CANTONES (solo lectura desde el panel — vienen precargados)

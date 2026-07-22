@@ -20,6 +20,7 @@
     <div class="logo">Loja<span>nova</span></div>
     <nav>
       <button data-view="resumen" class="active"><i data-lucide="layout-dashboard" class="icon"></i> Resumen</button>
+      <button data-view="solicitudes"><i data-lucide="user-check" class="icon"></i> Solicitudes</button>
       <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
       <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
       <button data-view="categorias"><i data-lucide="tags" class="icon"></i> Categorías</button>
@@ -52,6 +53,27 @@
           4. Comparte novedades en la sección de Noticias.<br>
           Los cambios aparecen de inmediato en el sitio público.
         </p>
+      </div>
+    </section>
+
+    <!-- ============ SOLICITUDES ============ -->
+    <section id="view-solicitudes" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Solicitudes de productores</h1><p>Revisa y aprueba las cuentas nuevas antes de que aparezcan en el sitio público</p></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Pendientes de revisión</h3></div>
+        <table>
+          <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Correo</th><th>Fecha</th><th></th></tr></thead>
+          <tbody id="tablaSolicitudes"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Historial (aprobados y rechazados)</h3></div>
+        <table>
+          <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaHistorialSolicitudes"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
+        </table>
       </div>
     </section>
 
