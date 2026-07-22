@@ -8,18 +8,76 @@ const navbar = document.getElementById("navbar");
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
 
-window.addEventListener("scroll", () => {
+function setNavbarState() {
   navbar.classList.toggle("scrolled", window.scrollY > 40);
-});
+}
+setNavbarState();
+window.addEventListener("scroll", setNavbarState, { passive: true });
 navToggle?.addEventListener("click", () => navLinks.classList.toggle("open"));
 navLinks?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => navLinks.classList.remove("open")));
+
+/* ---------- Hero slider + movimiento ---------- */
+const heroSlides = [...document.querySelectorAll(".hero-bg")];
+let activeHeroSlide = 0;
+if (heroSlides.length > 1) {
+  setInterval(() => {
+    heroSlides[activeHeroSlide].classList.remove("is-active");
+    activeHeroSlide = (activeHeroSlide + 1) % heroSlides.length;
+    heroSlides[activeHeroSlide].classList.add("is-active");
+  }, 5200);
+}
+
+/* ---------- Parallax liviano ---------- */
+let ticking = false;
+function updateParallax() {
+  const viewportCenter = window.innerHeight / 2;
+  document.querySelectorAll("[data-parallax-section]").forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+    const offset = (rect.top + rect.height / 2 - viewportCenter) * -0.08;
+    section.style.setProperty("--parallax-y", `${Math.max(-36, Math.min(36, offset))}px`);
+  });
+  ticking = false;
+}
+function requestParallax() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(updateParallax);
+}
+window.addEventListener("scroll", requestParallax, { passive: true });
+window.addEventListener("resize", requestParallax);
+requestParallax();
 
 /* ---------- Scroll reveal ---------- */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); revealObserver.unobserve(e.target); } });
 }, { threshold: 0.15 });
-function observeReveals(){ document.querySelectorAll(".reveal:not(.visible)").forEach(el => revealObserver.observe(el)); }
+function observeReveals(){
+  document.querySelectorAll(".reveal:not(.visible)").forEach((el, index) => {
+    el.style.setProperty("--stagger-delay", `${Math.min(index * 70, 420)}ms`);
+    revealObserver.observe(el);
+  });
+}
 observeReveals();
+
+/* ---------- Cards 3D sutiles ---------- */
+function enhanceProductTilt(){
+  document.querySelectorAll(".card-producto:not([data-tilt-ready])").forEach(card => {
+    card.dataset.tiltReady = "true";
+    card.addEventListener("pointermove", event => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      card.classList.add("is-tilting");
+      card.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg) translateY(-6px)`;
+    });
+    card.addEventListener("pointerleave", () => {
+      card.classList.remove("is-tilting");
+      card.style.transform = "";
+    });
+  });
+}
 
 /* ---------- Helpers ---------- */
 function escapeHtml(str){
@@ -44,7 +102,7 @@ async function cargarCategorias(){
   CATEGORIAS = data;
   grid.innerHTML = data.map(c => `
     <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${urlImagen(c.imagen_url)}" alt="${escapeHtml(c.nombre)}" loading="lazy">
+      <img src="${urlImagen(c.imagen_url, "category")}" alt="${escapeHtml(c.nombre)}" loading="lazy">
       <div class="cat-card-label">
         <h3>${escapeHtml(c.nombre)}</h3>
         <span>Ver productos</span>
@@ -116,7 +174,7 @@ function renderProductos(){
   grid.innerHTML = lista.map(p => `
     <article class="card-producto reveal">
       <div class="thumb">
-        <img src="${urlImagen(p.imagen_principal_url)}" alt="${escapeHtml(p.nombre)}" loading="lazy">
+        <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
         ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
       </div>
       <div class="card-body">
@@ -129,6 +187,7 @@ function renderProductos(){
     </article>
   `).join("");
   observeReveals();
+  enhanceProductTilt();
 }
 
 ["fBuscar","fCategoria","fCanton","fTipo"].forEach(id => {
@@ -151,7 +210,7 @@ async function cargarEmprendedores(){
   }
   grid.innerHTML = data.map(e => `
     <article class="card-emp reveal">
-      <div class="thumb"><img src="${urlImagen(e.foto_url)}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
+      <div class="thumb"><img src="${urlImagen(e.foto_url, "producer")}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
       <div class="card-body">
         <div class="emprend">${escapeHtml(e.emprendimiento)}</div>
         <h3>${escapeHtml(e.nombre)}</h3>
@@ -174,7 +233,7 @@ async function cargarNoticias(){
   }
   grid.innerHTML = data.map(n => `
     <article class="card-news reveal">
-      <div class="thumb"><img src="${urlImagen(n.imagen_url)}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
+      <div class="thumb"><img src="${urlImagen(n.imagen_url, "news")}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
       <div class="card-body">
         <span class="tipo">${TIPO_LABEL[n.tipo] || 'Noticia'}</span>
         <h3>${escapeHtml(n.titulo)}</h3>
@@ -196,6 +255,10 @@ async function cargarStats(){
   ]);
   const vals = { emprendedores: emp.count || 0, productos: prod.count || 0, cantones: cant.count || 0, categorias: cat.count || 0 };
   document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = vals[el.dataset.stat] ?? "0"; });
+  const heroProductos = document.getElementById("heroProductos");
+  const heroEmp = document.getElementById("heroEmp");
+  if (heroProductos) heroProductos.textContent = vals.productos;
+  if (heroEmp) heroEmp.textContent = vals.emprendedores;
 }
 
 /* ---------- Init ---------- */

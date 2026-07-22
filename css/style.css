@@ -649,3 +649,181 @@ display:none;
 }
 
 }
+
+/* ===================================================
+   LOJANOVA MOTION SYSTEM
+===================================================*/
+
+body{
+  background:
+    linear-gradient(120deg,rgba(201,161,90,.08),rgba(30,90,58,.06),rgba(157,181,141,.08)),
+    linear-gradient(to bottom,#ffffff,#fafaf8);
+  background-size:180% 180%,100% 100%;
+  animation:ambientGradient 18s ease-in-out infinite;
+}
+
+@keyframes ambientGradient{
+  0%,100%{background-position:0% 45%,center}
+  50%{background-position:100% 55%,center}
+}
+
+.hero-slider,.hero-bg{
+  position:absolute;
+  inset:0;
+}
+
+.hero-slider{
+  z-index:0;
+  overflow:hidden;
+}
+
+.hero-bg{
+  background-size:cover;
+  background-position:center;
+  opacity:0;
+  transform:scale(1.1) translate3d(0,var(--parallax-y,0),0);
+  transition:opacity 1.25s ease,transform 6s ease;
+  will-change:opacity,transform;
+}
+
+.hero-bg.is-active{
+  opacity:1;
+  transform:scale(1.18) translate3d(0,var(--parallax-y,0),0);
+  animation:heroFloat 9s ease-in-out infinite alternate;
+}
+
+@keyframes heroFloat{
+  from{background-position:center 48%}
+  to{background-position:center 54%}
+}
+
+.hero-title .line,.hero-copy .line{
+  display:block;
+  overflow:hidden;
+}
+
+.hero-title .line > span,.hero-copy .line > span{
+  display:block;
+  transform:translateY(112%);
+  opacity:0;
+  animation:lineReveal .9s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+.hero-title .line:nth-child(2) > span{animation-delay:.18s}
+.hero-copy .line:nth-child(1) > span{animation-delay:.42s}
+.hero-copy .line:nth-child(2) > span{animation-delay:.55s}
+.hero-actions .btn{animation:fadeLift .8s ease .76s both}
+.hero-stats{animation:fadeLift .9s ease .92s both}
+
+@keyframes lineReveal{
+  to{transform:translateY(0);opacity:1}
+}
+
+@keyframes fadeLift{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero-title .accent span{
+  color:var(--dorado);
+}
+
+section[data-parallax-section] > .container{
+  transform:translate3d(0,calc(var(--parallax-y,0px) * .16),0);
+  transition:transform .12s linear;
+  will-change:transform;
+}
+
+.about,.soft-section,.catalog{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.96),rgba(245,241,231,.82),rgba(157,181,141,.12));
+  background-size:160% 160%;
+  animation:ambientGradient 22s ease-in-out infinite;
+}
+
+.soft-section{
+  background:
+    linear-gradient(135deg,rgba(250,250,248,.96),rgba(245,241,231,.94),rgba(201,161,90,.10));
+  background-size:170% 170%;
+}
+
+.about-media img,.loja-media img,.card-news .thumb img,.card-emp .thumb img{
+  animation:imageFloat 7s ease-in-out infinite alternate;
+  will-change:transform;
+}
+
+@keyframes imageFloat{
+  from{transform:scale(1.02) translate3d(0,-6px,0)}
+  to{transform:scale(1.06) translate3d(0,8px,0)}
+}
+
+.cat-card,.card-producto,.card-emp,.benefit-card,.card-news,.stat-card,.canton-pill{
+  transform-style:preserve-3d;
+  will-change:transform,opacity;
+}
+
+.card-producto{
+  transition:transform .18s ease,box-shadow .35s ease;
+}
+
+.card-producto.is-tilting{
+  box-shadow:0 28px 70px rgba(30,90,58,.18);
+}
+
+.card-producto .thumb,.card-producto .card-body{
+  transform:translateZ(1px);
+}
+
+.btn,.chip,.footer-social a,.nav-toggle,.canton-pill{
+  transition:transform .28s ease,box-shadow .28s ease,background .28s ease,color .28s ease,border-color .28s ease;
+}
+
+.btn:hover,.chip:hover,.footer-social a:hover{
+  transform:translateY(-4px) scale(1.02);
+}
+
+.btn:active,.chip:active,.footer-social a:active{
+  transform:translateY(-1px) scale(.98);
+}
+
+.btn-ghost{
+  background:var(--beige);
+  color:var(--verde-bosque);
+}
+
+.btn-ghost:hover{
+  background:var(--verde-bosque);
+  color:var(--blanco);
+}
+
+.cta-gold{
+  background:linear-gradient(135deg,var(--dorado),#e1c277);
+  color:#1b1d17;
+}
+
+.cta-final{
+  background:
+    linear-gradient(135deg,rgba(30,90,58,.96),rgba(18,56,36,.98),rgba(201,161,90,.28));
+  background-size:180% 180%;
+  animation:ambientGradient 16s ease-in-out infinite;
+  overflow:hidden;
+}
+
+.reveal{
+  transition-delay:var(--stagger-delay,0ms);
+}
+
+.reveal.visible{
+  animation:softPop .72s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes softPop{
+  0%{opacity:0;transform:translateY(30px) scale(.98)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+
+@media (max-width:700px){
+  .hero-copy .line{display:inline;overflow:visible}
+  .hero-copy .line > span{display:inline}
+  section[data-parallax-section] > .container{transform:none}
+}

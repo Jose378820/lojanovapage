@@ -32,24 +32,82 @@
 </header>
 
 <!-- ===================== HERO ===================== -->
-<section class="hero">
-  <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=2000')"></div>
-  <div class="hero-overlay"></div>
-  <div class="container hero-content">
-    <span class="eyebrow" style="color:var(--dorado)">Prefectura de Loja</span>
-    <h1>Loja al Mundo</h1>
-    <p>Descubre productos únicos elaborados por emprendedores de la provincia de Loja y conecta directamente con quienes los producen.</p>
-    <div class="hero-actions">
-      <a href="#catalogo" class="btn btn-primary">Explorar productos</a>
-      <a href="registro.html" class="btn btn-ghost">Registrarme como productor</a>
-      <a href="#emprendedores" class="btn btn-outline">Conocer emprendedores</a>
+<section class="hero" data-parallax-section>
+
+    <div class="hero-slider" aria-hidden="true">
+        <div class="hero-bg is-active" style="background-image:url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=2200&auto=format&fit=crop')"></div>
+        <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2200&auto=format&fit=crop')"></div>
+        <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?q=80&w=2200&auto=format&fit=crop')"></div>
     </div>
-  </div>
-  <span class="hero-scroll">Desplázate</span>
+
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+
+        <span class="eyebrow hero-eyebrow">
+            Plataforma Oficial · Prefectura de Loja
+        </span>
+
+        <h1 class="hero-title" aria-label="Descubre la riqueza productiva de Loja">
+            <span class="line"><span>Descubre la riqueza</span></span>
+            <span class="line accent"><span>productiva de Loja</span></span>
+        </h1>
+
+        <p class="hero-copy">
+            <span class="line"><span>Una vitrina digital que conecta a productores, artesanos y emprendedores</span></span>
+            <span class="line"><span>con compradores nacionales e internacionales, promoviendo el desarrollo económico de Loja.</span></span>
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#catalogo" class="btn btn-primary magnetic">
+                Explorar catálogo
+            </a>
+
+            <a href="#emprendedores" class="btn btn-outline magnetic">
+                Conocer emprendedores
+            </a>
+
+        </div>
+
+        <div class="hero-stats">
+
+            <div class="hero-stat">
+                <strong>16</strong>
+                <span>Cantones</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong id="heroProductos">+</strong>
+                <span>Productos</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong id="heroEmp">+</strong>
+                <span>Emprendedores</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong>100%</strong>
+                <span>Lojano</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="hero-scroll">
+
+        <div class="scroll-line"></div>
+
+        <span>SCROLL</span>
+
+    </div>
+
 </section>
 
 <!-- ===================== SOBRE EL PROYECTO ===================== -->
-<section id="sobre" class="about">
+<section id="sobre" class="about" data-parallax-section>
   <div class="container about-grid">
     <div class="about-media reveal">
       <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=1200" alt="Paisaje agrícola de la provincia de Loja">
@@ -70,7 +128,7 @@
 </section>
 
 <!-- ===================== CATEGORÍAS ===================== -->
-<section id="categorias">
+<section id="categorias" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
       <span class="eyebrow">Explora por categoría</span>
@@ -84,7 +142,7 @@
 </section>
 
 <!-- ===================== CATÁLOGO ===================== -->
-<section id="catalogo" class="catalog">
+<section id="catalogo" class="catalog" data-parallax-section>
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Catálogo</span>
@@ -110,7 +168,7 @@
 </section>
 
 <!-- ===================== EMPRENDEDORES ===================== -->
-<section id="emprendedores" style="background:var(--gris-claro)">
+<section id="emprendedores" class="soft-section" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
       <span class="eyebrow">Rostros de Lojanova</span>
@@ -124,7 +182,7 @@
 </section>
 
 <!-- ===================== LOJA ===================== -->
-<section id="loja" class="loja-section">
+<section id="loja" class="loja-section" data-parallax-section>
   <div class="container loja-grid">
     <div class="reveal">
       <span class="eyebrow">La provincia</span>
@@ -139,7 +197,7 @@
 </section>
 
 <!-- ===================== BENEFICIOS ===================== -->
-<section id="beneficios">
+<section id="beneficios" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
       <span class="eyebrow">Por qué Lojanova</span>
@@ -156,7 +214,7 @@
 </section>
 
 <!-- ===================== NOTICIAS ===================== -->
-<section id="noticias" style="background:var(--gris-claro)">
+<section id="noticias" class="soft-section" data-parallax-section>
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Agenda</span>
@@ -174,7 +232,7 @@
   <div class="cta-final reveal">
     <h2>¿Eres un emprendedor lojano?</h2>
     <p>Súmate a Lojanova y lleva tus productos a nuevos mercados nacionales e internacionales.</p>
-    <a href="registro.html" class="btn btn-primary" style="background:var(--dorado)">Crear cuenta de productor</a>
+    <a href="login.html" class="btn btn-primary cta-gold magnetic">Quiero sumarme</a>
   </div>
 </section>
 
@@ -208,7 +266,6 @@
           <li><a href="#">Aviso legal</a></li>
           <li><a href="#">Política de privacidad</a></li>
           <li><a href="admin/index.html">Acceso administrador</a></li>
-          <li><a href="login.html">Acceso productores</a></li>
         </ul>
       </div>
       <div>
