@@ -18,12 +18,15 @@ navLinks?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => n
 
 /* ---------- Hero slider + movimiento ---------- */
 const heroSlides = [...document.querySelectorAll(".hero-bg")];
+const heroDots = [...document.querySelectorAll(".hero-dots span")];
 let activeHeroSlide = 0;
 if (heroSlides.length > 1) {
   setInterval(() => {
     heroSlides[activeHeroSlide].classList.remove("is-active");
+    heroDots[activeHeroSlide]?.classList.remove("is-active");
     activeHeroSlide = (activeHeroSlide + 1) % heroSlides.length;
     heroSlides[activeHeroSlide].classList.add("is-active");
+    heroDots[activeHeroSlide]?.classList.add("is-active");
   }, 5200);
 }
 

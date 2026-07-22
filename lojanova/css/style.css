@@ -185,7 +185,7 @@ p{
 .logo{font-family:var(--f-display);font-weight:700;font-size:1.4rem;color:var(--blanco);letter-spacing:.02em;transition:color .35s ease}
 .logo span{color:var(--dorado)}
 .navbar.scrolled .logo{color:var(--verde-bosque-dark)}
-.nav-links{display:flex;gap:38px;align-items:center}
+.nav-links{display:flex;gap:clamp(18px,2.2vw,34px);align-items:center}
 .nav-links a{
   font-size:.92rem;font-weight:500;color:var(--blanco);position:relative;transition:color .3s ease;
 }
@@ -471,9 +471,10 @@ footer{background:#1b1d17;color:rgba(255,255,255,.72);padding:100px 0 30px}
     background:
     linear-gradient(
         90deg,
-        rgba(8,20,12,.82) 0%,
-        rgba(18,55,36,.70) 40%,
-        rgba(22,60,38,.30) 100%
+        rgba(6,18,12,.76) 0%,
+        rgba(18,55,36,.48) 38%,
+        rgba(18,55,36,.10) 72%,
+        rgba(255,255,255,.18) 100%
     );
 
 }
@@ -681,15 +682,26 @@ body{
   background-size:cover;
   background-position:center;
   opacity:0;
-  transform:scale(1.1) translate3d(0,var(--parallax-y,0),0);
-  transition:opacity 1.25s ease,transform 6s ease;
+  filter:saturate(1.18) contrast(1.05);
+  transform:scale(1.05) translate3d(0,var(--parallax-y,0),0);
+  transition:opacity 1.25s ease,transform 6s ease,filter 1.25s ease;
   will-change:opacity,transform;
 }
 
 .hero-bg.is-active{
   opacity:1;
-  transform:scale(1.18) translate3d(0,var(--parallax-y,0),0);
+  transform:scale(1.13) translate3d(0,var(--parallax-y,0),0);
   animation:heroFloat 9s ease-in-out infinite alternate;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:34%;
+  z-index:1;
+  background:linear-gradient(180deg,rgba(8,20,12,0),rgba(8,20,12,.72));
+  pointer-events:none;
 }
 
 @keyframes heroFloat{
@@ -726,6 +738,33 @@ body{
 
 .hero-title .accent span{
   color:var(--dorado);
+}
+
+.hero-dots{
+  position:absolute;
+  right:clamp(28px,6vw,86px);
+  top:50%;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  transform:translateY(-50%);
+}
+
+.hero-dots span{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.8);
+  background:rgba(255,255,255,.18);
+  transition:height .35s ease,background .35s ease,border-color .35s ease;
+}
+
+.hero-dots span.is-active{
+  height:34px;
+  border-radius:999px;
+  background:var(--dorado);
+  border-color:var(--dorado);
 }
 
 section[data-parallax-section] > .container{
@@ -825,5 +864,6 @@ section[data-parallax-section] > .container{
 @media (max-width:700px){
   .hero-copy .line{display:inline;overflow:visible}
   .hero-copy .line > span{display:inline}
+  .hero-dots{display:none}
   section[data-parallax-section] > .container{transform:none}
 }
