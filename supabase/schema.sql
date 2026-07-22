@@ -57,6 +57,7 @@ on conflict (nombre) do nothing;
 -- ---------------------------------------------------------
 create table if not exists emprendedores (
   id uuid primary key default uuid_generate_v4(),
+  auth_user_id uuid unique references auth.users(id) on delete cascade,
   nombre text not null,
   emprendimiento text not null,
   foto_url text,
@@ -74,6 +75,9 @@ create table if not exists emprendedores (
   activo boolean default true,
   created_at timestamptz default now()
 );
+
+alter table emprendedores
+  add column if not exists auth_user_id uuid unique references auth.users(id) on delete cascade;
 
 -- ---------------------------------------------------------
 -- TABLA: productos
@@ -145,6 +149,35 @@ create table if not exists admins (
   created_at timestamptz default now()
 );
 
+-- Crea el perfil de emprendedor automaticamente cuando un productor se registra
+create or replace function public.crear_emprendedor_auth()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if coalesce(new.raw_user_meta_data->>'rol', '') = 'productor' then
+    insert into public.emprendedores (auth_user_id, nombre, emprendimiento, correo, activo)
+    values (
+      new.id,
+      coalesce(nullif(new.raw_user_meta_data->>'nombre', ''), split_part(new.email, '@', 1)),
+      coalesce(nullif(new.raw_user_meta_data->>'emprendimiento', ''), 'Emprendimiento sin nombre'),
+      new.email,
+      true
+    )
+    on conflict (auth_user_id) do nothing;
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists crear_emprendedor_auth_trigger on auth.users;
+create trigger crear_emprendedor_auth_trigger
+  after insert on auth.users
+  for each row execute function public.crear_emprendedor_auth();
+
 -- =========================================================
 -- ROW LEVEL SECURITY
 -- =========================================================
@@ -182,6 +215,59 @@ create policy "admin escribe noticias" on noticias for all
 create policy "admin lee su propio perfil" on admins for select
   using (auth.uid() = id);
 
+-- Un productor administra solo su propio perfil
+create policy "productor crea su perfil" on emprendedores for insert
+  with check (auth.uid() = auth_user_id);
+
+create policy "productor actualiza su perfil" on emprendedores for update
+  using (auth.uid() = auth_user_id)
+  with check (auth.uid() = auth_user_id);
+
+-- Un productor administra solo productos asociados a su perfil
+create policy "productor crea sus productos" on productos for insert
+  with check (
+    emprendedor_id in (
+      select id from emprendedores where auth_user_id = auth.uid()
+    )
+  );
+
+create policy "productor actualiza sus productos" on productos for update
+  using (
+    emprendedor_id in (
+      select id from emprendedores where auth_user_id = auth.uid()
+    )
+  )
+  with check (
+    emprendedor_id in (
+      select id from emprendedores where auth_user_id = auth.uid()
+    )
+  );
+
+create policy "productor elimina sus productos" on productos for delete
+  using (
+    emprendedor_id in (
+      select id from emprendedores where auth_user_id = auth.uid()
+    )
+  );
+
+create policy "productor administra imagenes de sus productos" on producto_imagenes for all
+  using (
+    producto_id in (
+      select p.id
+      from productos p
+      join emprendedores e on e.id = p.emprendedor_id
+      where e.auth_user_id = auth.uid()
+    )
+  )
+  with check (
+    producto_id in (
+      select p.id
+      from productos p
+      join emprendedores e on e.id = p.emprendedor_id
+      where e.auth_user_id = auth.uid()
+    )
+  );
+
 -- =========================================================
 -- STORAGE: buckets para imágenes (ejecutar una sola vez)
 -- =========================================================
@@ -200,6 +286,13 @@ create policy "admin sube imagenes"
 create policy "admin borra imagenes"
   on storage.objects for delete
   using (bucket_id = 'lojanova-imagenes' and auth.uid() in (select id from admins));
+
+create policy "productor sube imagenes"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'lojanova-imagenes'
+    and auth.uid() in (select auth_user_id from emprendedores)
+  );
 
 -- =========================================================
 -- Para convertir un usuario en administrador del panel:

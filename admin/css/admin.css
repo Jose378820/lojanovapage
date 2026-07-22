@@ -34,6 +34,7 @@ input,select,textarea{font-family:inherit;font-size:.92rem}
   background:#fff;border-radius:var(--radius);padding:48px 40px;width:100%;max-width:400px;
   box-shadow:var(--shadow);
 }
+.auth-card-wide{max-width:460px}
 .login-card .logo{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--verde-bosque-dark);text-align:center;margin-bottom:6px}
 .login-card .logo span{color:var(--dorado)}
 .login-card p.sub{text-align:center;color:#777;font-size:.88rem;margin-bottom:30px}
@@ -47,6 +48,7 @@ input,select,textarea{font-family:inherit;font-size:.92rem}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:8px;font-weight:600;font-size:.88rem;transition:.25s}
 .btn-primary{background:var(--verde-bosque);color:#fff;width:100%}
 .btn-primary:hover{background:var(--verde-bosque-dark)}
+.btn.auto-width,.auto-width{width:auto}
 .btn-outline{background:#fff;border:1px solid var(--gris-medio);color:var(--gris-oscuro)}
 .btn-outline:hover{border-color:var(--verde-bosque)}
 .btn-danger{background:#fff;border:1px solid var(--rojo);color:var(--rojo)}
@@ -68,8 +70,12 @@ input,select,textarea{font-family:inherit;font-size:.92rem}
   display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;color:rgba(255,255,255,.75);
   font-size:.9rem;font-weight:500;text-align:left;width:100%;transition:.2s;
 }
-.sidebar nav button:hover{background:rgba(255,255,255,.06);color:#fff}
-.sidebar nav button.active{background:var(--verde-bosque);color:#fff}
+.sidebar nav button:hover,.sidebar nav .nav-link:hover{background:rgba(255,255,255,.06);color:#fff}
+.sidebar nav button.active,.sidebar nav .nav-link.active{background:var(--verde-bosque);color:#fff}
+.sidebar nav .nav-link{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:8px;color:rgba(255,255,255,.75);
+  font-size:.9rem;font-weight:500;text-align:left;width:100%;transition:.2s;
+}
 .sidebar .logout{margin-top:auto;color:rgba(255,255,255,.6);font-size:.85rem;padding:12px 14px;display:flex;align-items:center;gap:10px}
 .sidebar .logout:hover{color:#fff}
 
@@ -79,6 +85,10 @@ input,select,textarea{font-family:inherit;font-size:.92rem}
 .main-header p{color:#777;font-size:.9rem;margin-top:4px}
 
 .panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;margin-bottom:24px}
+.panel-section{scroll-margin-top:24px}
+.panel-message{margin-bottom:18px}
+.producer-app .sidebar{position:sticky;left:auto}
+.producer-kpis{grid-template-columns:repeat(2,1fr)}
 .panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .panel-title h3{font-family:'Inter',sans-serif;font-weight:700;font-size:1.05rem;color:var(--gris-oscuro)}
 
@@ -119,6 +129,8 @@ tbody tr:hover{background:var(--gris-claro)}
 @media (max-width:900px){
   .sidebar{position:fixed;left:-260px;z-index:1500;transition:.3s}
   .sidebar.open{left:0}
+  .producer-app{display:block}
+  .producer-app .sidebar{position:static;width:100%;height:auto}
   .main{padding:24px}
 }
 .mobile-topbar{display:none}

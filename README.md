@@ -10,12 +10,17 @@ No es un e-commerce: no hay carrito ni pagos. Cada producto muestra información
 lojanova/
 ├── index.html              → Landing page pública
 ├── producto.html            → Ficha de producto individual (?slug=...)
+├── registro.html            → Registro de productores
+├── login.html               → Login de productores
+├── mi-panel.html            → Panel privado del productor
 ├── css/style.css            → Sistema de diseño del sitio público
 ├── js/
 │   ├── config.js             → Credenciales de Supabase (URL + anon key)
 │   ├── supabase-client.js    → Inicialización del cliente
 │   ├── main.js                → Lógica de la landing (carga de datos, filtros)
-│   └── producto.js            → Lógica de la ficha de producto
+│   ├── producto.js            → Lógica de la ficha de producto
+│   ├── productor-auth.js      → Registro/login de productores
+│   └── mi-panel.js            → CRUD privado del productor
 ├── admin/
 │   ├── index.html            → Login del panel (Supabase Auth)
 │   ├── dashboard.html         → Panel de administración (CRUD)
@@ -42,7 +47,7 @@ const SUPABASE_URL = "https://tu-proyecto.supabase.co";
 const SUPABASE_ANON_KEY = "tu-anon-key-publica";
 ```
 
-> La `anon key` es pública por diseño: la protección real la dan las políticas RLS definidas en `schema.sql` (lectura pública, escritura solo para administradores).
+> La `anon key` es pública por diseño: la protección real la dan las políticas RLS definidas en `schema.sql` (lectura pública, administración global solo para admins y escritura limitada para cada productor).
 
 ## 3. Crear tu primer usuario administrador
 
@@ -56,7 +61,21 @@ insert into admins (id, nombre) values ('PEGA-AQUI-EL-UUID', 'Nombre del adminis
 
 4. Ya puedes iniciar sesión en `admin/index.html` con ese correo y contraseña.
 
-## 4. Ejecutar el proyecto en GitHub Codespaces
+## 4. Registro y panel de productores
+
+Los productores no usan el login administrador. Cada productor debe crear su propia cuenta en `registro.html` con nombre, emprendimiento, correo y contraseña.
+
+Al registrarse:
+
+1. Supabase Auth crea el usuario.
+2. El trigger `crear_emprendedor_auth_trigger` crea el registro en `emprendedores`.
+3. La columna `emprendedores.auth_user_id` queda vinculada con `auth.users.id`.
+
+Luego el productor ingresa por `login.html` y se redirige a `mi-panel.html`, donde solo puede editar su perfil y los productos asociados a su propio `emprendedor_id`.
+
+El administrador sigue entrando por `admin/index.html`; ese login solo acepta usuarios registrados en la tabla `admins`.
+
+## 5. Ejecutar el proyecto en GitHub Codespaces
 
 1. Sube este proyecto a un repositorio de GitHub.
 2. Haz clic en **Code → Codespaces → Create codespace on main**.
@@ -74,7 +93,7 @@ Alternativa sin `live-server`, con Python (ya viene instalado en la imagen base)
 python3 -m http.server 8080
 ```
 
-## 5. Publicar el sitio (producción)
+## 6. Publicar el sitio (producción)
 
 Al ser un proyecto 100% estático, puedes desplegarlo gratis en:
 
@@ -83,7 +102,7 @@ Al ser un proyecto 100% estático, puedes desplegarlo gratis en:
 
 Recuerda que `js/config.js` debe apuntar siempre a tu proyecto real de Supabase antes de publicar.
 
-## 6. Cargar contenido
+## 7. Cargar contenido
 
 Todo el contenido (categorías, cantones, emprendedores, productos, noticias) se administra desde `admin/dashboard.html`, sin tocar código:
 
