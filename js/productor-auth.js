@@ -58,6 +58,7 @@ form.addEventListener("submit", async (event) => {
       email,
       password,
       options: {
+        emailRedirectTo: `${window.location.origin}/login.html`,
         data: {
           rol: "productor",
           nombre,
