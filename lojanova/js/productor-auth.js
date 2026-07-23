@@ -12,7 +12,10 @@ function normalizeAuthError(error) {
   const rawMessage = typeof error === "string"
     ? error
     : error?.message || error?.error_description || error?.error || "";
-  const message = rawMessage || "No se pudo completar la solicitud. Revisa la configuración de Supabase e intenta de nuevo.";
+  const cleanMessage = String(rawMessage || "").trim();
+  const message = (!cleanMessage || cleanMessage === "{}" || cleanMessage === "[object Object]")
+    ? "No se pudo crear la cuenta. Verifica en Supabase que el proveedor Email esté activo y que hayas ejecutado supabase/fix_registro_productores.sql."
+    : cleanMessage;
   const normalized = message.toLowerCase();
 
   if (normalized.includes("email logins are disabled") || normalized.includes("email signups are disabled")) {
@@ -95,6 +98,7 @@ form.addEventListener("submit", async (event) => {
       });
 
       if (error) {
+        console.error("Error al registrar productor:", error);
         showMessage(errorMsg, error);
         submitBtn.disabled = false;
         submitBtn.textContent = "Crear cuenta";
@@ -111,6 +115,7 @@ form.addEventListener("submit", async (event) => {
       submitBtn.textContent = "Crear cuenta";
       return;
     } catch (error) {
+      console.error("Excepción al registrar productor:", error);
       showMessage(errorMsg, error);
       submitBtn.disabled = false;
       submitBtn.textContent = "Crear cuenta";
