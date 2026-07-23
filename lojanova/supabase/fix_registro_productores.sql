@@ -9,6 +9,10 @@ alter table public.productos enable row level security;
 alter table public.emprendedores
   add column if not exists auth_user_id uuid unique references auth.users(id) on delete cascade;
 
+alter table public.emprendedores
+  add column if not exists estado text not null default 'pendiente'
+  check (estado in ('pendiente','aprobado','rechazado'));
+
 create or replace function public.crear_emprendedor_auth()
 returns trigger
 language plpgsql
@@ -40,6 +44,7 @@ create trigger crear_emprendedor_auth_trigger
 drop policy if exists "productor lee su perfil" on public.emprendedores;
 drop policy if exists "productor crea su perfil" on public.emprendedores;
 drop policy if exists "productor actualiza su perfil" on public.emprendedores;
+drop policy if exists "visitante crea solicitud de productor" on public.emprendedores;
 drop policy if exists "productor gestiona sus productos" on public.productos;
 drop policy if exists "productor crea sus productos" on public.productos;
 drop policy if exists "productor actualiza sus productos" on public.productos;
@@ -57,6 +62,15 @@ create policy "productor actualiza su perfil" on public.emprendedores
   for update
   using (auth.uid() = auth_user_id)
   with check (auth.uid() = auth_user_id);
+
+create policy "visitante crea solicitud de productor" on public.emprendedores
+  for insert
+  with check (
+    auth.uid() is null
+    and auth_user_id is null
+    and estado = 'pendiente'
+    and activo = false
+  );
 
 create policy "productor crea sus productos" on public.productos
   for insert

@@ -8,6 +8,10 @@
 alter table emprendedores
   add column if not exists auth_user_id uuid references auth.users(id) unique;
 
+alter table emprendedores
+  add column if not exists estado text not null default 'pendiente'
+  check (estado in ('pendiente','aprobado','rechazado'));
+
 -- 2) Al registrarse un productor en registro.html, Supabase Auth crea
 --    la fila en auth.users con metadata { rol: 'productor', nombre, emprendimiento }.
 --    Este trigger crea automáticamente su fila correspondiente en "emprendedores".
@@ -45,6 +49,7 @@ create trigger crear_emprendedor_auth_trigger
 drop policy if exists "productor lee su perfil" on emprendedores;
 drop policy if exists "productor crea su perfil" on emprendedores;
 drop policy if exists "productor actualiza su perfil" on emprendedores;
+drop policy if exists "visitante crea solicitud de productor" on emprendedores;
 drop policy if exists "productor gestiona sus productos" on productos;
 
 create policy "productor lee su perfil" on emprendedores for select
@@ -56,6 +61,14 @@ create policy "productor crea su perfil" on emprendedores for insert
 create policy "productor actualiza su perfil" on emprendedores for update
   using (auth.uid() = auth_user_id)
   with check (auth.uid() = auth_user_id);
+
+create policy "visitante crea solicitud de productor" on emprendedores for insert
+  with check (
+    auth.uid() is null
+    and auth_user_id is null
+    and estado = 'pendiente'
+    and activo = false
+  );
 
 create policy "productor gestiona sus productos" on productos for all
   using (emprendedor_id in (select id from emprendedores where auth_user_id = auth.uid()))
