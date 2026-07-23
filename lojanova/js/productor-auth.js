@@ -4,8 +4,34 @@ const successMsg = document.getElementById("successMsg");
 const submitBtn = document.getElementById("submitBtn");
 
 function showMessage(element, message) {
-  element.textContent = message;
+  element.textContent = normalizeAuthError(message);
   element.style.display = "block";
+}
+
+function normalizeAuthError(error) {
+  const rawMessage = typeof error === "string"
+    ? error
+    : error?.message || error?.error_description || error?.error || "";
+  const message = rawMessage || "No se pudo completar la solicitud. Revisa la configuración de Supabase e intenta de nuevo.";
+  const normalized = message.toLowerCase();
+
+  if (normalized.includes("email logins are disabled") || normalized.includes("email signups are disabled")) {
+    return "El registro por correo está desactivado en Supabase. Activa Authentication > Sign In / Providers > Email.";
+  }
+
+  if (normalized.includes("row-level security") || normalized.includes("violates row-level security")) {
+    return "Supabase bloqueó el perfil por RLS. Ejecuta el SQL supabase/fix_registro_productores.sql en el SQL Editor.";
+  }
+
+  if (normalized.includes("user already registered") || normalized.includes("already registered")) {
+    return "Este correo ya está registrado. Inicia sesión o usa otro correo.";
+  }
+
+  if (normalized.includes("password")) {
+    return "La contraseña no cumple los requisitos de Supabase. Usa al menos 6 caracteres.";
+  }
+
+  return message;
 }
 
 function hideMessages() {
@@ -54,42 +80,49 @@ form.addEventListener("submit", async (event) => {
       return;
     }
 
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login.html`,
-        data: {
-          rol: "productor",
-          nombre,
-          emprendimiento,
+    try {
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/login.html`,
+          data: {
+            rol: "productor",
+            nombre,
+            emprendimiento,
+          },
         },
-      },
-    });
+      });
 
-    if (error) {
-      showMessage(errorMsg, error.message);
+      if (error) {
+        showMessage(errorMsg, error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Crear cuenta";
+        return;
+      }
+
+      if (data.session) {
+        location.href = "mi-panel.html";
+        return;
+      }
+
+      showMessage(successMsg, "Cuenta creada. Revisa tu correo para confirmar el registro y luego inicia sesión.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Crear cuenta";
+      return;
+    } catch (error) {
+      showMessage(errorMsg, error);
       submitBtn.disabled = false;
       submitBtn.textContent = "Crear cuenta";
       return;
     }
-
-    if (data.session) {
-      location.href = "mi-panel.html";
-      return;
-    }
-
-    showMessage(successMsg, "Cuenta creada. Revisa tu correo para confirmar el registro y luego inicia sesion.");
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Crear cuenta";
-    return;
   }
 
   submitBtn.textContent = "Ingresando...";
 
   const { data, error } = await db.auth.signInWithPassword({ email, password });
   if (error) {
-    showMessage(errorMsg, "Correo o contrasena incorrectos.");
+    showMessage(errorMsg, "Correo o contraseña incorrectos.");
     submitBtn.disabled = false;
     submitBtn.textContent = "Ingresar";
     return;
