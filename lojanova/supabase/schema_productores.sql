@@ -23,13 +23,14 @@ set search_path = public
 as $$
 begin
   if coalesce(new.raw_user_meta_data ->> 'rol', '') = 'productor' then
-    insert into public.emprendedores (auth_user_id, nombre, emprendimiento, correo, activo)
+    insert into public.emprendedores (auth_user_id, nombre, emprendimiento, correo, activo, estado)
     values (
       new.id,
       coalesce(nullif(new.raw_user_meta_data ->> 'nombre', ''), split_part(new.email, '@', 1)),
       coalesce(nullif(new.raw_user_meta_data ->> 'emprendimiento', ''), 'Emprendimiento sin nombre'),
       new.email,
-      true
+      false,
+      'pendiente'
     )
     on conflict (auth_user_id) do nothing;
   end if;
@@ -49,7 +50,6 @@ create trigger crear_emprendedor_auth_trigger
 drop policy if exists "productor lee su perfil" on emprendedores;
 drop policy if exists "productor crea su perfil" on emprendedores;
 drop policy if exists "productor actualiza su perfil" on emprendedores;
-drop policy if exists "visitante crea solicitud de productor" on emprendedores;
 drop policy if exists "productor gestiona sus productos" on productos;
 
 create policy "productor lee su perfil" on emprendedores for select
@@ -61,14 +61,6 @@ create policy "productor crea su perfil" on emprendedores for insert
 create policy "productor actualiza su perfil" on emprendedores for update
   using (auth.uid() = auth_user_id)
   with check (auth.uid() = auth_user_id);
-
-create policy "visitante crea solicitud de productor" on emprendedores for insert
-  with check (
-    auth.uid() is null
-    and auth_user_id is null
-    and estado = 'pendiente'
-    and activo = false
-  );
 
 create policy "productor gestiona sus productos" on productos for all
   using (emprendedor_id in (select id from emprendedores where auth_user_id = auth.uid()))
