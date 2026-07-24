@@ -21,6 +21,21 @@ set search_path = public
 as $$
 begin
   if coalesce(new.raw_user_meta_data ->> 'rol', '') = 'productor' then
+    update public.emprendedores
+    set
+      auth_user_id = new.id,
+      nombre = coalesce(nullif(new.raw_user_meta_data ->> 'nombre', ''), nombre, split_part(new.email, '@', 1)),
+      emprendimiento = coalesce(nullif(new.raw_user_meta_data ->> 'emprendimiento', ''), emprendimiento, 'Emprendimiento sin nombre'),
+      correo = new.email,
+      activo = false,
+      estado = 'pendiente'
+    where lower(correo) = lower(new.email)
+      and auth_user_id is null;
+
+    if found then
+      return new;
+    end if;
+
     insert into public.emprendedores (auth_user_id, nombre, emprendimiento, correo, activo, estado)
     values (
       new.id,
