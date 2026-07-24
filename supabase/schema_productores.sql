@@ -23,16 +23,24 @@ set search_path = public
 as $$
 begin
   if coalesce(new.raw_user_meta_data ->> 'rol', '') = 'productor' then
-    update public.emprendedores
+    with perfil_existente as (
+      select id
+      from public.emprendedores
+      where lower(correo) = lower(new.email)
+        and auth_user_id is null
+      order by created_at desc nulls last, id desc
+      limit 1
+    )
+    update public.emprendedores e
     set
       auth_user_id = new.id,
-      nombre = coalesce(nullif(new.raw_user_meta_data ->> 'nombre', ''), nombre, split_part(new.email, '@', 1)),
-      emprendimiento = coalesce(nullif(new.raw_user_meta_data ->> 'emprendimiento', ''), emprendimiento, 'Emprendimiento sin nombre'),
+      nombre = coalesce(nullif(new.raw_user_meta_data ->> 'nombre', ''), e.nombre, split_part(new.email, '@', 1)),
+      emprendimiento = coalesce(nullif(new.raw_user_meta_data ->> 'emprendimiento', ''), e.emprendimiento, 'Emprendimiento sin nombre'),
       correo = new.email,
       activo = false,
       estado = 'pendiente'
-    where lower(correo) = lower(new.email)
-      and auth_user_id is null;
+    from perfil_existente
+    where e.id = perfil_existente.id;
 
     if found then
       return new;
