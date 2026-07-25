@@ -37,6 +37,32 @@ function normalizeAuthError(error) {
   return message;
 }
 
+function canCreatePublicRequest(error) {
+  const message = typeof error === "string"
+    ? error
+    : error?.message || error?.error_description || error?.error || "";
+  const normalized = String(message || "").toLowerCase();
+
+  return !message
+    || message === "{}"
+    || normalized.includes("email logins are disabled")
+    || normalized.includes("email signups are disabled")
+    || normalized.includes("row-level security")
+    || normalized.includes("violates row-level security");
+}
+
+async function createProducerRequest({ nombre, emprendimiento, email }) {
+  const { error } = await db.from("emprendedores").insert({
+    nombre,
+    emprendimiento,
+    correo: email,
+    activo: false,
+    estado: "pendiente",
+  });
+
+  if (error) throw error;
+}
+
 function hideMessages() {
   errorMsg.style.display = "none";
   if (successMsg) successMsg.style.display = "none";
@@ -99,6 +125,18 @@ form.addEventListener("submit", async (event) => {
 
       if (error) {
         console.error("Error al registrar productor:", error);
+        if (canCreatePublicRequest(error)) {
+          try {
+            await createProducerRequest({ nombre, emprendimiento, email });
+            showMessage(successMsg, "Solicitud enviada. Un administrador revisará el registro y se comunicará contigo.");
+          } catch (requestError) {
+            console.error("Error al guardar solicitud de productor:", requestError);
+            showMessage(errorMsg, requestError);
+          }
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Crear cuenta";
+          return;
+        }
         showMessage(errorMsg, error);
         submitBtn.disabled = false;
         submitBtn.textContent = "Crear cuenta";
@@ -116,6 +154,18 @@ form.addEventListener("submit", async (event) => {
       return;
     } catch (error) {
       console.error("Excepción al registrar productor:", error);
+      if (canCreatePublicRequest(error)) {
+        try {
+          await createProducerRequest({ nombre, emprendimiento, email });
+          showMessage(successMsg, "Solicitud enviada. Un administrador revisará el registro y se comunicará contigo.");
+        } catch (requestError) {
+          console.error("Error al guardar solicitud de productor:", requestError);
+          showMessage(errorMsg, requestError);
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Crear cuenta";
+        return;
+      }
       showMessage(errorMsg, error);
       submitBtn.disabled = false;
       submitBtn.textContent = "Crear cuenta";

@@ -1,271 +1,124 @@
-// =========================================================
-// LOJANOVA — main.js
-// Interacciones de la landing + carga de datos desde Supabase
-// =========================================================
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Mi panel — Lojanova</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="admin/css/admin.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
 
-/* ---------- Navbar ---------- */
-const navbar = document.getElementById("navbar");
-const navToggle = document.getElementById("navToggle");
-const navLinks = document.getElementById("navLinks");
+<div class="mobile-topbar">
+  <span style="font-family:'Playfair Display',serif">Loja<span style="color:var(--dorado)">nova</span></span>
+  <button id="mobileToggle" style="color:#fff"><i data-lucide="menu"></i></button>
+</div>
 
-function setNavbarState() {
-  navbar.classList.toggle("scrolled", window.scrollY > 40);
-}
-setNavbarState();
-window.addEventListener("scroll", setNavbarState, { passive: true });
-navToggle?.addEventListener("click", () => navLinks.classList.toggle("open"));
-navLinks?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => navLinks.classList.remove("open")));
-
-/* ---------- Hero slider + movimiento ---------- */
-const heroSlides = [...document.querySelectorAll(".hero-bg")];
-const heroDots = [...document.querySelectorAll(".hero-dots span")];
-let activeHeroSlide = 0;
-if (heroSlides.length > 1) {
-  setInterval(() => {
-    heroSlides[activeHeroSlide].classList.remove("is-active");
-    heroDots[activeHeroSlide]?.classList.remove("is-active");
-    activeHeroSlide = (activeHeroSlide + 1) % heroSlides.length;
-    heroSlides[activeHeroSlide].classList.add("is-active");
-    heroDots[activeHeroSlide]?.classList.add("is-active");
-  }, 5200);
-}
-
-/* ---------- Parallax liviano ---------- */
-let ticking = false;
-function updateParallax() {
-  const viewportCenter = window.innerHeight / 2;
-  document.querySelectorAll("[data-parallax-section]").forEach(section => {
-    const rect = section.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-    const offset = (rect.top + rect.height / 2 - viewportCenter) * -0.08;
-    section.style.setProperty("--parallax-y", `${Math.max(-36, Math.min(36, offset))}px`);
-  });
-  ticking = false;
-}
-function requestParallax() {
-  if (ticking) return;
-  ticking = true;
-  requestAnimationFrame(updateParallax);
-}
-window.addEventListener("scroll", requestParallax, { passive: true });
-window.addEventListener("resize", requestParallax);
-requestParallax();
-
-/* ---------- Scroll reveal ---------- */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); revealObserver.unobserve(e.target); } });
-}, { threshold: 0.15 });
-function observeReveals(){
-  document.querySelectorAll(".reveal:not(.visible)").forEach((el, index) => {
-    el.style.setProperty("--stagger-delay", `${Math.min(index * 70, 420)}ms`);
-    revealObserver.observe(el);
-  });
-}
-observeReveals();
-
-/* ---------- Cards 3D sutiles ---------- */
-function enhanceProductTilt(){
-  document.querySelectorAll(".card-producto:not([data-tilt-ready])").forEach(card => {
-    card.dataset.tiltReady = "true";
-    card.addEventListener("pointermove", event => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const rect = card.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - .5;
-      const y = (event.clientY - rect.top) / rect.height - .5;
-      card.classList.add("is-tilting");
-      card.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg) translateY(-6px)`;
-    });
-    card.addEventListener("pointerleave", () => {
-      card.classList.remove("is-tilting");
-      card.style.transform = "";
-    });
-  });
-}
-
-/* ---------- Helpers ---------- */
-function escapeHtml(str){
-  return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
-}
-function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "…" : str; }
-
-/* ---------- Estado global de filtros ---------- */
-let PRODUCTOS = [];
-let CATEGORIAS = [];
-let CANTONES = [];
-
-/* ---------- Cargar categorías ---------- */
-async function cargarCategorias(){
-  const { data, error } = await db.from("categorias").select("*").order("orden");
-  const grid = document.getElementById("catGrid");
-  const selectCat = document.getElementById("fCategoria");
-  if (error || !data || data.length === 0){
-    grid.innerHTML = `<div class="empty-state">Aún no hay categorías cargadas. Ingresa al panel de administración para crear la primera.</div>`;
-    return;
-  }
-  CATEGORIAS = data;
-  grid.innerHTML = data.map(c => `
-    <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${urlImagenCategoria(c.imagen_url, c.nombre)}" alt="${escapeHtml(c.nombre)}" loading="lazy">
-      <div class="cat-card-label">
-        <h3>${escapeHtml(c.nombre)}</h3>
-        <span>Ver productos</span>
-      </div>
+<div class="app producer-app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">Loja<span>nova</span></div>
+    <div style="padding:0 10px 20px">
+      <div style="color:#fff;font-weight:700;font-size:1rem" id="producerName">—</div>
+      <div style="color:var(--dorado);font-size:.82rem;margin-top:2px" id="producerBusiness">—</div>
     </div>
-  `).join("");
-  selectCat.innerHTML = `<option value="">Categoría</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
-  grid.querySelectorAll(".cat-card").forEach(card => {
-    card.addEventListener("click", () => {
-      selectCat.value = card.dataset.cat;
-      document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
-      renderProductos();
-    });
-  });
-  observeReveals();
-}
+    <nav>
+      <a href="#panel-perfil" class="nav-link"><i data-lucide="user" class="icon"></i> Mi perfil</a>
+      <a href="#panel-productos" class="nav-link"><i data-lucide="package" class="icon"></i> Mis productos</a>
+      <a href="../index.html" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio público</a>
+    </nav>
+    <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesión</button>
+  </aside>
 
-/* ---------- Cargar cantones ---------- */
-async function cargarCantones(){
-  const { data, error } = await db.from("cantones").select("*").order("orden");
-  const selectCanton = document.getElementById("fCanton");
-  const pillList = document.getElementById("cantonList");
-  if (error || !data) return;
-  CANTONES = data;
-  selectCanton.innerHTML = `<option value="">Cantón</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
-  pillList.innerHTML = data.map(c => `<span class="canton-pill">${escapeHtml(c.nombre)}</span>`).join("");
-}
+  <main class="main">
+    <div class="main-header">
+      <div><h1>Mi panel de productor</h1><p>Administra tu perfil y tus productos en Lojanova</p></div>
+    </div>
 
-/* ---------- Cargar y renderizar productos ---------- */
-async function cargarProductos(){
-  const { data, error } = await db
-    .from("productos")
-    .select("*, categorias(nombre), cantones(nombre)")
-    .eq("activo", true)
-    .order("created_at", { ascending: false });
-  if (error || !data){
-    document.getElementById("productGrid").innerHTML = `<div class="empty-state">No se pudieron cargar los productos.</div>`;
-    return;
-  }
-  PRODUCTOS = data;
-  renderProductos();
-}
+    <div id="statusBox" class="panel-message" style="display:none"></div>
+    <div id="estadoBox" class="panel-message" style="display:none"></div>
 
-function renderProductos(){
-  const grid = document.getElementById("productGrid");
-  const q = document.getElementById("fBuscar").value.trim().toLowerCase();
-  const cat = document.getElementById("fCategoria").value;
-  const canton = document.getElementById("fCanton").value;
-  const tipo = document.getElementById("fTipo").value;
+    <div class="kpi-grid producer-kpis">
+      <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos registrados</div></div>
+      <div class="kpi-card"><div class="kpi-num" id="kpiPublicados">—</div><div class="kpi-label">Productos publicados</div></div>
+    </div>
 
-  let lista = PRODUCTOS.filter(p => {
-    if (cat && p.categoria_id !== cat) return false;
-    if (canton && p.canton_id !== canton) return false;
-    if (tipo === "exportacion" && !p.es_exportacion) return false;
-    if (tipo === "artesanal" && !p.es_artesanal) return false;
-    if (q && !(`${p.nombre} ${p.descripcion_corta}`.toLowerCase().includes(q))) return false;
-    return true;
-  });
+    <!-- ============ MI PERFIL ============ -->
+    <section id="panel-perfil" class="panel panel-section">
+      <div class="panel-title"><h3>Mi perfil</h3></div>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="field"><label>Nombre completo *</label><input type="text" id="perfilNombre" required></div>
+          <div class="field"><label>Nombre del emprendimiento *</label><input type="text" id="perfilEmprendimiento" required></div>
+          <div class="field"><label>Cantón</label><select id="perfilCanton"></select></div>
+          <div class="field"><label>Años de experiencia</label><input type="number" id="perfilAnios" min="0"></div>
+          <div class="field full"><label>Historia</label><textarea id="perfilHistoria"></textarea></div>
+          <div class="field"><label>Teléfono</label><input type="text" id="perfilTelefono"></div>
+          <div class="field"><label>WhatsApp (con código de país)</label><input type="text" id="perfilWhatsapp" placeholder="593999999999"></div>
+          <div class="field"><label>Correo</label><input type="email" id="perfilCorreo"></div>
+          <div class="field"><label>Ubicación</label><input type="text" id="perfilUbicacion"></div>
+          <div class="field"><label>Facebook (URL)</label><input type="text" id="perfilFacebook"></div>
+          <div class="field"><label>Instagram (URL)</label><input type="text" id="perfilInstagram"></div>
+          <div class="field full"><label>URL de fotografía</label><input type="text" id="perfilFoto" placeholder="https://..."></div>
+        </div>
+        <div class="modal-actions" style="margin-top:20px">
+          <button type="submit" class="btn btn-primary auto-width">Guardar perfil</button>
+        </div>
+      </form>
+    </section>
 
-  if (PRODUCTOS.length === 0){
-    grid.innerHTML = `<div class="empty-state">Todavía no hay productos publicados. Vuelve pronto — estamos incorporando nuevos emprendedores cada semana.</div>`;
-    return;
-  }
-  if (lista.length === 0){
-    grid.innerHTML = `<div class="empty-state">No encontramos productos con esos filtros. Prueba ajustando la búsqueda.</div>`;
-    return;
-  }
-
-  grid.innerHTML = lista.map(p => `
-    <article class="card-producto reveal">
-      <div class="thumb">
-        <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
-        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
+    <!-- ============ MIS PRODUCTOS ============ -->
+    <section id="panel-productos" class="panel panel-section">
+      <div class="panel-title">
+        <h3>Mis productos</h3>
+        <button class="btn btn-primary auto-width btn-sm" id="btnNuevoProducto"><i data-lucide="plus" class="icon"></i> Nuevo producto</button>
       </div>
-      <div class="card-body">
-        <div class="card-meta"><span>${escapeHtml(p.categorias?.nombre || '')}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
-        <h3>${escapeHtml(p.nombre)}</h3>
-        <p>${escapeHtml(cortar(p.descripcion_corta, 100))}</p>
-        <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
-        <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
-      </div>
-    </article>
-  `).join("");
-  observeReveals();
-  enhanceProductTilt();
-}
+      <table>
+        <thead><tr><th></th><th>Nombre</th><th>Categoría</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tablaProductos"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
+      </table>
+    </section>
 
-["fBuscar","fCategoria","fCanton","fTipo"].forEach(id => {
-  document.getElementById(id)?.addEventListener("input", renderProductos);
-  document.getElementById(id)?.addEventListener("change", renderProductos);
-});
+    <!-- ============ FORMULARIO DE PRODUCTO ============ -->
+    <section class="panel panel-section" id="productFormPanel">
+      <div class="panel-title"><h3 id="productFormTitle">Nuevo producto</h3></div>
+      <form id="productForm">
+        <input type="hidden" id="productoId">
+        <div class="form-grid">
+          <div class="field full"><label>Nombre del producto *</label><input type="text" id="productoNombre" required></div>
+          <div class="field"><label>Categoría *</label><select id="productoCategoria" required></select></div>
+          <div class="field"><label>Cantón *</label><select id="productoCanton" required></select></div>
+          <div class="field full"><label>Descripción corta (para tarjeta)</label><textarea id="productoDescCorta" maxlength="160"></textarea></div>
+          <div class="field full"><label>Descripción extensa</label><textarea id="productoDescLarga"></textarea></div>
+          <div class="field full"><label>Proceso de elaboración</label><textarea id="productoProceso"></textarea></div>
+          <div class="field"><label>Ingredientes / materiales</label><input type="text" id="productoIngredientes"></div>
+          <div class="field"><label>Presentación</label><input type="text" id="productoPresentacion"></div>
+          <div class="field"><label>Disponibilidad</label><input type="text" id="productoDisponibilidad"></div>
+          <div class="field"><label>Mercados donde se comercializa</label><input type="text" id="productoMercados"></div>
+          <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="productoEtiquetas" placeholder="orgánico, gourmet, exportación"></div>
+          <div class="field full"><label>URL de imagen principal</label><input type="text" id="productoImagen" placeholder="https://..."></div>
+          <div class="field full">
+            <div class="checkbox-row"><input type="checkbox" id="productoExportacion"><label for="productoExportacion">Producto de exportación</label></div>
+            <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="productoArtesanal"><label for="productoArtesanal">Producto artesanal</label></div>
+            <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="productoActivo" checked><label for="productoActivo">Publicado (visible en el sitio)</label></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline auto-width" id="btnCancelarProducto">Cancelar</button>
+          <button type="submit" class="btn btn-primary auto-width">Guardar producto</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
 
-/* ---------- Emprendedores ---------- */
-async function cargarEmprendedores(){
-  const { data, error } = await db
-    .from("emprendedores")
-    .select("*, cantones(nombre)")
-    .eq("activo", true)
-    .order("created_at", { ascending: false })
-    .limit(6);
-  const grid = document.getElementById("empGrid");
-  if (error || !data || data.length === 0){
-    grid.innerHTML = `<div class="empty-state">Aún no hay emprendedores publicados.</div>`;
-    return;
-  }
-  grid.innerHTML = data.map(e => `
-    <article class="card-emp reveal">
-      <div class="thumb"><img src="${urlImagen(e.foto_url, "producer")}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
-      <div class="card-body">
-        <div class="emprend">${escapeHtml(e.emprendimiento)}</div>
-        <h3>${escapeHtml(e.nombre)}</h3>
-        <p>${escapeHtml(cortar(e.historia, 110))}</p>
-        <div class="card-meta"><span>${escapeHtml(e.cantones?.nombre || '')}</span><span>${e.anios_experiencia ? e.anios_experiencia + ' años' : ''}</span></div>
-      </div>
-    </article>
-  `).join("");
-  observeReveals();
-}
-
-/* ---------- Noticias ---------- */
-const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
-async function cargarNoticias(){
-  const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(6);
-  const grid = document.getElementById("newsGrid");
-  if (error || !data || data.length === 0){
-    grid.innerHTML = `<div class="empty-state">Aún no hay noticias publicadas.</div>`;
-    return;
-  }
-  grid.innerHTML = data.map(n => `
-    <article class="card-news reveal">
-      <div class="thumb"><img src="${urlImagen(n.imagen_url, "news")}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
-      <div class="card-body">
-        <span class="tipo">${TIPO_LABEL[n.tipo] || 'Noticia'}</span>
-        <h3>${escapeHtml(n.titulo)}</h3>
-        <p>${escapeHtml(cortar(n.resumen, 90))}</p>
-        ${n.fecha_evento ? `<div class="fecha">${new Date(n.fecha_evento).toLocaleDateString('es-EC', { day:'numeric', month:'long', year:'numeric' })}</div>` : ''}
-      </div>
-    </article>
-  `).join("");
-  observeReveals();
-}
-
-/* ---------- Estadísticas ---------- */
-async function cargarStats(){
-  const [emp, prod, cant, cat] = await Promise.all([
-    db.from("emprendedores").select("id", { count: "exact", head: true }).eq("activo", true),
-    db.from("productos").select("id", { count: "exact", head: true }).eq("activo", true),
-    db.from("cantones").select("id", { count: "exact", head: true }),
-    db.from("categorias").select("id", { count: "exact", head: true }),
-  ]);
-  const vals = { emprendedores: emp.count || 0, productos: prod.count || 0, cantones: cant.count || 0, categorias: cat.count || 0 };
-  document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = vals[el.dataset.stat] ?? "0"; });
-  const heroProductos = document.getElementById("heroProductos");
-  const heroEmp = document.getElementById("heroEmp");
-  if (heroProductos) heroProductos.textContent = vals.productos;
-  if (heroEmp) heroEmp.textContent = vals.emprendedores;
-}
-
-/* ---------- Init ---------- */
-(async function init(){
-  lucide.createIcons();
-  await Promise.all([cargarCategorias(), cargarCantones(), cargarProductos(), cargarEmprendedores(), cargarNoticias(), cargarStats()]);
-})();
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/mi-panel.js"></script>
+<script>
+document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
+</script>
+</body>
+</html>

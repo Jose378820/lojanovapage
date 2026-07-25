@@ -26,6 +26,55 @@ function agregarDato(dl, label, valor){
   dl.appendChild(div);
 }
 
+const SITE_URL = "https://lojanova.gob.ec";
+
+function setMeta(id, valor){
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.tagName === "TITLE") el.textContent = valor;
+  else if (el.tagName === "LINK") el.href = valor;
+  else el.setAttribute("content", valor);
+}
+
+function actualizarSEO(p){
+  const titulo = `${p.nombre} — Lojanova`;
+  const descripcion = (p.descripcion_corta || p.descripcion_larga || `Producto lojano elaborado por ${p.emprendedores?.emprendimiento || "un emprendedor de Loja"}.`).slice(0, 160);
+  const url = `${SITE_URL}/producto.html?slug=${encodeURIComponent(p.slug)}`;
+  const imagen = urlImagen(p.imagen_principal_url) || `${SITE_URL}/img/og-image.jpg`;
+
+  document.title = titulo;
+  setMeta("pageTitle", titulo);
+  setMeta("metaDescription", descripcion);
+  setMeta("canonicalLink", url);
+  setMeta("ogUrl", url);
+  setMeta("ogTitle", titulo);
+  setMeta("ogDescription", descripcion);
+  setMeta("ogImage", imagen);
+  setMeta("twitterTitle", titulo);
+  setMeta("twitterDescription", descripcion);
+  setMeta("twitterImage", imagen);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": p.nombre,
+    "description": descripcion,
+    "image": imagen,
+    "url": url,
+    "category": p.categorias?.nombre || undefined,
+    "brand": p.emprendedores?.emprendimiento ? { "@type": "Brand", "name": p.emprendedores.emprendimiento } : undefined,
+    "manufacturer": p.emprendedores?.nombre ? { "@type": "Person", "name": p.emprendedores.nombre } : undefined,
+    "offers": {
+      "@type": "Offer",
+      "availability": p.disponibilidad ? "https://schema.org/InStock" : "https://schema.org/LimitedAvailability",
+      "areaServed": p.cantones?.nombre || "Loja, Ecuador",
+      "seller": p.emprendedores?.emprendimiento ? { "@type": "Organization", "name": p.emprendedores.emprendimiento } : undefined
+    }
+  };
+  const scriptTag = document.getElementById("productJsonLd");
+  if (scriptTag) scriptTag.textContent = JSON.stringify(jsonLd);
+}
+
 async function cargarProducto(){
   const params = new URLSearchParams(location.search);
   const slug = params.get("slug");
@@ -52,7 +101,8 @@ async function cargarProducto(){
 
   if (error || !p){ notFound.style.display = "block"; return; }
 
-  document.title = `${p.nombre} — Lojanova`;
+  actualizarSEO(p);
+
   document.getElementById("bcNombre").textContent = p.nombre;
   document.getElementById("metaCategoria").textContent = p.categorias?.nombre || "";
   document.getElementById("metaCanton").textContent = p.cantones?.nombre || "";
