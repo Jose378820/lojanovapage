@@ -10,6 +10,10 @@ document.getElementById("navToggle")?.addEventListener("click", () => document.g
 function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
+function lnTexto(es, en){
+  const lang = localStorage.getItem("ln_lang") || "es";
+  return (lang === "en" && en) ? en : es;
+}
 
 function setBloque(id, valor){
   const el = document.getElementById(id);
@@ -37,8 +41,9 @@ function setMeta(id, valor){
 }
 
 function actualizarSEO(p){
-  const titulo = `${p.nombre} — Lojanova`;
-  const descripcion = (p.descripcion_corta || p.descripcion_larga || `Producto lojano elaborado por ${p.emprendedores?.emprendimiento || "un emprendedor de Loja"}.`).slice(0, 160);
+  const nombreSEO = lnTexto(p.nombre, p.nombre_en);
+  const titulo = `${nombreSEO} — Lojanova`;
+  const descripcion = (lnTexto(p.descripcion_corta, p.descripcion_corta_en) || lnTexto(p.descripcion_larga, p.descripcion_larga_en) || `Producto lojano elaborado por ${p.emprendedores?.emprendimiento || "un emprendedor de Loja"}.`).slice(0, 160);
   const url = `${SITE_URL}/producto.html?slug=${encodeURIComponent(p.slug)}`;
   const imagen = urlImagen(p.imagen_principal_url) || `${SITE_URL}/img/og-image.jpg`;
 
@@ -57,11 +62,11 @@ function actualizarSEO(p){
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": p.nombre,
+    "name": nombreSEO,
     "description": descripcion,
     "image": imagen,
     "url": url,
-    "category": p.categorias?.nombre || undefined,
+    "category": lnTexto(p.categorias?.nombre, p.categorias?.nombre_en) || undefined,
     "brand": p.emprendedores?.emprendimiento ? { "@type": "Brand", "name": p.emprendedores.emprendimiento } : undefined,
     "manufacturer": p.emprendedores?.nombre ? { "@type": "Person", "name": p.emprendedores.nombre } : undefined,
     "offers": {
@@ -86,7 +91,7 @@ async function cargarProducto(){
 
   const { data: p, error } = await db
     .from("productos")
-    .select("*, categorias(nombre), cantones(nombre), emprendedores(*, cantones(nombre))")
+    .select("*, categorias(nombre, nombre_en), cantones(nombre), emprendedores(*, cantones(nombre))")
     .eq("slug", slug)
     .eq("activo", true)
     .single();
@@ -103,10 +108,11 @@ async function cargarProducto(){
 
   actualizarSEO(p);
 
-  document.getElementById("bcNombre").textContent = p.nombre;
-  document.getElementById("metaCategoria").textContent = p.categorias?.nombre || "";
+  const nombreMostrar = lnTexto(p.nombre, p.nombre_en);
+  document.getElementById("bcNombre").textContent = nombreMostrar;
+  document.getElementById("metaCategoria").textContent = lnTexto(p.categorias?.nombre || "", p.categorias?.nombre_en);
   document.getElementById("metaCanton").textContent = p.cantones?.nombre || "";
-  document.getElementById("nombreProducto").textContent = p.nombre;
+  document.getElementById("nombreProducto").textContent = nombreMostrar;
 
   document.getElementById("tagRow").innerHTML = (p.etiquetas || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
 
@@ -114,9 +120,9 @@ async function cargarProducto(){
   const todasImgs = [p.imagen_principal_url, ...(imagenes || []).map(i => i.imagen_url)].filter(Boolean);
   const imgPrincipal = document.getElementById("imgPrincipal");
   imgPrincipal.src = urlImagen(todasImgs[0]);
-  imgPrincipal.alt = p.nombre;
+  imgPrincipal.alt = nombreMostrar;
   const thumbs = document.getElementById("galleryThumbs");
-  thumbs.innerHTML = todasImgs.map((url, i) => `<img src="${escapeHtml(urlImagen(url))}" data-i="${i}" class="${i===0?'active':''}" alt="Imagen ${i+1} de ${escapeHtml(p.nombre)}">`).join("");
+  thumbs.innerHTML = todasImgs.map((url, i) => `<img src="${escapeHtml(urlImagen(url))}" data-i="${i}" class="${i===0?'active':''}" alt="Imagen ${i+1} de ${escapeHtml(nombreMostrar)}">`).join("");
   thumbs.querySelectorAll("img").forEach(img => {
     img.addEventListener("click", () => {
       imgPrincipal.src = img.src;
@@ -125,7 +131,7 @@ async function cargarProducto(){
     });
   });
 
-  setBloque("descLarga", p.descripcion_larga || p.descripcion_corta);
+  setBloque("descLarga", lnTexto(p.descripcion_larga, p.descripcion_larga_en) || lnTexto(p.descripcion_corta, p.descripcion_corta_en));
   setBloque("historia", p.historia);
   setBloque("proceso", p.proceso_elaboracion);
 

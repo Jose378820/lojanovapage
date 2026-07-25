@@ -222,6 +222,9 @@ window.editarProducto = function(id){
   document.getElementById("p_emprendedor").value = p.emprendedor_id || "";
   document.getElementById("p_desc_corta").value = p.descripcion_corta || "";
   document.getElementById("p_desc_larga").value = p.descripcion_larga || "";
+  document.getElementById("p_nombre_en").value = p.nombre_en || "";
+  document.getElementById("p_desc_corta_en").value = p.descripcion_corta_en || "";
+  document.getElementById("p_desc_larga_en").value = p.descripcion_larga_en || "";
   document.getElementById("p_historia").value = p.historia || "";
   document.getElementById("p_proceso").value = p.proceso_elaboracion || "";
   document.getElementById("p_ingredientes").value = p.ingredientes || "";
@@ -259,6 +262,9 @@ document.getElementById("formProducto").addEventListener("submit", async (e) => 
     emprendedor_id: document.getElementById("p_emprendedor").value || null,
     descripcion_corta: document.getElementById("p_desc_corta").value.trim(),
     descripcion_larga: document.getElementById("p_desc_larga").value.trim(),
+    nombre_en: document.getElementById("p_nombre_en").value.trim() || null,
+    descripcion_corta_en: document.getElementById("p_desc_corta_en").value.trim() || null,
+    descripcion_larga_en: document.getElementById("p_desc_larga_en").value.trim() || null,
     historia: document.getElementById("p_historia").value.trim(),
     proceso_elaboracion: document.getElementById("p_proceso").value.trim(),
     ingredientes: document.getElementById("p_ingredientes").value.trim(),
@@ -404,6 +410,7 @@ window.editarCategoria = function(id){
   document.getElementById("tituloModalCategoria").textContent = "Editar categoría";
   document.getElementById("c_id").value = c.id;
   document.getElementById("c_nombre").value = c.nombre || "";
+  document.getElementById("c_nombre_en").value = c.nombre_en || "";
   document.getElementById("c_orden").value = c.orden ?? 0;
   document.getElementById("c_descripcion").value = c.descripcion || "";
   document.getElementById("c_imagen").value = c.imagen_url || "";
@@ -423,6 +430,7 @@ document.getElementById("formCategoria").addEventListener("submit", async (e) =>
   const nombre = document.getElementById("c_nombre").value.trim();
   const payload = {
     nombre,
+    nombre_en: document.getElementById("c_nombre_en").value.trim() || null,
     slug: slugify(nombre),
     orden: Number(document.getElementById("c_orden").value) || 0,
     descripcion: document.getElementById("c_descripcion").value.trim(),

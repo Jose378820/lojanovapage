@@ -87,6 +87,10 @@ function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
 function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "…" : str; }
+function lnTexto(es, en){
+  const lang = localStorage.getItem("ln_lang") || "es";
+  return (lang === "en" && en) ? en : es;
+}
 
 /* ---------- Estado global de filtros ---------- */
 let PRODUCTOS = [];
@@ -105,9 +109,9 @@ async function cargarCategorias(){
   CATEGORIAS = data;
   grid.innerHTML = data.map(c => `
     <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${escapeHtml(urlImagenCategoria(c.imagen_url, c.nombre))}" alt="${escapeHtml(c.nombre)}" loading="lazy">
+      <img src="${escapeHtml(urlImagenCategoria(c.imagen_url, c.nombre))}" alt="${escapeHtml(lnTexto(c.nombre, c.nombre_en))}" loading="lazy">
       <div class="cat-card-label">
-        <h3>${escapeHtml(c.nombre)}</h3>
+        <h3>${escapeHtml(lnTexto(c.nombre, c.nombre_en))}</h3>
         <span>Ver productos</span>
       </div>
     </div>
@@ -138,7 +142,7 @@ async function cargarCantones(){
 async function cargarProductos(){
   const { data, error } = await db
     .from("productos")
-    .select("*, categorias(nombre), cantones(nombre)")
+    .select("*, categorias(nombre, nombre_en), cantones(nombre)")
     .eq("activo", true)
     .order("created_at", { ascending: false });
   if (error || !data){
@@ -181,9 +185,9 @@ function renderProductos(){
         ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
       </div>
       <div class="card-body">
-        <div class="card-meta"><span>${escapeHtml(p.categorias?.nombre || '')}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
-        <h3>${escapeHtml(p.nombre)}</h3>
-        <p>${escapeHtml(cortar(p.descripcion_corta, 100))}</p>
+        <div class="card-meta"><span>${escapeHtml(lnTexto(p.categorias?.nombre || '', p.categorias?.nombre_en))}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
+        <h3>${escapeHtml(lnTexto(p.nombre, p.nombre_en))}</h3>
+        <p>${escapeHtml(cortar(lnTexto(p.descripcion_corta, p.descripcion_corta_en), 100))}</p>
         <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
         <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
       </div>

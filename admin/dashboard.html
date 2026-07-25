@@ -248,6 +248,12 @@
         <div class="field full"><label>Emprendedor *</label><select id="p_emprendedor" required></select></div>
         <div class="field full"><label>Descripción corta (para tarjeta)</label><textarea id="p_desc_corta" maxlength="160"></textarea></div>
         <div class="field full"><label>Descripción extensa</label><textarea id="p_desc_larga"></textarea></div>
+        <div class="field full" style="border-top:1px dashed #ccc;padding-top:12px;margin-top:4px">
+          <label style="font-weight:700">🇬🇧 English (opcional — para versión exportadora del sitio)</label>
+        </div>
+        <div class="field full"><label>Product name (EN)</label><input type="text" id="p_nombre_en"></div>
+        <div class="field full"><label>Short description (EN)</label><textarea id="p_desc_corta_en" maxlength="160"></textarea></div>
+        <div class="field full"><label>Full description (EN)</label><textarea id="p_desc_larga_en"></textarea></div>
         <div class="field full"><label>Historia del producto</label><textarea id="p_historia"></textarea></div>
         <div class="field full"><label>Proceso de elaboración</label><textarea id="p_proceso"></textarea></div>
         <div class="field"><label>Ingredientes / materiales</label><input type="text" id="p_ingredientes"></div>
@@ -311,6 +317,7 @@
       <input type="hidden" id="c_id">
       <div class="form-grid">
         <div class="field"><label>Nombre *</label><input type="text" id="c_nombre" required></div>
+        <div class="field"><label>Name (EN)</label><input type="text" id="c_nombre_en"></div>
         <div class="field"><label>Orden</label><input type="number" id="c_orden" value="0"></div>
         <div class="field full"><label>Descripción</label><textarea id="c_descripcion"></textarea></div>
         <div class="field full"><label>URL de imagen</label><input type="text" id="c_imagen" placeholder="https://..."></div>

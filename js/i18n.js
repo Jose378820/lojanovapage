@@ -108,11 +108,19 @@
     localStorage.setItem("ln_lang", lang);
   }
 
+  function refrescarDinamico(){
+    // Las tarjetas dinámicas (productos/categorías) ya tienen el texto
+    // "horneado" en el HTML, hay que volver a pintarlas
+    if (typeof renderProductos === "function") renderProductos();
+    if (typeof cargarCategorias === "function") cargarCategorias();
+  }
+
   const guardado = localStorage.getItem("ln_lang") || "es";
   aplicarIdioma(guardado);
 
   document.getElementById("langToggle")?.addEventListener("click", () => {
     const actual = localStorage.getItem("ln_lang") || "es";
     aplicarIdioma(actual === "es" ? "en" : "es");
+    refrescarDinamico();
   });
 })();
