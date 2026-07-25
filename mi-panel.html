@@ -60,7 +60,15 @@
           <div class="field"><label>Ubicación</label><input type="text" id="perfilUbicacion"></div>
           <div class="field"><label>Facebook (URL)</label><input type="text" id="perfilFacebook"></div>
           <div class="field"><label>Instagram (URL)</label><input type="text" id="perfilInstagram"></div>
-          <div class="field full"><label>URL de fotografía</label><input type="text" id="perfilFoto" placeholder="https://..."></div>
+          <div class="field full">
+            <label>Fotografía de perfil</label>
+            <input type="hidden" id="perfilFoto">
+            <input type="file" id="perfilFotoArchivo" accept="image/png,image/jpeg,image/webp">
+            <div id="perfilFotoPreviewWrap" style="margin-top:8px;display:none">
+              <img id="perfilFotoPreview" style="width:90px;height:90px;object-fit:cover;border-radius:10px" alt="">
+            </div>
+            <small id="perfilFotoEstado" style="display:block;margin-top:6px;color:#666"></small>
+          </div>
         </div>
         <div class="modal-actions" style="margin-top:20px">
           <button type="submit" class="btn btn-primary auto-width">Guardar perfil</button>
@@ -97,7 +105,15 @@
           <div class="field"><label>Disponibilidad</label><input type="text" id="productoDisponibilidad"></div>
           <div class="field"><label>Mercados donde se comercializa</label><input type="text" id="productoMercados"></div>
           <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="productoEtiquetas" placeholder="orgánico, gourmet, exportación"></div>
-          <div class="field full"><label>URL de imagen principal</label><input type="text" id="productoImagen" placeholder="https://..."></div>
+          <div class="field full">
+            <label>Imagen principal del producto</label>
+            <input type="hidden" id="productoImagen">
+            <input type="file" id="productoImagenArchivo" accept="image/png,image/jpeg,image/webp">
+            <div id="productoImagenPreviewWrap" style="margin-top:8px;display:none">
+              <img id="productoImagenPreview" style="width:120px;height:90px;object-fit:cover;border-radius:10px" alt="">
+            </div>
+            <small id="productoImagenEstado" style="display:block;margin-top:6px;color:#666"></small>
+          </div>
           <div class="field full">
             <div class="checkbox-row"><input type="checkbox" id="productoExportacion"><label for="productoExportacion">Producto de exportación</label></div>
             <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="productoArtesanal"><label for="productoArtesanal">Producto artesanal</label></div>

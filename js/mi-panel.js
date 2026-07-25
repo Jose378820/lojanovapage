@@ -46,6 +46,59 @@ function slugify(str) {
     .toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+function mostrarPreview(wrapId, imgId, url) {
+  const wrap = document.getElementById(wrapId);
+  const img = document.getElementById(imgId);
+  if (!wrap || !img) return;
+  if (url) { img.src = url; wrap.style.display = "block"; }
+  else { wrap.style.display = "none"; img.src = ""; }
+}
+
+async function subirImagen(archivo, prefijo, { hiddenId, previewWrapId, previewImgId, estadoId }) {
+  const estado = document.getElementById(estadoId);
+  const MAX_MB = 4;
+  if (!archivo) return;
+  if (!["image/png", "image/jpeg", "image/webp"].includes(archivo.type)) {
+    estado.textContent = "Formato no permitido. Usa JPG, PNG o WEBP.";
+    estado.style.color = "#b3261e";
+    return;
+  }
+  if (archivo.size > MAX_MB * 1024 * 1024) {
+    estado.textContent = `La imagen pesa demasiado (máx. ${MAX_MB}MB).`;
+    estado.style.color = "#b3261e";
+    return;
+  }
+  estado.textContent = "Subiendo imagen…";
+  estado.style.color = "#666";
+  const ext = archivo.name.split(".").pop().toLowerCase();
+  const ruta = `productores/${EMPRENDEDOR.auth_user_id}/${prefijo}-${Date.now()}.${ext}`;
+  const { error } = await db.storage.from(BUCKET).upload(ruta, archivo, { upsert: true });
+  if (error) {
+    estado.textContent = "No se pudo subir la imagen: " + error.message;
+    estado.style.color = "#b3261e";
+    return;
+  }
+  const url = urlImagen(ruta);
+  document.getElementById(hiddenId).value = url;
+  mostrarPreview(previewWrapId, previewImgId, url);
+  estado.textContent = "Imagen cargada ✓";
+  estado.style.color = "#1E5A3A";
+}
+
+document.getElementById("perfilFotoArchivo")?.addEventListener("change", (e) => {
+  subirImagen(e.target.files[0], "perfil", {
+    hiddenId: "perfilFoto", previewWrapId: "perfilFotoPreviewWrap",
+    previewImgId: "perfilFotoPreview", estadoId: "perfilFotoEstado",
+  });
+});
+
+document.getElementById("productoImagenArchivo")?.addEventListener("change", (e) => {
+  subirImagen(e.target.files[0], "producto", {
+    hiddenId: "productoImagen", previewWrapId: "productoImagenPreviewWrap",
+    previewImgId: "productoImagenPreview", estadoId: "productoImagenEstado",
+  });
+});
+
 function showStatus(message, type = "success") {
   statusBox.textContent = message;
   statusBox.className = type === "error" ? "error-msg panel-message" : "success-msg panel-message";
@@ -112,6 +165,7 @@ function pintarPerfil() {
   document.getElementById("perfilFacebook").value = EMPRENDEDOR.facebook || "";
   document.getElementById("perfilInstagram").value = EMPRENDEDOR.instagram || "";
   document.getElementById("perfilFoto").value = EMPRENDEDOR.foto_url || "";
+  mostrarPreview("perfilFotoPreviewWrap", "perfilFotoPreview", EMPRENDEDOR.foto_url);
 }
 
 async function cargarProductos() {
@@ -148,6 +202,10 @@ async function cargarProductos() {
 function resetProductForm() {
   productForm.reset();
   document.getElementById("productoId").value = "";
+  document.getElementById("productoImagen").value = "";
+  document.getElementById("productoImagenArchivo").value = "";
+  document.getElementById("productoImagenEstado").textContent = "";
+  mostrarPreview("productoImagenPreviewWrap", "productoImagenPreview", null);
   document.getElementById("productoActivo").checked = true;
   document.getElementById("productoArtesanal").checked = false;
   document.getElementById("productoExportacion").checked = false;
@@ -172,6 +230,7 @@ window.editarProducto = function(id) {
   document.getElementById("productoMercados").value = producto.mercados || "";
   document.getElementById("productoEtiquetas").value = (producto.etiquetas || []).join(", ");
   document.getElementById("productoImagen").value = producto.imagen_principal_url || "";
+  mostrarPreview("productoImagenPreviewWrap", "productoImagenPreview", producto.imagen_principal_url);
   document.getElementById("productoActivo").checked = !!producto.activo;
   document.getElementById("productoArtesanal").checked = !!producto.es_artesanal;
   document.getElementById("productoExportacion").checked = !!producto.es_exportacion;
