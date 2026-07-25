@@ -33,7 +33,61 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
     document.getElementById("sidebar").classList.remove("open");
   });
 });
-document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
+/* =========================================================
+   ANALÍTICAS
+   ========================================================= */
+async function cargarAnaliticas(){
+  const [diarias, horas, top, dispositivos, duraciones, hoy] = await Promise.all([
+    db.from("vista_visitas_diarias").select("*"),
+    db.from("vista_horas_pico").select("*"),
+    db.from("vista_paginas_top").select("*"),
+    db.from("vista_dispositivos").select("*"),
+    db.from("vista_duracion_sesiones").select("duracion_segundos"),
+    db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", new Date().toISOString().slice(0,10)),
+  ]);
+
+  document.getElementById("kpiVisitasHoy").textContent = hoy.count ?? 0;
+
+  const sesionesUnicas = new Set();
+  (diarias.data || []).forEach(d => sesionesUnicas.add(d.dia));
+  const totalUnicos = (diarias.data || []).reduce((acc, d) => acc + (d.visitantes_unicos || 0), 0);
+  document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos;
+
+  const dur = (duraciones.data || []).map(d => d.duracion_segundos || 0);
+  const promedio = dur.length ? Math.round(dur.reduce((a,b) => a+b, 0) / dur.length) : 0;
+  document.getElementById("kpiDuracionProm").textContent = promedio > 60 ? `${Math.floor(promedio/60)} min ${promedio%60}s` : `${promedio}s`;
+
+  const topData = top.data || [];
+  document.getElementById("kpiPaginaTop").textContent = topData[0]?.pagina || "—";
+  document.getElementById("tablaPaginasTop").innerHTML = topData.length
+    ? topData.map(p => `<tr><td>${escapeHtml(p.pagina)}</td><td>${p.visitas}</td></tr>`).join("")
+    : `<tr class="empty-row"><td colspan="2">Sin datos aún</td></tr>`;
+
+  renderChart("chartVisitasDiarias", "line", {
+    labels: (diarias.data || []).map(d => d.dia),
+    datasets: [{ label: "Visitas", data: (diarias.data || []).map(d => d.visitas), borderColor: "#1E5A3A", backgroundColor: "rgba(30,90,58,.15)", tension: .3, fill: true }]
+  });
+
+  const horasMap = new Array(24).fill(0);
+  (horas.data || []).forEach(h => horasMap[h.hora] = h.visitas);
+  renderChart("chartHoras", "bar", {
+    labels: horasMap.map((_, i) => `${i}h`),
+    datasets: [{ label: "Visitas", data: horasMap, backgroundColor: "#C9A15A" }]
+  });
+
+  renderChart("chartDispositivos", "doughnut", {
+    labels: (dispositivos.data || []).map(d => d.dispositivo),
+    datasets: [{ data: (dispositivos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a"] }]
+  });
+}
+
+const CHART_INSTANCES = {};
+function renderChart(canvasId, type, data){
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  if (CHART_INSTANCES[canvasId]) CHART_INSTANCES[canvasId].destroy();
+  CHART_INSTANCES[canvasId] = new Chart(ctx, { type, data, options: { responsive: true, plugins: { legend: { display: type === "doughnut" } } } });
+}
 
 /* ---------- Utilidades ---------- */
 function escapeHtml(str){
@@ -56,7 +110,7 @@ document.querySelectorAll(".modal-overlay").forEach(ov => {
 async function iniciarDashboard(){
   lucide.createIcons();
   await cargarListasBase();
-  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes()]);
+  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes(), cargarAnaliticas()]);
 }
 
 async function cargarListasBase(){

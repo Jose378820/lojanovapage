@@ -21,6 +21,7 @@
     <div class="logo">Loja<span>nova</span></div>
     <nav>
       <button data-view="resumen" class="active"><i data-lucide="layout-dashboard" class="icon"></i> Resumen</button>
+      <button data-view="analiticas"><i data-lucide="bar-chart-3" class="icon"></i> Analíticas</button>
       <button data-view="solicitudes"><i data-lucide="user-check" class="icon"></i> Solicitudes</button>
       <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
       <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
@@ -54,6 +55,38 @@
           4. Comparte novedades en la sección de Noticias.<br>
           Los cambios aparecen de inmediato en el sitio público.
         </p>
+      </div>
+    </section>
+
+    <!-- ============ ANALITICAS ============ -->
+    <section id="view-analiticas" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Analíticas</h1><p>Patrones de tráfico de los últimos 30 días</p></div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiPaginaTop">—</div><div class="kpi-label">Página más visitada</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Visitas por día</h3></div>
+        <canvas id="chartVisitasDiarias" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Hora del día en que se conectan</h3></div>
+        <canvas id="chartHoras" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Páginas más visitadas</h3></div>
+        <table>
+          <thead><tr><th>Página</th><th>Visitas</th></tr></thead>
+          <tbody id="tablaPaginasTop"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Dispositivos</h3></div>
+        <canvas id="chartDispositivos" height="90"></canvas>
       </div>
     </section>
 
@@ -269,6 +302,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js?v=20260723-admin-fix"></script>
 <script src="/js/supabase-client.js?v=20260723-admin-fix"></script>
