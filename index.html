@@ -30,7 +30,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
 <link rel="apple-touch-icon" href="/img/favicon-180.png">
-<link rel="stylesheet" href="css/style.css?v=20260722-hero-visible">
+<link rel="stylesheet" href="css/style.css?v=20260725-lang-toggle">
 <script src="https://unpkg.com/lucide@1.26.0"></script>
 
 <!-- Datos estructurados: Organización -->
@@ -59,15 +59,16 @@
   <div class="container">
     <a href="index.html" class="logo">Loja<span>nova</span></a>
     <nav class="nav-links" id="navLinks">
-      <a href="#sobre">Sobre el proyecto</a>
-      <a href="#categorias">Categorías</a>
-      <a href="#catalogo">Productos</a>
-      <a href="#emprendedores">Emprendedores</a>
-      <a href="#loja">Loja</a>
-      <a href="#noticias">Noticias</a>
-      <a href="login.html">Productores</a>
+      <a href="#sobre" data-i18n="nav.sobre">Sobre el proyecto</a>
+      <a href="#categorias" data-i18n="nav.categorias">Categorías</a>
+      <a href="#catalogo" data-i18n="nav.catalogo">Productos</a>
+      <a href="#emprendedores" data-i18n="nav.emprendedores">Emprendedores</a>
+      <a href="#loja" data-i18n="nav.loja">Loja</a>
+      <a href="#noticias" data-i18n="nav.noticias">Noticias</a>
+      <a href="login.html" data-i18n="nav.productores">Productores</a>
     </nav>
-    <a href="#catalogo" class="btn btn-primary btn-sm nav-cta">Explorar productos</a>
+    <a href="#catalogo" class="btn btn-primary btn-sm nav-cta" data-i18n="nav.cta">Explorar productos</a>
+    <button class="lang-toggle" id="langToggle" type="button" aria-label="Change language">EN</button>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -85,27 +86,27 @@
 
     <div class="container hero-content">
 
-        <span class="eyebrow hero-eyebrow">
+        <span class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">
             Plataforma Oficial · Prefectura de Loja
         </span>
 
         <h1 class="hero-title" aria-label="Descubre la riqueza productiva de Loja">
-            <span class="line"><span>Descubre la riqueza</span></span>
-            <span class="line accent"><span>productiva de Loja</span></span>
+            <span class="line"><span data-i18n="hero.title1">Descubre la riqueza</span></span>
+            <span class="line accent"><span data-i18n="hero.title2">productiva de Loja</span></span>
         </h1>
 
         <p class="hero-copy">
-            <span class="line"><span>Una vitrina digital que conecta a productores, artesanos y emprendedores</span></span>
-            <span class="line"><span>con compradores nacionales e internacionales, promoviendo el desarrollo económico de Loja.</span></span>
+            <span class="line"><span data-i18n="hero.copy1">Una vitrina digital que conecta a productores, artesanos y emprendedores</span></span>
+            <span class="line"><span data-i18n="hero.copy2">con compradores nacionales e internacionales, promoviendo el desarrollo económico de Loja.</span></span>
         </p>
 
         <div class="hero-actions">
 
-            <a href="#catalogo" class="btn btn-primary magnetic">
+            <a href="#catalogo" class="btn btn-primary magnetic" data-i18n="hero.cta1">
                 Explorar catálogo
             </a>
 
-            <a href="#emprendedores" class="btn btn-outline magnetic">
+            <a href="#emprendedores" class="btn btn-outline magnetic" data-i18n="hero.cta2">
                 Conocer emprendedores
             </a>
 
@@ -115,22 +116,22 @@
 
             <div class="hero-stat">
                 <strong>16</strong>
-                <span>Cantones</span>
+                <span data-i18n="hero.stat.cantones">Cantones</span>
             </div>
 
             <div class="hero-stat">
                 <strong id="heroProductos">+</strong>
-                <span>Productos</span>
+                <span data-i18n="hero.stat.productos">Productos</span>
             </div>
 
             <div class="hero-stat">
                 <strong id="heroEmp">+</strong>
-                <span>Emprendedores</span>
+                <span data-i18n="hero.stat.emprendedores">Emprendedores</span>
             </div>
 
             <div class="hero-stat">
                 <strong>100%</strong>
-                <span>Lojano</span>
+                <span data-i18n="hero.stat.lojano">Lojano</span>
             </div>
 
         </div>
@@ -141,7 +142,7 @@
 
         <div class="scroll-line"></div>
 
-        <span>SCROLL</span>
+        <span data-i18n="hero.scroll">SCROLL</span>
 
     </div>
 
@@ -160,15 +161,15 @@
       <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=1200" alt="Paisaje agrícola de la provincia de Loja">
     </div>
     <div class="about-text reveal">
-      <span class="eyebrow">Sobre el proyecto</span>
-      <h2>Una iniciativa de la Prefectura de Loja</h2>
-      <p>Lojanova es la plataforma oficial que conecta la riqueza productiva de la provincia con compradores, distribuidores, turistas y público general, a nivel nacional e internacional.</p>
-      <p>No es una tienda en línea: es una vitrina digital pensada para dar visibilidad a cada emprendedor y facilitar el contacto directo, fortaleciendo la economía local y proyectando el talento lojano al mundo.</p>
+      <span class="eyebrow" data-i18n="about.eyebrow">Sobre el proyecto</span>
+      <h2 data-i18n="about.title">Una iniciativa de la Prefectura de Loja</h2>
+      <p data-i18n="about.p1">Lojanova es la plataforma oficial que conecta la riqueza productiva de la provincia con compradores, distribuidores, turistas y público general, a nivel nacional e internacional.</p>
+      <p data-i18n="about.p2">No es una tienda en línea: es una vitrina digital pensada para dar visibilidad a cada emprendedor y facilitar el contacto directo, fortaleciendo la economía local y proyectando el talento lojano al mundo.</p>
       <div class="stats-grid" id="statsGrid">
-        <div class="stat-card"><div class="stat-num" data-stat="emprendedores">—</div><div class="stat-label">Emprendedores</div></div>
-        <div class="stat-card"><div class="stat-num" data-stat="productos">—</div><div class="stat-label">Productos</div></div>
-        <div class="stat-card"><div class="stat-num" data-stat="cantones">—</div><div class="stat-label">Cantones participantes</div></div>
-        <div class="stat-card"><div class="stat-num" data-stat="categorias">—</div><div class="stat-label">Categorías</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="emprendedores">—</div><div class="stat-label" data-i18n="about.stat.emprendedores">Emprendedores</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="productos">—</div><div class="stat-label" data-i18n="about.stat.productos">Productos</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="cantones">—</div><div class="stat-label" data-i18n="about.stat.cantones">Cantones participantes</div></div>
+        <div class="stat-card"><div class="stat-num" data-stat="categorias">—</div><div class="stat-label" data-i18n="about.stat.categorias">Categorías</div></div>
       </div>
     </div>
   </div>
@@ -178,9 +179,9 @@
 <section id="categorias" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
-      <span class="eyebrow">Explora por categoría</span>
-      <h2>La riqueza productiva de Loja</h2>
-      <p>Desde el café de altura hasta la cerámica artesanal: doce categorías que reúnen lo mejor de la provincia.</p>
+      <span class="eyebrow" data-i18n="cat.eyebrow">Explora por categoría</span>
+      <h2 data-i18n="cat.title">La riqueza productiva de Loja</h2>
+      <p data-i18n="cat.copy">Desde el café de altura hasta la cerámica artesanal: doce categorías que reúnen lo mejor de la provincia.</p>
     </div>
     <div class="cat-grid" id="catGrid">
       <!-- Las categorías se cargan dinámicamente desde Supabase -->
@@ -192,19 +193,19 @@
 <section id="catalogo" class="catalog" data-parallax-section>
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Catálogo</span>
-      <h2>Productos destacados</h2>
-      <p>Un showroom permanente de la oferta productiva lojana, lista para conectar con el mundo.</p>
+      <span class="eyebrow" data-i18n="catalogo.eyebrow">Catálogo</span>
+      <h2 data-i18n="catalogo.title">Productos destacados</h2>
+      <p data-i18n="catalogo.copy">Un showroom permanente de la oferta productiva lojana, lista para conectar con el mundo.</p>
     </div>
 
     <div class="filters reveal">
-      <input type="text" id="fBuscar" placeholder="Buscar producto...">
-      <select id="fCategoria"><option value="">Categoría</option></select>
-      <select id="fCanton"><option value="">Cantón</option></select>
+      <input type="text" id="fBuscar" placeholder="Buscar producto..." data-i18n-placeholder="catalogo.buscar">
+      <select id="fCategoria"><option value="" data-i18n="catalogo.opt.categoria">Categoría</option></select>
+      <select id="fCanton"><option value="" data-i18n="catalogo.opt.canton">Cantón</option></select>
       <select id="fTipo">
-        <option value="">Tipo de emprendimiento</option>
-        <option value="exportacion">Producto de exportación</option>
-        <option value="artesanal">Producto artesanal</option>
+        <option value="" data-i18n="catalogo.opt.tipo">Tipo de emprendimiento</option>
+        <option value="exportacion" data-i18n="catalogo.opt.export">Producto de exportación</option>
+        <option value="artesanal" data-i18n="catalogo.opt.artesanal">Producto artesanal</option>
       </select>
     </div>
 
@@ -218,9 +219,9 @@
 <section id="emprendedores" class="soft-section" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
-      <span class="eyebrow">Rostros de Lojanova</span>
-      <h2>Emprendedores lojanos</h2>
-      <p>Historias de esfuerzo, tradición e innovación detrás de cada producto.</p>
+      <span class="eyebrow" data-i18n="emp.eyebrow">Rostros de Lojanova</span>
+      <h2 data-i18n="emp.title">Emprendedores lojanos</h2>
+      <p data-i18n="emp.copy">Historias de esfuerzo, tradición e innovación detrás de cada producto.</p>
     </div>
     <div class="emp-grid" id="empGrid">
       <div class="loading-spinner">Cargando emprendedores…</div>
@@ -232,9 +233,9 @@
 <section id="loja" class="loja-section" data-parallax-section>
   <div class="container loja-grid">
     <div class="reveal">
-      <span class="eyebrow">La provincia</span>
-      <h2>16 cantones, una sola tierra fértil</h2>
-      <p>Loja combina bosques secos, valles andinos y páramos australes: una geografía diversa que da origen a productos igual de diversos, desde el café orgánico hasta las artesanías en cerámica.</p>
+      <span class="eyebrow" data-i18n="loja.eyebrow">La provincia</span>
+      <h2 data-i18n="loja.title">16 cantones, una sola tierra fértil</h2>
+      <p data-i18n="loja.copy">Loja combina bosques secos, valles andinos y páramos australes: una geografía diversa que da origen a productos igual de diversos, desde el café orgánico hasta las artesanías en cerámica.</p>
       <div class="canton-list" id="cantonList" style="margin-top:32px"></div>
     </div>
     <div class="loja-media reveal">
@@ -247,15 +248,15 @@
 <section id="beneficios" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
-      <span class="eyebrow">Por qué Lojanova</span>
-      <h2>Beneficios de comprar lojano</h2>
+      <span class="eyebrow" data-i18n="ben.eyebrow">Por qué Lojanova</span>
+      <h2 data-i18n="ben.title">Beneficios de comprar lojano</h2>
     </div>
     <div class="benefits-grid">
-      <div class="benefit-card reveal"><i data-lucide="map-pin" class="benefit-icon"></i><h4>Productos locales</h4><p>Origen verificado, directo de la provincia de Loja.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="badge-check" class="benefit-icon"></i><h4>Calidad garantizada</h4><p>Emprendedores comprometidos con procesos de calidad.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="handshake" class="benefit-icon"></i><h4>Contacto directo</h4><p>Habla directamente con quien produce, sin intermediarios.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="trending-up" class="benefit-icon"></i><h4>Economía local</h4><p>Cada contacto impulsa el desarrollo de la provincia.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="globe" class="benefit-icon"></i><h4>Proyección internacional</h4><p>Un puente entre Loja y mercados de todo el mundo.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="map-pin" class="benefit-icon"></i><h4 data-i18n="ben.1.title">Productos locales</h4><p data-i18n="ben.1.copy">Origen verificado, directo de la provincia de Loja.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="badge-check" class="benefit-icon"></i><h4 data-i18n="ben.2.title">Calidad garantizada</h4><p data-i18n="ben.2.copy">Emprendedores comprometidos con procesos de calidad.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="handshake" class="benefit-icon"></i><h4 data-i18n="ben.3.title">Contacto directo</h4><p data-i18n="ben.3.copy">Habla directamente con quien produce, sin intermediarios.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="trending-up" class="benefit-icon"></i><h4 data-i18n="ben.4.title">Economía local</h4><p data-i18n="ben.4.copy">Cada contacto impulsa el desarrollo de la provincia.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="globe" class="benefit-icon"></i><h4 data-i18n="ben.5.title">Proyección internacional</h4><p data-i18n="ben.5.copy">Un puente entre Loja y mercados de todo el mundo.</p></div>
     </div>
   </div>
 </section>
@@ -264,9 +265,9 @@
 <section id="noticias" class="soft-section" data-parallax-section>
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Agenda</span>
-      <h2>Noticias y eventos</h2>
-      <p>Ferias, ruedas de negocio, capacitaciones y convocatorias para emprendedores lojanos.</p>
+      <span class="eyebrow" data-i18n="news.eyebrow">Agenda</span>
+      <h2 data-i18n="news.title">Noticias y eventos</h2>
+      <p data-i18n="news.copy">Ferias, ruedas de negocio, capacitaciones y convocatorias para emprendedores lojanos.</p>
     </div>
     <div class="news-grid" id="newsGrid">
       <div class="loading-spinner">Cargando noticias…</div>
@@ -277,9 +278,9 @@
 <!-- ===================== CTA FINAL ===================== -->
 <section>
   <div class="cta-final reveal">
-    <h2>¿Eres un emprendedor lojano?</h2>
-    <p>Súmate a Lojanova y lleva tus productos a nuevos mercados nacionales e internacionales.</p>
-    <a href="login.html" class="btn btn-primary cta-gold magnetic" data-track="cta_sumarme">Quiero sumarme</a>
+    <h2 data-i18n="ctaf.title">¿Eres un emprendedor lojano?</h2>
+    <p data-i18n="ctaf.copy">Súmate a Lojanova y lleva tus productos a nuevos mercados nacionales e internacionales.</p>
+    <a href="login.html" class="btn btn-primary cta-gold magnetic" data-track="cta_sumarme" data-i18n="ctaf.btn">Quiero sumarme</a>
   </div>
 </section>
 
@@ -289,7 +290,7 @@
     <div class="footer-grid">
       <div>
         <div class="footer-logo">Loja<span>nova</span></div>
-        <p style="max-width:280px;font-size:.9rem">Iniciativa de la Prefectura de Loja para promover la comercialización y visibilidad de los productos de la provincia.</p>
+        <p style="max-width:280px;font-size:.9rem" data-i18n="footer.tagline">Iniciativa de la Prefectura de Loja para promover la comercialización y visibilidad de los productos de la provincia.</p>
         <div class="footer-social">
           <a href="#" aria-label="Facebook"><i data-lucide="facebook" class="icon"></i></a>
           <a href="#" aria-label="Instagram"><i data-lucide="instagram" class="icon"></i></a>
@@ -297,44 +298,45 @@
         </div>
       </div>
       <div>
-        <h4>Mapa del sitio</h4>
+        <h4 data-i18n="footer.sitemap">Mapa del sitio</h4>
         <ul>
-          <li><a href="#sobre">Sobre el proyecto</a></li>
-          <li><a href="#categorias">Categorías</a></li>
-          <li><a href="#catalogo">Productos</a></li>
-          <li><a href="#emprendedores">Emprendedores</a></li>
-          <li><a href="#noticias">Noticias</a></li>
+          <li><a href="#sobre" data-i18n="nav.sobre">Sobre el proyecto</a></li>
+          <li><a href="#categorias" data-i18n="nav.categorias">Categorías</a></li>
+          <li><a href="#catalogo" data-i18n="nav.catalogo">Productos</a></li>
+          <li><a href="#emprendedores" data-i18n="nav.emprendedores">Emprendedores</a></li>
+          <li><a href="#noticias" data-i18n="nav.noticias">Noticias</a></li>
         </ul>
       </div>
       <div>
-        <h4>Institucional</h4>
+        <h4 data-i18n="footer.institucional">Institucional</h4>
         <ul>
-          <li><a href="#">Prefectura de Loja</a></li>
-          <li><a href="#">Aviso legal</a></li>
-          <li><a href="#">Política de privacidad</a></li>
-          <li><a href="admin/index.html">Acceso administrador</a></li>
+          <li><a href="#" data-i18n="footer.prefectura">Prefectura de Loja</a></li>
+          <li><a href="#" data-i18n="footer.aviso">Aviso legal</a></li>
+          <li><a href="#" data-i18n="footer.privacidad">Política de privacidad</a></li>
+          <li><a href="admin/index.html" data-i18n="footer.admin">Acceso administrador</a></li>
         </ul>
       </div>
       <div>
-        <h4>Contacto</h4>
+        <h4 data-i18n="footer.contacto">Contacto</h4>
         <ul>
-          <li>Prefectura de Loja, Ecuador</li>
+          <li data-i18n="footer.direccion">Prefectura de Loja, Ecuador</li>
           <li>contacto@lojanova.gob.ec</li>
           <li>+593 7 000 0000</li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Lojanova · Prefectura de Loja. Todos los derechos reservados.</span>
-      <span>Hecho en Loja, Ecuador 🇪🇨</span>
+      <span data-i18n="footer.rights">© 2026 Lojanova · Prefectura de Loja. Todos los derechos reservados.</span>
+      <span data-i18n="footer.made">Hecho en Loja, Ecuador 🇪🇨</span>
     </div>
   </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js?v=20260722-hero-visible"></script>
-<script src="js/supabase-client.js?v=20260722-hero-visible"></script>
-<script src="js/analytics.js?v=20260722-hero-visible"></script>
-<script src="js/main.js?v=20260722-hero-visible"></script>
+<script src="js/config.js?v=20260725-lang-toggle"></script>
+<script src="js/supabase-client.js?v=20260725-lang-toggle"></script>
+<script src="js/analytics.js?v=20260725-lang-toggle"></script>
+<script src="js/main.js?v=20260725-lang-toggle"></script>
+<script src="js/i18n.js"></script>
 </body>
 </html>

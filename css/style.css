@@ -867,3 +867,22 @@ section[data-parallax-section] > .container{
   .hero-dots{display:none}
   section[data-parallax-section] > .container{transform:none}
 }
+
+/* ---- Selector de idioma ---- */
+.lang-toggle{
+  border: 1.5px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .04em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: background .2s, color .2s;
+}
+.lang-toggle:hover{ background: currentColor; color: var(--verde-bosque, #1E5A3A); }
+@media (max-width: 860px){
+  .lang-toggle{ margin-left: 8px; padding: 5px 10px; font-size: .72rem; }
+}
