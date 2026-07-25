@@ -198,6 +198,20 @@ function renderProductos(){
   document.getElementById(id)?.addEventListener("change", renderProductos);
 });
 
+// Tracking de búsquedas (debounced) y filtros
+let lnBusquedaTimer;
+document.getElementById("fBuscar")?.addEventListener("input", (e) => {
+  clearTimeout(lnBusquedaTimer);
+  const termino = e.target.value.trim();
+  if (!termino) return;
+  lnBusquedaTimer = setTimeout(() => window.lnTrackBusqueda?.(termino), 800);
+});
+[["fCategoria","categoria"],["fCanton","canton"],["fTipo","tipo"]].forEach(([id, nombre]) => {
+  document.getElementById(id)?.addEventListener("change", (e) => {
+    if (e.target.value) window.lnTrackFiltro?.(nombre, e.target.value);
+  });
+});
+
 /* ---------- Emprendedores ---------- */
 async function cargarEmprendedores(){
   const { data, error } = await db

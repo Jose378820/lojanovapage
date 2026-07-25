@@ -68,6 +68,8 @@
         <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiPaginaTop">—</div><div class="kpi-label">Página más visitada</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiTasaRebote">—</div><div class="kpi-label">Tasa de rebote</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiScrollProm">—</div><div class="kpi-label">Scroll promedio</div></div>
       </div>
       <div class="panel">
         <div class="panel-title"><h3>Visitas por día</h3></div>
@@ -85,8 +87,58 @@
         </table>
       </div>
       <div class="panel">
+        <div class="panel-title"><h3>Productos más vistos</h3></div>
+        <table>
+          <thead><tr><th>Producto (slug)</th><th>Vistas</th></tr></thead>
+          <tbody id="tablaProductosTop"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
         <div class="panel-title"><h3>Dispositivos</h3></div>
         <canvas id="chartDispositivos" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Navegadores</h3></div>
+        <canvas id="chartNavegadores" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Sistemas operativos</h3></div>
+        <canvas id="chartSO" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Países</h3></div>
+        <table>
+          <thead><tr><th>País</th><th>Visitantes</th></tr></thead>
+          <tbody id="tablaPaises"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Ciudades</h3></div>
+        <table>
+          <thead><tr><th>Ciudad</th><th>País</th><th>Visitantes</th></tr></thead>
+          <tbody id="tablaCiudades"><tr class="empty-row"><td colspan="3">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Origen del tráfico</h3></div>
+        <table>
+          <thead><tr><th>Origen</th><th>Visitas</th></tr></thead>
+          <tbody id="tablaOrigenes"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Búsquedas más frecuentes</h3></div>
+        <table>
+          <thead><tr><th>Término</th><th>Veces</th></tr></thead>
+          <tbody id="tablaBusquedas"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Clics en botones clave</h3></div>
+        <table>
+          <thead><tr><th>Elemento</th><th>Clics</th></tr></thead>
+          <tbody id="tablaClics"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
       </div>
     </section>
 

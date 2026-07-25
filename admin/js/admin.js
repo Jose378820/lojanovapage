@@ -37,19 +37,27 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
    ANALÍTICAS
    ========================================================= */
 async function cargarAnaliticas(){
-  const [diarias, horas, top, dispositivos, duraciones, hoy] = await Promise.all([
+  const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
     db.from("vista_visitas_diarias").select("*"),
     db.from("vista_horas_pico").select("*"),
     db.from("vista_paginas_top").select("*"),
     db.from("vista_dispositivos").select("*"),
     db.from("vista_duracion_sesiones").select("duracion_segundos"),
     db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", new Date().toISOString().slice(0,10)),
+    db.from("vista_navegadores").select("*"),
+    db.from("vista_sistemas_operativos").select("*"),
+    db.from("vista_paises").select("*"),
+    db.from("vista_ciudades").select("*"),
+    db.from("vista_origenes_trafico").select("*"),
+    db.from("vista_terminos_busqueda").select("*"),
+    db.from("vista_clics_cta").select("*"),
+    db.from("vista_productos_mas_vistos").select("*"),
+    db.from("vista_tiempo_por_pagina").select("*"),
+    db.from("vista_tasa_rebote").select("*").maybeSingle(),
   ]);
 
   document.getElementById("kpiVisitasHoy").textContent = hoy.count ?? 0;
 
-  const sesionesUnicas = new Set();
-  (diarias.data || []).forEach(d => sesionesUnicas.add(d.dia));
   const totalUnicos = (diarias.data || []).reduce((acc, d) => acc + (d.visitantes_unicos || 0), 0);
   document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos;
 
@@ -62,6 +70,12 @@ async function cargarAnaliticas(){
   document.getElementById("tablaPaginasTop").innerHTML = topData.length
     ? topData.map(p => `<tr><td>${escapeHtml(p.pagina)}</td><td>${p.visitas}</td></tr>`).join("")
     : `<tr class="empty-row"><td colspan="2">Sin datos aún</td></tr>`;
+
+  document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "—";
+
+  const tp = tiempoPag.data || [];
+  const scrollProm = tp.length ? Math.round(tp.reduce((a,d) => a + (d.scroll_promedio_pct||0), 0) / tp.length) : 0;
+  document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "—";
 
   renderChart("chartVisitasDiarias", "line", {
     labels: (diarias.data || []).map(d => d.dia),
@@ -79,6 +93,29 @@ async function cargarAnaliticas(){
     labels: (dispositivos.data || []).map(d => d.dispositivo),
     datasets: [{ data: (dispositivos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a"] }]
   });
+
+  renderChart("chartNavegadores", "doughnut", {
+    labels: (navegadores.data || []).map(d => d.navegador),
+    datasets: [{ data: (navegadores.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
+  });
+
+  renderChart("chartSO", "doughnut", {
+    labels: (sos.data || []).map(d => d.so),
+    datasets: [{ data: (sos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
+  });
+
+  const tablaSimple = (id, rows, render, vacio) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = rows.length ? rows.map(render).join("") : `<tr class="empty-row"><td colspan="3">${vacio}</td></tr>`;
+  };
+
+  tablaSimple("tablaPaises", paises.data || [], p => `<tr><td>${escapeHtml(p.pais)}</td><td>${p.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaCiudades", ciudades.data || [], c => `<tr><td>${escapeHtml(c.ciudad)}</td><td>${escapeHtml(c.pais)}</td><td>${c.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaOrigenes", origenes.data || [], o => `<tr><td>${escapeHtml(o.origen)}</td><td>${o.visitas}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaBusquedas", busquedas.data || [], b => `<tr><td>${escapeHtml(b.termino)}</td><td>${b.veces}</td></tr>`, "Aún no hay búsquedas registradas");
+  tablaSimple("tablaClics", clics.data || [], c => `<tr><td>${escapeHtml(c.elemento)}</td><td>${c.clics}</td></tr>`, "Aún no hay clics registrados");
+  tablaSimple("tablaProductosTop", productos.data || [], p => `<tr><td>${escapeHtml(p.slug)}</td><td>${p.vistas}</td></tr>`, "Sin datos aún");
 }
 
 const CHART_INSTANCES = {};
