@@ -190,7 +190,7 @@ async function cargarProductos(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay productos. Crea el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(p => `
     <tr>
-      <td><img class="thumb-sm" src="${p.imagen_principal_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(p.imagen_principal_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(p.nombre)}</td>
       <td>${escapeHtml(p.categorias?.nombre || '—')}</td>
       <td>${escapeHtml(p.cantones?.nombre || '—')}</td>
@@ -295,7 +295,7 @@ async function cargarEmprendedores(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay emprendedores. Registra el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td>${escapeHtml(e.cantones?.nombre || '—')}</td>
@@ -378,7 +378,7 @@ async function cargarCategorias(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Aún no hay categorías.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `
     <tr>
-      <td><img class="thumb-sm" src="${c.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(c.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(c.nombre)}</td>
       <td>${escapeHtml(c.slug)}</td>
       <td>${c.orden ?? 0}</td>
@@ -446,7 +446,7 @@ async function cargarNoticias(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay noticias.</td></tr>`; return; }
   tbody.innerHTML = data.map(n => `
     <tr>
-      <td><img class="thumb-sm" src="${n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(n.titulo)}</td>
       <td>${TIPO_LABEL[n.tipo] || n.tipo || '—'}</td>
       <td>${n.fecha_evento || '—'}</td>
@@ -541,7 +541,7 @@ async function cargarSolicitudes(){
 
   tPend.innerHTML = pendientes.length ? pendientes.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td>${escapeHtml(e.correo || '—')}</td>
@@ -555,7 +555,7 @@ async function cargarSolicitudes(){
 
   tHist.innerHTML = historial.length ? historial.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td><span class="status-pill ${e.estado === 'aprobado' ? 'on' : 'off'}">${e.estado === 'aprobado' ? 'Aprobado' : 'Rechazado'}</span></td>

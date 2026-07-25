@@ -116,7 +116,7 @@ async function cargarProducto(){
   imgPrincipal.src = urlImagen(todasImgs[0]);
   imgPrincipal.alt = p.nombre;
   const thumbs = document.getElementById("galleryThumbs");
-  thumbs.innerHTML = todasImgs.map((url, i) => `<img src="${urlImagen(url)}" data-i="${i}" class="${i===0?'active':''}" alt="Imagen ${i+1} de ${escapeHtml(p.nombre)}">`).join("");
+  thumbs.innerHTML = todasImgs.map((url, i) => `<img src="${escapeHtml(urlImagen(url))}" data-i="${i}" class="${i===0?'active':''}" alt="Imagen ${i+1} de ${escapeHtml(p.nombre)}">`).join("");
   thumbs.querySelectorAll("img").forEach(img => {
     img.addEventListener("click", () => {
       imgPrincipal.src = img.src;

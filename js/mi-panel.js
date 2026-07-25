@@ -133,7 +133,7 @@ async function cargarProductos() {
 
   tbody.innerHTML = PRODUCTOS.map(producto => `
     <tr>
-      <td><img class="thumb-sm" src="${producto.imagen_principal_url || "https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20"}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(producto.imagen_principal_url || "https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20")}" alt=""></td>
       <td>${escapeHtml(producto.nombre)}</td>
       <td>${escapeHtml(producto.categorias?.nombre || "-")}</td>
       <td><span class="status-pill ${producto.activo ? "on" : "off"}">${producto.activo ? "Publicado" : "Oculto"}</span></td>

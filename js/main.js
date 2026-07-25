@@ -105,7 +105,7 @@ async function cargarCategorias(){
   CATEGORIAS = data;
   grid.innerHTML = data.map(c => `
     <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${urlImagenCategoria(c.imagen_url, c.nombre)}" alt="${escapeHtml(c.nombre)}" loading="lazy">
+      <img src="${escapeHtml(urlImagenCategoria(c.imagen_url, c.nombre))}" alt="${escapeHtml(c.nombre)}" loading="lazy">
       <div class="cat-card-label">
         <h3>${escapeHtml(c.nombre)}</h3>
         <span>Ver productos</span>
@@ -177,7 +177,7 @@ function renderProductos(){
   grid.innerHTML = lista.map(p => `
     <article class="card-producto reveal">
       <div class="thumb">
-        <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
+        <img src="${escapeHtml(urlImagen(p.imagen_principal_url, "product"))}" alt="${escapeHtml(p.nombre)}" loading="lazy">
         ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
       </div>
       <div class="card-body">
@@ -227,7 +227,7 @@ async function cargarEmprendedores(){
   }
   grid.innerHTML = data.map(e => `
     <article class="card-emp reveal">
-      <div class="thumb"><img src="${urlImagen(e.foto_url, "producer")}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
+      <div class="thumb"><img src="${escapeHtml(urlImagen(e.foto_url, "producer"))}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
       <div class="card-body">
         <div class="emprend">${escapeHtml(e.emprendimiento)}</div>
         <h3>${escapeHtml(e.nombre)}</h3>
@@ -250,7 +250,7 @@ async function cargarNoticias(){
   }
   grid.innerHTML = data.map(n => `
     <article class="card-news reveal">
-      <div class="thumb"><img src="${urlImagen(n.imagen_url, "news")}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
+      <div class="thumb"><img src="${escapeHtml(urlImagen(n.imagen_url, "news"))}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
       <div class="card-body">
         <span class="tipo">${TIPO_LABEL[n.tipo] || 'Noticia'}</span>
         <h3>${escapeHtml(n.titulo)}</h3>
