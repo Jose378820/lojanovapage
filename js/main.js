@@ -253,8 +253,6 @@ async function cargarEmprendedores(){
     </a>`;
   }).join("");
   if (window.lucide) lucide.createIcons();
-    </a>
-  `).join("");
   observeReveals();
 }
 
