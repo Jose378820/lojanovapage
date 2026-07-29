@@ -65,7 +65,7 @@ observeReveals();
 
 /* ---------- Cards 3D sutiles ---------- */
 function enhanceProductTilt(){
-  document.querySelectorAll(".card-producto:not([data-tilt-ready])").forEach(card => {
+  document.querySelectorAll(".card-producto:not([data-tilt-ready]), .card-marca:not([data-tilt-ready])").forEach(card => {
     card.dataset.tiltReady = "true";
     card.addEventListener("pointermove", event => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -142,7 +142,7 @@ async function cargarCantones(){
 async function cargarProductos(){
   const { data, error } = await db
     .from("productos")
-    .select("*, categorias(nombre, nombre_en), cantones(nombre)")
+    .select("*, categorias(nombre, nombre_en), cantones(nombre), emprendedores(id, nombre, emprendimiento, foto_url)")
     .eq("activo", true)
     .order("created_at", { ascending: false });
   if (error || !data){
@@ -151,6 +151,76 @@ async function cargarProductos(){
   }
   PRODUCTOS = data;
   renderProductos();
+}
+
+/* Agrupa una lista de productos por emprendedor (marca). Los productos sin
+   emprendedor asociado (huérfanos) se devuelven aparte, cada uno como grupo
+   individual, para no perderlos ni mostrar enlaces rotos a marca.html. */
+function agruparPorMarca(lista){
+  const marcas = new Map();
+  const huerfanos = [];
+
+  lista.forEach(p => {
+    const e = p.emprendedores;
+    if (!e || !e.id){ huerfanos.push(p); return; }
+    if (!marcas.has(e.id)){
+      marcas.set(e.id, {
+        emprendedor_id: e.id,
+        emprendimiento: e.emprendimiento,
+        nombre: e.nombre,
+        foto_url: e.foto_url,
+        canton: p.cantones?.nombre || '',
+        productos: []
+      });
+    }
+    marcas.get(e.id).productos.push(p);
+  });
+
+  return { marcas: [...marcas.values()], huerfanos };
+}
+
+function tarjetaMarca(m){
+  const imgs = m.productos.slice(0, 4).map(p => urlImagen(p.imagen_principal_url, "product"));
+  const n = Math.min(imgs.length, 4);
+  const claseCollage = n <= 1 ? "imgs-1" : n === 2 ? "imgs-2" : n === 3 ? "imgs-3" : "imgs-4plus";
+  const categoriasUnicas = [...new Set(m.productos.map(p => lnTexto(p.categorias?.nombre || '', p.categorias?.nombre_en)).filter(Boolean))].slice(0, 3);
+  const totalProductos = m.productos.length;
+  const etiquetaCantidad = totalProductos === 1 ? "1 producto" : `${totalProductos} productos`;
+
+  return `
+    <a href="marca.html?id=${encodeURIComponent(m.emprendedor_id)}" class="card-marca reveal" data-track="ver_marca">
+      <div class="marca-collage ${claseCollage}">
+        ${imgs.map(src => `<img src="${escapeHtml(src)}" alt="${escapeHtml(m.emprendimiento)}" loading="lazy">`).join("")}
+        <span class="marca-count">${etiquetaCantidad}</span>
+      </div>
+      <div class="marca-avatar"><img src="${escapeHtml(urlImagen(m.foto_url, "producer"))}" alt="${escapeHtml(m.emprendimiento)}" loading="lazy"></div>
+      <div class="card-body">
+        <div class="card-meta"><span>${escapeHtml(m.canton)}</span><span>Marca lojana</span></div>
+        <h3>${escapeHtml(m.emprendimiento)}</h3>
+        <p class="marca-owner">${escapeHtml(m.nombre)}</p>
+        <div class="tag-row">${categoriasUnicas.map(c => `<span class="tag">${escapeHtml(c)}</span>`).join("")}</div>
+        <span class="btn btn-ghost btn-sm">Ver tienda</span>
+      </div>
+    </a>
+  `;
+}
+
+function tarjetaProductoHuerfano(p){
+  return `
+    <article class="card-producto reveal">
+      <div class="thumb">
+        <img src="${escapeHtml(urlImagen(p.imagen_principal_url, "product"))}" alt="${escapeHtml(p.nombre)}" loading="lazy">
+        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
+      </div>
+      <div class="card-body">
+        <div class="card-meta"><span>${escapeHtml(lnTexto(p.categorias?.nombre || '', p.categorias?.nombre_en))}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
+        <h3>${escapeHtml(lnTexto(p.nombre, p.nombre_en))}</h3>
+        <p>${escapeHtml(cortar(lnTexto(p.descripcion_corta, p.descripcion_corta_en), 100))}</p>
+        <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+        <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
+      </div>
+    </article>
+  `;
 }
 
 function renderProductos(){
@@ -178,21 +248,11 @@ function renderProductos(){
     return;
   }
 
-  grid.innerHTML = lista.map(p => `
-    <article class="card-producto reveal">
-      <div class="thumb">
-        <img src="${escapeHtml(urlImagen(p.imagen_principal_url, "product"))}" alt="${escapeHtml(p.nombre)}" loading="lazy">
-        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
-      </div>
-      <div class="card-body">
-        <div class="card-meta"><span>${escapeHtml(lnTexto(p.categorias?.nombre || '', p.categorias?.nombre_en))}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
-        <h3>${escapeHtml(lnTexto(p.nombre, p.nombre_en))}</h3>
-        <p>${escapeHtml(cortar(lnTexto(p.descripcion_corta, p.descripcion_corta_en), 100))}</p>
-        <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
-        <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
-      </div>
-    </article>
-  `).join("");
+  // Los productos ya llegan ordenados por fecha (más recientes primero), así que
+  // el orden de aparición de cada marca respeta el producto más reciente que tenga.
+  const { marcas, huerfanos } = agruparPorMarca(lista);
+
+  grid.innerHTML = marcas.map(tarjetaMarca).join("") + huerfanos.map(tarjetaProductoHuerfano).join("");
   observeReveals();
   enhanceProductTilt();
 }
@@ -229,30 +289,17 @@ async function cargarEmprendedores(){
     grid.innerHTML = `<div class="empty-state">Aún no hay emprendedores publicados.</div>`;
     return;
   }
-
-  // Conteo de productos por marca (para el badge)
-  const { data: prods } = await db.from("productos").select("emprendedor_id").eq("activo", true);
-  const conteos = {};
-  (prods || []).forEach(p => { conteos[p.emprendedor_id] = (conteos[p.emprendedor_id] || 0) + 1; });
-
-  grid.innerHTML = data.map(e => {
-    const n = conteos[e.id] || 0;
-    return `
-    <a href="marca.html?id=${e.id}" class="card-emp reveal" style="text-decoration:none;color:inherit;display:block">
-      <div class="thumb">
-        <img src="${escapeHtml(urlImagen(e.foto_url, "producer"))}" alt="${escapeHtml(e.nombre)}" loading="lazy">
-        <span class="marca-count-badge">${n} ${n===1?'producto':'productos'}</span>
-        <span class="hover-cta"><i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i> Ver catálogo completo</span>
-      </div>
+  grid.innerHTML = data.map(e => `
+    <a href="marca.html?id=${encodeURIComponent(e.id)}" class="card-emp reveal" data-track="ver_marca">
+      <div class="thumb"><img src="${escapeHtml(urlImagen(e.foto_url, "producer"))}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
       <div class="card-body">
         <div class="emprend">${escapeHtml(e.emprendimiento)}</div>
         <h3>${escapeHtml(e.nombre)}</h3>
         <p>${escapeHtml(cortar(e.historia, 110))}</p>
         <div class="card-meta"><span>${escapeHtml(e.cantones?.nombre || '')}</span><span>${e.anios_experiencia ? e.anios_experiencia + ' años' : ''}</span></div>
       </div>
-    </a>`;
-  }).join("");
-  if (window.lucide) lucide.createIcons();
+    </a>
+  `).join("");
   observeReveals();
 }
 

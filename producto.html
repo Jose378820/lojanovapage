@@ -86,11 +86,16 @@
         <div class="tag-row" id="tagRow"></div>
 
         <div class="emp-sticky" id="empSticky">
-          <img class="emp-photo" id="empFoto" src="" alt="">
-          <h4 id="empNombre"></h4>
-          <div class="emprend" id="empEmprendimiento"></div>
+          <a id="empLink" href="#" style="text-decoration:none;color:inherit;display:block">
+            <img class="emp-photo" id="empFoto" src="" alt="">
+            <h4 id="empNombre"></h4>
+            <div class="emprend" id="empEmprendimiento"></div>
+          </a>
           <p id="empExtra" style="font-size:.85rem"></p>
           <div class="emp-contact-list" id="empContactos"></div>
+          <a href="#" id="empVerMarca" class="btn btn-ghost btn-sm" style="width:100%;margin-top:6px">
+            <i data-lucide="store" class="icon"></i> Ver todos los productos de esta marca
+          </a>
           <a href="#" id="btnContactar" class="btn btn-primary" target="_blank" rel="noopener" data-track="contactar_emprendedor">
             <i data-lucide="message-circle" class="icon"></i> Contactar al emprendedor
           </a>

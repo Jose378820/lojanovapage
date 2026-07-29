@@ -34,6 +34,7 @@ exports.handler = async function () {
   ];
 
   let productUrls = [];
+  let marcaUrls = [];
 
   try {
     const res = await fetch(
@@ -63,9 +64,36 @@ exports.handler = async function () {
     console.error("Error obteniendo productos para sitemap:", err);
   }
 
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/emprendedores?select=id,created_at&activo=eq.true`,
+      {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      }
+    );
+
+    if (res.ok) {
+      const emprendedores = await res.json();
+      marcaUrls = emprendedores
+        .filter((e) => e.id)
+        .map((e) =>
+          urlEntry(`${SITE_URL}/marca.html?id=${encodeURIComponent(e.id)}`, {
+            changefreq: "weekly",
+            priority: "0.6",
+            lastmod: e.created_at ? e.created_at.slice(0, 10) : undefined,
+          })
+        );
+    }
+  } catch (err) {
+    console.error("Error obteniendo emprendedores para sitemap:", err);
+  }
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${[...staticUrls, ...productUrls].join("\n")}
+${[...staticUrls, ...productUrls, ...marcaUrls].join("\n")}
 </urlset>`;
 
   return {

@@ -154,6 +154,8 @@ async function cargarProducto(){
     document.getElementById("empNombre").textContent = e.nombre;
     document.getElementById("empEmprendimiento").textContent = e.emprendimiento;
     document.getElementById("empExtra").textContent = [e.cantones?.nombre, e.anios_experiencia ? `${e.anios_experiencia} años de experiencia` : null].filter(Boolean).join(" · ");
+    document.getElementById("empLink").href = `marca.html?id=${encodeURIComponent(e.id)}`;
+    document.getElementById("empVerMarca").href = `marca.html?id=${encodeURIComponent(e.id)}`;
 
     const contactos = document.getElementById("empContactos");
     const items = [];
