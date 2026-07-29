@@ -229,16 +229,31 @@ async function cargarEmprendedores(){
     grid.innerHTML = `<div class="empty-state">Aún no hay emprendedores publicados.</div>`;
     return;
   }
-  grid.innerHTML = data.map(e => `
-    <article class="card-emp reveal">
-      <div class="thumb"><img src="${escapeHtml(urlImagen(e.foto_url, "producer"))}" alt="${escapeHtml(e.nombre)}" loading="lazy"></div>
+
+  // Conteo de productos por marca (para el badge)
+  const { data: prods } = await db.from("productos").select("emprendedor_id").eq("activo", true);
+  const conteos = {};
+  (prods || []).forEach(p => { conteos[p.emprendedor_id] = (conteos[p.emprendedor_id] || 0) + 1; });
+
+  grid.innerHTML = data.map(e => {
+    const n = conteos[e.id] || 0;
+    return `
+    <a href="marca.html?id=${e.id}" class="card-emp reveal" style="text-decoration:none;color:inherit;display:block">
+      <div class="thumb">
+        <img src="${escapeHtml(urlImagen(e.foto_url, "producer"))}" alt="${escapeHtml(e.nombre)}" loading="lazy">
+        <span class="marca-count-badge">${n} ${n===1?'producto':'productos'}</span>
+        <span class="hover-cta"><i data-lucide="arrow-right" class="icon" style="width:14px;height:14px"></i> Ver catálogo completo</span>
+      </div>
       <div class="card-body">
         <div class="emprend">${escapeHtml(e.emprendimiento)}</div>
         <h3>${escapeHtml(e.nombre)}</h3>
         <p>${escapeHtml(cortar(e.historia, 110))}</p>
         <div class="card-meta"><span>${escapeHtml(e.cantones?.nombre || '')}</span><span>${e.anios_experiencia ? e.anios_experiencia + ' años' : ''}</span></div>
       </div>
-    </article>
+    </a>`;
+  }).join("");
+  if (window.lucide) lucide.createIcons();
+    </a>
   `).join("");
   observeReveals();
 }

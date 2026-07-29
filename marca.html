@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Marca — Lojanova</title>
+<meta name="description" id="metaDescription" content="Descubre los productos de esta marca lojana.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" id="canonicalLink" href="https://lojanova.gob.ec/marca.html">
+<meta property="og:type" content="website">
+<meta property="og:url" id="ogUrl" content="https://lojanova.gob.ec/marca.html">
+<meta property="og:site_name" content="Lojanova">
+<meta property="og:title" id="ogTitle" content="Marca — Lojanova">
+<meta property="og:description" id="ogDescription" content="Descubre los productos de esta marca lojana.">
+<meta property="og:image" id="ogImage" content="https://lojanova.gob.ec/img/og-image.jpg">
+<meta name="theme-color" content="#1E5A3A">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="apple-touch-icon" href="/img/favicon-180.png">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@1.26.0"></script>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">Loja<span>nova</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#sobre">Sobre el proyecto</a>
+      <a href="index.html#categorias">Categorías</a>
+      <a href="index.html#catalogo">Productos</a>
+      <a href="index.html#emprendedores">Marcas</a>
+      <a href="index.html#loja">Loja</a>
+      <a href="index.html#noticias">Noticias</a>
+    </nav>
+    <a href="index.html#catalogo" class="btn btn-primary btn-sm nav-cta">Explorar productos</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="container">
+  <section style="padding:120px 0 60px">
+
+    <nav class="breadcrumb">
+      <a href="index.html">Inicio</a><span class="sep">/</span>
+      <a href="index.html#emprendedores">Marcas</a><span class="sep">/</span>
+      <span class="current" id="bcMarca">…</span>
+    </nav>
+
+    <div id="marcaLoading">
+      <div class="skeleton-line" style="height:220px;border-radius:22px;margin-bottom:20px"></div>
+      <div class="skeleton-line" style="height:20px;width:40%;margin-bottom:10px"></div>
+      <div class="skeleton-line" style="height:14px;width:60%"></div>
+    </div>
+
+    <div id="marcaDetalle" style="display:none">
+
+      <div class="marca-cover">
+        <div class="marca-cover-inner">
+          <img id="marcaFoto" class="marca-avatar" src="" alt="">
+          <div class="marca-cover-text">
+            <span class="eyebrow">Marca lojana</span>
+            <h1 id="marcaNombreEmprendimiento"></h1>
+            <div class="marca-dueno"><i data-lucide="user" class="icon" style="width:15px;height:15px"></i> <span id="marcaNombreDueno"></span></div>
+          </div>
+          <div class="marca-cover-badges">
+            <span class="pill" id="marcaCanton"><i data-lucide="map-pin" class="icon"></i></span>
+            <span class="pill" id="marcaExperiencia" style="display:none"><i data-lucide="award" class="icon"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="marca-stats-row">
+        <div class="marca-stat"><div class="num" id="statProductos">—</div><div class="label">Productos</div></div>
+        <div class="marca-stat"><div class="num" id="statCanton">—</div><div class="label">Cantón</div></div>
+        <div class="marca-stat"><div class="num" id="statExperiencia">—</div><div class="label">Años de experiencia</div></div>
+      </div>
+
+      <div class="marca-body-grid">
+        <div class="marca-historia">
+          <span class="eyebrow">La historia</span>
+          <p id="marcaHistoria" style="margin-top:14px"></p>
+        </div>
+
+        <aside class="marca-contact-card">
+          <h4>Contacto directo</h4>
+          <div id="marcaContactos"></div>
+          <button class="btn btn-outline marca-share-btn" id="btnCompartir" type="button">
+            <i data-lucide="share-2" class="icon"></i> Compartir esta marca
+          </button>
+        </aside>
+      </div>
+
+      <div class="marca-productos-header">
+        <h2>Catálogo de <span id="marcaNombreInline"></span></h2>
+        <span class="marca-productos-count" id="marcaProductosCount"></span>
+      </div>
+      <div class="product-grid" id="marcaProductos">
+        <div class="empty-state">Cargando productos…</div>
+      </div>
+    </div>
+
+    <div class="empty-state" id="marcaNotFound" style="display:none">
+      No encontramos esta marca. <a href="index.html#emprendedores">Volver a marcas</a>.
+    </div>
+
+  </section>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <span>© 2026 Lojanova · Prefectura de Loja. Todos los derechos reservados.</span>
+      <a href="index.html">Volver al inicio</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/marca.js"></script>
+</body>
+</html>
