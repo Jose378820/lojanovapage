@@ -31,7 +31,7 @@
     "about.eyebrow": { es: "Sobre el proyecto", en: "About the project" },
     "about.title": { es: "Una iniciativa de la Prefectura de Loja", en: "An initiative of the Prefecture of Loja" },
     "about.p1": { es: "Lojanova es la plataforma oficial que conecta la riqueza productiva de la provincia con compradores, distribuidores, turistas y público general, a nivel nacional e internacional.", en: "Lojanova is the official platform connecting the province's productive wealth with buyers, distributors, tourists and the general public, both nationally and internationally." },
-    "about.p2": { es: "No es una tienda en línea: es una vitrina digital pensada para dar visibilidad a cada emprendedor y facilitar el contacto directo, fortaleciendo la economía local y proyectando el talento lojano al mundo.", en: "It's not an online store: it's a digital showcase designed to give visibility to each entrepreneur and enable direct contact, strengthening the local economy and projecting Loja's talent to the world." },
+    "about.p2": { es: "Más que una tienda en línea, Lojanova es una vitrina digital que busca abrir nuevas oportunidades, fortalecer la economía local y llevar el talento, la creatividad y la identidad lojana a nuevos mercados.", en: "It's not an online store: it's a digital showcase designed to give visibility to each entrepreneur and enable direct contact, strengthening the local economy and projecting Loja's talent to the world." },
     "about.stat.emprendedores": { es: "Emprendedores", en: "Entrepreneurs" },
     "about.stat.productos": { es: "Productos", en: "Products" },
     "about.stat.cantones": { es: "Cantones participantes", en: "Participating cantons" },
