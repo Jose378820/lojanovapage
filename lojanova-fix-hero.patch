@@ -1,0 +1,57 @@
+diff -ruN old/css/style.css new/css/style.css
+--- old/css/style.css	2026-07-29 04:12:51.338842748 +0000
++++ new/css/style.css	2026-07-29 04:12:51.422949802 +0000
+@@ -561,11 +561,12 @@
+     background:
+     linear-gradient(
+         90deg,
+-        rgba(6,18,12,.76) 0%,
+-        rgba(18,55,36,.48) 38%,
+-        rgba(18,55,36,.10) 72%,
+-        rgba(255,255,255,.18) 100%
+-    );
++        rgba(6,18,12,.86) 0%,
++        rgba(8,24,16,.68) 40%,
++        rgba(8,24,16,.5) 65%,
++        rgba(8,24,16,.32) 100%
++    ),
++    linear-gradient(180deg, rgba(6,18,12,.18) 0%, rgba(6,18,12,.1) 40%, rgba(6,18,12,.42) 100%);
+ 
+ }
+ 
+@@ -573,13 +574,15 @@
+ 
+     padding-bottom:0;
+ 
+-    max-width:760px;
++    max-width:920px;
+ 
+ }
+ 
+ .hero-content h1{
+ 
+-    font-size:clamp(3.3rem,6vw,5.6rem);
++    font-size:clamp(2.6rem,4.6vw,5rem);
++
++    line-height:1.22;
+ 
+     margin-top:18px;
+ 
+@@ -772,7 +775,7 @@
+   background-size:cover;
+   background-position:center;
+   opacity:0;
+-  filter:saturate(1.18) contrast(1.05);
++  filter:saturate(1.1) contrast(1.02) brightness(.88);
+   transform:scale(1.05) translate3d(0,var(--parallax-y,0),0);
+   transition:opacity 1.25s ease,transform 6s ease,filter 1.25s ease;
+   will-change:opacity,transform;
+@@ -802,6 +805,8 @@
+ .hero-title .line,.hero-copy .line{
+   display:block;
+   overflow:hidden;
++  padding-bottom:.12em;
++  margin-bottom:-.12em;
+ }
+ 
+ .hero-title .line > span,.hero-copy .line > span{
