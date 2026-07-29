@@ -97,7 +97,18 @@ let PRODUCTOS = [];
 let CATEGORIAS = [];
 let CANTONES = [];
 
-/* ---------- Cargar categorías ---------- */
+/* Paleta de degradados para las categorías que aún no tienen foto propia.
+   Se usa el ícono real guardado en cada categoría (columna `icono`), así
+   la imagen SIEMPRE corresponde a la categoría, sin adivinar con fotos de stock. */
+const CAT_GRADIENTS = [
+  "linear-gradient(135deg,#1E5A3A,#123824)",
+  "linear-gradient(135deg,#A9762F,#6E4A1F)",
+  "linear-gradient(135deg,#6E7C4C,#3F4A2A)",
+  "linear-gradient(135deg,#C9A15A,#8C6A2E)",
+  "linear-gradient(135deg,#123824,#0A1F14)",
+  "linear-gradient(135deg,#9DB58D,#5C7A4C)"
+];
+
 async function cargarCategorias(){
   const { data, error } = await db.from("categorias").select("*").order("orden");
   const grid = document.getElementById("catGrid");
@@ -107,9 +118,12 @@ async function cargarCategorias(){
     return;
   }
   CATEGORIAS = data;
-  grid.innerHTML = data.map(c => `
+  grid.innerHTML = data.map((c, i) => `
     <div class="cat-card reveal" data-cat="${c.id}">
-      <img src="${escapeHtml(urlImagenCategoria(c.imagen_url, c.nombre))}" alt="${escapeHtml(lnTexto(c.nombre, c.nombre_en))}" loading="lazy">
+      ${c.imagen_url
+        ? `<img src="${escapeHtml(urlImagen(c.imagen_url, "category"))}" alt="${escapeHtml(lnTexto(c.nombre, c.nombre_en))}" loading="lazy">`
+        : `<div class="cat-card-icon" style="background:${CAT_GRADIENTS[i % CAT_GRADIENTS.length]}"><i data-lucide="${escapeHtml(c.icono || 'package')}"></i></div>`
+      }
       <div class="cat-card-label">
         <h3>${escapeHtml(lnTexto(c.nombre, c.nombre_en))}</h3>
         <span>Ver productos</span>
@@ -125,6 +139,7 @@ async function cargarCategorias(){
     });
   });
   observeReveals();
+  lucide.createIcons();
 }
 
 /* ---------- Cargar cantones ---------- */

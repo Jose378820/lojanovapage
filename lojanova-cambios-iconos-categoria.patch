@@ -1,0 +1,61 @@
+diff -ruN old/css/style.css new/css/style.css
+--- old/css/style.css	2026-07-29 03:58:54.806943094 +0000
++++ new/css/style.css	2026-07-29 03:58:54.866116172 +0000
+@@ -273,6 +273,11 @@
+ .cat-card-label h3{color:var(--blanco);font-size:1.15rem;margin-bottom:2px}
+ .cat-card-label span{font-size:.8rem;color:var(--arena)}
+ 
++.cat-card-icon{
++  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
++}
++.cat-card-icon i, .cat-card-icon svg{width:32%;height:32%;color:rgba(255,255,255,.92);stroke-width:1.25}
++
+ /* ---------- Filtros + Catálogo ---------- */
+ .catalog{background:var(--blanco)}
+ .filters{
+diff -ruN old/js/main.js new/js/main.js
+--- old/js/main.js	2026-07-29 03:58:54.811475695 +0000
++++ new/js/main.js	2026-07-29 03:58:54.869019230 +0000
+@@ -97,7 +97,18 @@
+ let CATEGORIAS = [];
+ let CANTONES = [];
+ 
+-/* ---------- Cargar categorías ---------- */
++/* Paleta de degradados para las categorías que aún no tienen foto propia.
++   Se usa el ícono real guardado en cada categoría (columna `icono`), así
++   la imagen SIEMPRE corresponde a la categoría, sin adivinar con fotos de stock. */
++const CAT_GRADIENTS = [
++  "linear-gradient(135deg,#1E5A3A,#123824)",
++  "linear-gradient(135deg,#A9762F,#6E4A1F)",
++  "linear-gradient(135deg,#6E7C4C,#3F4A2A)",
++  "linear-gradient(135deg,#C9A15A,#8C6A2E)",
++  "linear-gradient(135deg,#123824,#0A1F14)",
++  "linear-gradient(135deg,#9DB58D,#5C7A4C)"
++];
++
+ async function cargarCategorias(){
+   const { data, error } = await db.from("categorias").select("*").order("orden");
+   const grid = document.getElementById("catGrid");
+@@ -107,9 +118,12 @@
+     return;
+   }
+   CATEGORIAS = data;
+-  grid.innerHTML = data.map(c => `
++  grid.innerHTML = data.map((c, i) => `
+     <div class="cat-card reveal" data-cat="${c.id}">
+-      <img src="${escapeHtml(urlImagenCategoria(c.imagen_url, c.nombre))}" alt="${escapeHtml(lnTexto(c.nombre, c.nombre_en))}" loading="lazy">
++      ${c.imagen_url
++        ? `<img src="${escapeHtml(urlImagen(c.imagen_url, "category"))}" alt="${escapeHtml(lnTexto(c.nombre, c.nombre_en))}" loading="lazy">`
++        : `<div class="cat-card-icon" style="background:${CAT_GRADIENTS[i % CAT_GRADIENTS.length]}"><i data-lucide="${escapeHtml(c.icono || 'package')}"></i></div>`
++      }
+       <div class="cat-card-label">
+         <h3>${escapeHtml(lnTexto(c.nombre, c.nombre_en))}</h3>
+         <span>Ver productos</span>
+@@ -125,6 +139,7 @@
+     });
+   });
+   observeReveals();
++  lucide.createIcons();
+ }
+ 
+ /* ---------- Cargar cantones ---------- */
