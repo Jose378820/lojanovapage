@@ -1,5 +1,5 @@
-// =========================================================
-// LOJANOVA — producto.js
+﻿// =========================================================
+// LOJANOVA â€” producto.js
 // Carga el detalle de un producto por su slug (?slug=...)
 // =========================================================
 
@@ -52,7 +52,7 @@ async function cargarProducto(){
 
   if (error || !p){ notFound.style.display = "block"; return; }
 
-  document.title = `${p.nombre} — Lojanova`;
+  document.title = `${p.nombre} â€” Lojanova`;
   document.getElementById("bcNombre").textContent = p.nombre;
   document.getElementById("metaCategoria").textContent = p.categorias?.nombre || "";
   document.getElementById("metaCanton").textContent = p.cantones?.nombre || "";
@@ -60,7 +60,7 @@ async function cargarProducto(){
 
   document.getElementById("tagRow").innerHTML = (p.etiquetas || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
 
-  // Galería
+  // GalerÃ­a
   const todasImgs = [p.imagen_principal_url, ...(imagenes || []).map(i => i.imagen_url)].filter(Boolean);
   const imgPrincipal = document.getElementById("imgPrincipal");
   imgPrincipal.src = urlImagen(todasImgs[0]);
@@ -82,8 +82,8 @@ async function cargarProducto(){
   const dl = document.getElementById("fichaTecnica");
   agregarDato(dl, "Ingredientes / materiales", p.ingredientes);
   agregarDato(dl, "Certificaciones", p.certificaciones);
-  agregarDato(dl, "Capacidad de producción", p.capacidad_produccion);
-  agregarDato(dl, "Presentación", p.presentacion);
+  agregarDato(dl, "Capacidad de producciÃ³n", p.capacidad_produccion);
+  agregarDato(dl, "PresentaciÃ³n", p.presentacion);
   agregarDato(dl, "Peso", p.peso);
   agregarDato(dl, "Disponibilidad", p.disponibilidad);
   agregarDato(dl, "Mercados", p.mercados);
@@ -97,7 +97,9 @@ async function cargarProducto(){
     document.getElementById("empFoto").alt = e.nombre;
     document.getElementById("empNombre").textContent = e.nombre;
     document.getElementById("empEmprendimiento").textContent = e.emprendimiento;
-    document.getElementById("empExtra").textContent = [e.cantones?.nombre, e.anios_experiencia ? `${e.anios_experiencia} años de experiencia` : null].filter(Boolean).join(" · ");
+    document.getElementById("empLink").href = `marca.html?id=${e.id}`;
+    document.getElementById("empVerMarca").href = `marca.html?id=${e.id}`;
+    document.getElementById("empExtra").textContent = [e.cantones?.nombre, e.anios_experiencia ? `${e.anios_experiencia} aÃ±os de experiencia` : null].filter(Boolean).join(" Â· ");
 
     const contactos = document.getElementById("empContactos");
     const items = [];
@@ -113,7 +115,7 @@ async function cargarProducto(){
       const num = e.whatsapp.replace(/\D/g,"");
       btn.href = `https://wa.me/${num}?text=${encodeURIComponent("Hola, me interesa el producto " + p.nombre + " que vi en Lojanova.")}`;
     } else if (e.correo){
-      btn.href = `mailto:${e.correo}?subject=${encodeURIComponent("Interés en " + p.nombre + " — Lojanova")}`;
+      btn.href = `mailto:${e.correo}?subject=${encodeURIComponent("InterÃ©s en " + p.nombre + " â€” Lojanova")}`;
     } else {
       btn.style.display = "none";
     }
@@ -128,3 +130,5 @@ async function cargarProducto(){
 
 cargarProducto();
 lucide.createIcons();
+
+

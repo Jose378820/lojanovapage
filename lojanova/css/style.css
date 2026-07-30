@@ -1,5 +1,5 @@
-/* =========================================================
-   LOJANOVA — Sistema de diseño
+﻿/* =========================================================
+   LOJANOVA â€” Sistema de diseÃ±o
    Verde bosque + tierra + dorado. Premium, editorial, institucional.
    ========================================================= */
 
@@ -23,7 +23,7 @@
   --dorado:#C9A15A;
   --ocre:#A9762F;
 
-  /* Tipografía */
+  /* TipografÃ­a */
   --f-display:'Playfair Display',serif;
   --f-body:'Inter',sans-serif;
 
@@ -275,7 +275,7 @@ body{top:0!important}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
 }
 
-/* ---------- Categorías ---------- */
+/* ---------- CategorÃ­as ---------- */
 .cat-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
 }
@@ -298,7 +298,7 @@ body{top:0!important}
 .cat-card-label h3{color:var(--blanco);font-size:1.15rem;margin-bottom:2px}
 .cat-card-label span{font-size:.8rem;color:var(--arena)}
 
-/* ---------- Filtros + Catálogo ---------- */
+/* ---------- Filtros + CatÃ¡logo ---------- */
 .catalog{background:var(--blanco)}
 .filters{
   display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:48px;
@@ -417,7 +417,7 @@ footer{background:#1b1d17;color:rgba(255,255,255,.72);padding:100px 0 30px}
 @media (max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.footer-grid{grid-template-columns:1fr}}
 
-/* ---------- Página de producto ---------- */
+/* ---------- PÃ¡gina de producto ---------- */
 .breadcrumb{font-size:.85rem;color:#8a8d81;margin:130px 0 26px}
 .breadcrumb a:hover{color:var(--verde-bosque)}
 .product-detail{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:start}
@@ -903,3 +903,146 @@ section[data-parallax-section] > .container{
   .hero-dots{display:none}
   section[data-parallax-section] > .container{transform:none}
 }
+
+/* ---- Link de marca en ficha de producto ---- */
+#empLink{ text-decoration:none; color:inherit; display:block; }
+
+/* =========================================================
+   PÃGINA DE MARCA (marca.html)
+   ========================================================= */
+
+.breadcrumb{
+  display:flex; align-items:center; gap:8px; font-size:.82rem; color:#8a8d84;
+  margin-bottom:28px; flex-wrap:wrap;
+}
+.breadcrumb a{color:var(--verde-bosque); font-weight:600; transition:color .2s}
+.breadcrumb a:hover{color:var(--dorado)}
+.breadcrumb span.sep{opacity:.5}
+.breadcrumb span.current{color:var(--gris-oscuro); font-weight:600}
+
+.marca-cover{
+  position:relative;
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  min-height:220px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(201,161,90,.35), transparent 45%),
+    linear-gradient(120deg, var(--verde-bosque-dark), var(--verde-bosque) 60%, var(--verde-oliva));
+  display:flex; align-items:flex-end;
+  padding:36px 40px;
+  box-shadow:var(--shadow-md);
+}
+.marca-cover::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.10) 1px, transparent 1px);
+  background-size:22px 22px;
+  opacity:.5;
+  pointer-events:none;
+}
+.marca-cover-inner{
+  position:relative; z-index:1;
+  display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap;
+  width:100%;
+}
+.marca-avatar{
+  width:128px; height:128px; border-radius:50%;
+  object-fit:cover; border:5px solid var(--blanco);
+  box-shadow:var(--shadow-md);
+  flex-shrink:0;
+  background:var(--blanco);
+}
+.marca-cover-text{ color:var(--blanco); padding-bottom:4px }
+.marca-cover-text .eyebrow{ color:var(--arena) }
+.marca-cover-text .eyebrow::before{ background:var(--dorado) }
+.marca-cover-text h1{
+  font-family:var(--f-display); font-weight:700;
+  font-size:clamp(1.7rem,3vw,2.5rem); margin:4px 0 6px; line-height:1.1;
+}
+.marca-cover-text .marca-dueno{ opacity:.88; font-size:.95rem; display:flex; align-items:center; gap:8px }
+.marca-cover-badges{
+  margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; padding-bottom:6px;
+}
+.marca-cover-badges .pill{
+  background:rgba(255,255,255,.14); backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.28); color:var(--blanco);
+  font-size:.78rem; font-weight:600; padding:8px 16px; border-radius:100px;
+  display:flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.marca-cover-badges .pill .icon{width:14px;height:14px}
+
+.marca-stats-row{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  margin:-34px 24px 0; position:relative; z-index:2;
+}
+@media (max-width:700px){ .marca-stats-row{ grid-template-columns:1fr; margin:20px 0 0 } }
+.marca-stat{
+  background:var(--blanco); border-radius:var(--radius-sm); box-shadow:var(--shadow-sm);
+  padding:20px 22px; text-align:center;
+}
+.marca-stat .num{ font-family:var(--f-display); font-size:1.9rem; color:var(--verde-bosque); font-weight:700 }
+.marca-stat .label{ font-size:.8rem; color:#767a6f; margin-top:4px }
+
+.marca-body-grid{
+  display:grid; grid-template-columns:1.6fr 1fr; gap:56px;
+  margin-top:56px; align-items:start;
+}
+@media (max-width:900px){ .marca-body-grid{ grid-template-columns:1fr; gap:36px } }
+
+.marca-historia p{ font-size:1.05rem; line-height:1.85; color:var(--gris-oscuro) }
+.marca-historia p:first-letter{
+  font-family:var(--f-display); font-size:2.6rem; color:var(--verde-bosque);
+  float:left; line-height:1; margin:6px 8px 0 0; font-weight:700;
+}
+
+.marca-contact-card{
+  background:var(--gris-claro); border-radius:var(--radius); padding:28px;
+  box-shadow:var(--shadow-sm); position:sticky; top:110px;
+}
+.marca-contact-card h4{ font-family:var(--f-display); color:var(--verde-bosque-dark); margin-bottom:16px; font-size:1.1rem }
+.marca-contact-btn{
+  display:flex; align-items:center; gap:12px; padding:12px 14px;
+  border-radius:var(--radius-sm); background:var(--blanco); margin-bottom:10px;
+  font-size:.9rem; font-weight:600; color:var(--gris-oscuro); transition:.25s;
+  box-shadow:var(--shadow-xs);
+}
+.marca-contact-btn:hover{ background:var(--verde-bosque); color:var(--blanco); transform:translateX(4px) }
+.marca-contact-btn .icon{ width:18px; height:18px; flex-shrink:0; color:var(--dorado) }
+.marca-contact-btn:hover .icon{ color:var(--arena) }
+.marca-share-btn{ width:100%; margin-top:6px }
+
+.marca-productos-header{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  margin:70px 0 26px;
+}
+.marca-productos-header h2{ font-family:var(--f-display); font-size:1.6rem; color:var(--verde-bosque-dark) }
+.marca-productos-count{
+  background:var(--beige); color:var(--ocre); font-weight:700; font-size:.8rem;
+  padding:6px 16px; border-radius:100px;
+}
+
+/* Badge de conteo de productos en las tarjetas de marca del home */
+.card-emp .thumb{ position:relative }
+.card-emp .marca-count-badge{
+  position:absolute; top:14px; right:14px; z-index:2;
+  background:rgba(18,56,36,.82); backdrop-filter:blur(4px);
+  color:var(--blanco); font-size:.72rem; font-weight:700;
+  padding:6px 12px; border-radius:100px;
+}
+.card-emp .hover-cta{
+  position:absolute; inset:auto 0 0 0; padding:12px 16px;
+  background:linear-gradient(to top, rgba(18,56,36,.92), transparent);
+  color:var(--blanco); font-size:.8rem; font-weight:600;
+  opacity:0; transform:translateY(8px); transition:.3s;
+  display:flex; align-items:center; gap:6px;
+}
+.card-emp:hover .hover-cta{ opacity:1; transform:translateY(0) }
+
+/* Skeleton de carga simple */
+.skeleton-line{
+  background:linear-gradient(90deg,#eee 25%,#f5f5f5 50%,#eee 75%);
+  background-size:200% 100%; animation:skeletonShine 1.4s infinite;
+  border-radius:6px;
+}
+@keyframes skeletonShine{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
