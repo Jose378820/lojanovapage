@@ -138,7 +138,7 @@ async function cargarCantones(){
 async function cargarProductos(){
   const { data, error } = await db
     .from("productos")
-    .select("*, categorias(nombre), cantones(nombre)")
+    .select("*, categorias(nombre), cantones(nombre), emprendedores(id, nombre, emprendimiento, foto_url, historia)")
     .eq("activo", true)
     .order("created_at", { ascending: false });
   if (error || !data){
@@ -174,21 +174,52 @@ function renderProductos(){
     return;
   }
 
-  grid.innerHTML = lista.map(p => `
-    <article class="card-producto reveal">
+  const marcas = new Map();
+  lista.forEach(producto => {
+    const emprendedor = producto.emprendedores;
+    const marcaId = emprendedor?.id || producto.emprendedor_id || producto.id;
+    if (!marcas.has(marcaId)) {
+      marcas.set(marcaId, {
+        id: emprendedor?.id,
+        nombre: emprendedor?.emprendimiento || producto.nombre,
+        productor: emprendedor?.nombre || "",
+        historia: emprendedor?.historia || producto.descripcion_corta || "",
+        canton: producto.cantones?.nombre || "",
+        categoria: producto.categorias?.nombre || "",
+        imagen: producto.imagen_principal_url || emprendedor?.foto_url,
+        exportacion: !!producto.es_exportacion,
+        artesanal: !!producto.es_artesanal,
+        productos: []
+      });
+    }
+
+    const marca = marcas.get(marcaId);
+    marca.productos.push(producto);
+    if (!marca.imagen && producto.imagen_principal_url) marca.imagen = producto.imagen_principal_url;
+    if (producto.es_exportacion) marca.exportacion = true;
+    if (producto.es_artesanal) marca.artesanal = true;
+  });
+
+  grid.innerHTML = [...marcas.values()].map(marca => {
+    const total = marca.productos.length;
+    const etiqueta = total === 1 ? "producto" : "productos";
+    const href = marca.id ? `marca.html?id=${encodeURIComponent(marca.id)}` : "#catalogo";
+    return `
+    <a href="${href}" class="card-producto card-marca-catalogo reveal" style="text-decoration:none;color:inherit">
       <div class="thumb">
-        <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
-        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
+        <img src="${urlImagen(marca.imagen, "product")}" alt="${escapeHtml(marca.nombre)}" loading="lazy">
+        <span class="badge marca-product-count">${total} ${etiqueta}</span>
+        ${marca.exportacion ? '<span class="badge badge-secondary">Exportación</span>' : (marca.artesanal ? '<span class="badge badge-secondary">Artesanal</span>' : '')}
       </div>
       <div class="card-body">
-        <div class="card-meta"><span>${escapeHtml(p.categorias?.nombre || '')}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
-        <h3>${escapeHtml(p.nombre)}</h3>
-        <p>${escapeHtml(cortar(p.descripcion_corta, 100))}</p>
-        <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
-        <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
+        <div class="card-meta"><span>${escapeHtml(marca.categoria)}</span><span>${escapeHtml(marca.canton)}</span></div>
+        <h3>${escapeHtml(marca.nombre)}</h3>
+        ${marca.productor ? `<div class="marca-owner">Por ${escapeHtml(marca.productor)}</div>` : ""}
+        <p>${escapeHtml(cortar(marca.historia, 115))}</p>
+        <span class="btn btn-ghost btn-sm">Ver marca y productos</span>
       </div>
-    </article>
-  `).join("");
+    </a>`;
+  }).join("");
   observeReveals();
   enhanceProductTilt();
   window.lojanovaRefreshTranslation?.();

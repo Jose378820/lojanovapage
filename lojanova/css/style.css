@@ -334,6 +334,21 @@ body{top:0!important}
   position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);color:var(--verde-bosque);
   font-size:.72rem;font-weight:600;padding:6px 14px;border-radius:100px;letter-spacing:.03em;
 }
+.badge-secondary{left:auto;right:14px}
+.card-marca-catalogo{cursor:pointer}
+.card-marca-catalogo .thumb::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(15,36,24,0) 48%,rgba(15,36,24,.32) 100%);
+  pointer-events:none;
+}
+.card-marca-catalogo .marca-product-count{
+  top:14px;left:14px;background:rgba(21,63,40,.94);color:var(--blanco);
+  box-shadow:0 10px 30px rgba(0,0,0,.16);
+}
+.card-marca-catalogo .marca-owner{
+  color:var(--ocre);font-size:.82rem;font-weight:700;margin-top:-4px;
+}
+.card-marca-catalogo .btn{align-self:flex-start;margin-top:4px}
 .card-body{padding:24px;display:flex;flex-direction:column;gap:10px;flex:1}
 .card-meta{display:flex;justify-content:space-between;font-size:.76rem;color:var(--ocre);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
 .card-body h3{font-size:1.2rem;color:var(--verde-bosque-dark)}
