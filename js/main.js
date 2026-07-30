@@ -138,7 +138,7 @@ async function cargarCantones(){
 async function cargarProductos(){
   const { data, error } = await db
     .from("productos")
-    .select("*, categorias(nombre), cantones(nombre), emprendedores(id, nombre, emprendimiento, foto_url)")
+    .select("*, categorias(nombre), cantones(nombre)")
     .eq("activo", true)
     .order("created_at", { ascending: false });
   if (error || !data){
@@ -174,53 +174,20 @@ function renderProductos(){
     return;
   }
 
-  const marcas = new Map();
-  lista.forEach(producto => {
-    const marca = producto.emprendedores || {};
-    const marcaId = marca.id || "sin-marca";
-    if (!marcas.has(marcaId)) {
-      marcas.set(marcaId, {
-        id: marca.id,
-        nombre: marca.emprendimiento || marca.nombre || "Marca lojana",
-        productor: marca.nombre || "",
-        foto: marca.foto_url,
-        productos: []
-      });
-    }
-    marcas.get(marcaId).productos.push(producto);
-  });
-
-  grid.innerHTML = [...marcas.values()].map(marca => `
-    <section class="brand-product-group reveal">
-      <div class="brand-product-head">
-        <div class="brand-product-id">
-          <img src="${urlImagen(marca.foto, "producer")}" alt="${escapeHtml(marca.nombre)}" loading="lazy">
-          <div>
-            <span>Marca</span>
-            <h3>${escapeHtml(marca.nombre)}</h3>
-            ${marca.productor ? `<p>${escapeHtml(marca.productor)}</p>` : ""}
-          </div>
-        </div>
-        ${marca.id ? `<a href="marca.html?id=${encodeURIComponent(marca.id)}" class="btn btn-ghost btn-sm">Ver marca completa</a>` : ""}
+  grid.innerHTML = lista.map(p => `
+    <article class="card-producto reveal">
+      <div class="thumb">
+        <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
+        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
       </div>
-      <div class="brand-product-grid">
-        ${marca.productos.map(p => `
-          <article class="card-producto reveal">
-            <div class="thumb">
-              <img src="${urlImagen(p.imagen_principal_url, "product")}" alt="${escapeHtml(p.nombre)}" loading="lazy">
-              ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
-            </div>
-            <div class="card-body">
-              <div class="card-meta"><span>${escapeHtml(p.categorias?.nombre || '')}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
-              <h3>${escapeHtml(p.nombre)}</h3>
-              <p>${escapeHtml(cortar(p.descripcion_corta, 100))}</p>
-              <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
-              <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
-            </div>
-          </article>
-        `).join("")}
+      <div class="card-body">
+        <div class="card-meta"><span>${escapeHtml(p.categorias?.nombre || '')}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
+        <h3>${escapeHtml(p.nombre)}</h3>
+        <p>${escapeHtml(cortar(p.descripcion_corta, 100))}</p>
+        <div class="tag-row">${(p.etiquetas || []).slice(0,3).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+        <a href="producto.html?slug=${encodeURIComponent(p.slug)}" class="btn btn-ghost btn-sm">Ver detalles</a>
       </div>
-    </section>
+    </article>
   `).join("");
   observeReveals();
   enhanceProductTilt();
