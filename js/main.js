@@ -1,5 +1,5 @@
 ﻿// =========================================================
-// LOJANOVA â€” main.js
+// LOJANOVA — main.js
 // Interacciones de la landing + carga de datos desde Supabase
 // =========================================================
 
@@ -86,20 +86,20 @@ function enhanceProductTilt(){
 function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
-function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "â€¦" : str; }
+function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "…" : str; }
 
 /* ---------- Estado global de filtros ---------- */
 let PRODUCTOS = [];
 let CATEGORIAS = [];
 let CANTONES = [];
 
-/* ---------- Cargar categorÃ­as ---------- */
+/* ---------- Cargar categorías ---------- */
 async function cargarCategorias(){
   const { data, error } = await db.from("categorias").select("*").order("orden");
   const grid = document.getElementById("catGrid");
   const selectCat = document.getElementById("fCategoria");
   if (error || !data || data.length === 0){
-    grid.innerHTML = `<div class="empty-state">AÃºn no hay categorÃ­as cargadas. Ingresa al panel de administraciÃ³n para crear la primera.</div>`;
+    grid.innerHTML = `<div class="empty-state">Aún no hay categorías cargadas. Ingresa al panel de administración para crear la primera.</div>`;
     return;
   }
   CATEGORIAS = data;
@@ -112,7 +112,7 @@ async function cargarCategorias(){
       </div>
     </div>
   `).join("");
-  selectCat.innerHTML = `<option value="">CategorÃ­a</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  selectCat.innerHTML = `<option value="">Categoría</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
   grid.querySelectorAll(".cat-card").forEach(card => {
     card.addEventListener("click", () => {
       selectCat.value = card.dataset.cat;
@@ -130,7 +130,7 @@ async function cargarCantones(){
   const pillList = document.getElementById("cantonList");
   if (error || !data) return;
   CANTONES = data;
-  selectCanton.innerHTML = `<option value="">CantÃ³n</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  selectCanton.innerHTML = `<option value="">Cantón</option>` + data.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
   pillList.innerHTML = data.map(c => `<span class="canton-pill">${escapeHtml(c.nombre)}</span>`).join("");
 }
 
@@ -166,11 +166,11 @@ function renderProductos(){
   });
 
   if (PRODUCTOS.length === 0){
-    grid.innerHTML = `<div class="empty-state">TodavÃ­a no hay productos publicados. Vuelve pronto â€” estamos incorporando nuevos emprendedores cada semana.</div>`;
+    grid.innerHTML = `<div class="empty-state">Todavía no hay productos publicados. Vuelve pronto — estamos incorporando nuevos emprendedores cada semana.</div>`;
     return;
   }
   if (lista.length === 0){
-    grid.innerHTML = `<div class="empty-state">No encontramos productos con esos filtros. Prueba ajustando la bÃºsqueda.</div>`;
+    grid.innerHTML = `<div class="empty-state">No encontramos productos con esos filtros. Prueba ajustando la búsqueda.</div>`;
     return;
   }
 
@@ -273,12 +273,12 @@ async function cargarEmprendedores(){
 }
 
 /* ---------- Noticias ---------- */
-const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"CapacitaciÃ³n", convocatoria:"Convocatoria", evento:"Evento" };
+const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
 async function cargarNoticias(){
   const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(6);
   const grid = document.getElementById("newsGrid");
   if (error || !data || data.length === 0){
-    grid.innerHTML = `<div class="empty-state">AÃºn no hay noticias publicadas.</div>`;
+    grid.innerHTML = `<div class="empty-state">Aún no hay noticias publicadas.</div>`;
     return;
   }
   grid.innerHTML = data.map(n => `
@@ -295,7 +295,7 @@ async function cargarNoticias(){
   observeReveals();
 }
 
-/* ---------- EstadÃ­sticas ---------- */
+/* ---------- Estadísticas ---------- */
 async function cargarStats(){
   const [emp, prod, cant, cat] = await Promise.all([
     db.from("emprendedores").select("id", { count: "exact", head: true }).eq("activo", true),

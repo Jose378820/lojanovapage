@@ -1,5 +1,5 @@
 ﻿// =========================================================
-// LOJANOVA â€” marca.js
+// LOJANOVA — marca.js
 // Carga un emprendedor (marca) por ?id=... y todos sus productos
 // =========================================================
 
@@ -10,7 +10,7 @@ document.getElementById("navToggle")?.addEventListener("click", () => document.g
 function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
-function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "â€¦" : str; }
+function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "…" : str; }
 function lnTexto(es, en){
   const lang = localStorage.getItem("ln_lang") || "es";
   return (lang === "en" && en) ? en : es;
@@ -34,11 +34,11 @@ async function cargarMarca(){
   loading.style.display = "none";
   document.getElementById("marcaDetalle").style.display = "block";
 
-  document.title = `${e.emprendimiento} â€” Lojanova`;
-  document.getElementById("pageTitle").textContent = `${e.emprendimiento} â€” Lojanova`;
+  document.title = `${e.emprendimiento} — Lojanova`;
+  document.getElementById("pageTitle").textContent = `${e.emprendimiento} — Lojanova`;
   const desc = cortar(e.historia || `Marca lojana de ${e.cantones?.nombre || "Loja"}.`, 155);
   document.getElementById("metaDescription").content = desc;
-  document.getElementById("ogTitle").content = `${e.emprendimiento} â€” Lojanova`;
+  document.getElementById("ogTitle").content = `${e.emprendimiento} — Lojanova`;
   document.getElementById("ogDescription").content = desc;
   document.getElementById("ogImage").content = urlImagen(e.foto_url, "producer");
   document.getElementById("canonicalLink").href = location.href;
@@ -49,7 +49,7 @@ async function cargarMarca(){
   document.getElementById("marcaNombreEmprendimiento").textContent = e.emprendimiento;
   document.getElementById("marcaNombreInline").textContent = e.emprendimiento;
   document.getElementById("marcaNombreDueno").textContent = e.nombre;
-  document.getElementById("marcaHistoria").textContent = e.historia || "Esta marca aÃºn no ha compartido su historia.";
+  document.getElementById("marcaHistoria").textContent = e.historia || "Esta marca aún no ha compartido su historia.";
 
   const canton = e.cantones?.nombre || "Loja";
   document.getElementById("marcaCanton").innerHTML = `<i data-lucide="map-pin" class="icon"></i> ${escapeHtml(canton)}`;
@@ -57,10 +57,10 @@ async function cargarMarca(){
 
   if (e.anios_experiencia){
     document.getElementById("marcaExperiencia").style.display = "flex";
-    document.getElementById("marcaExperiencia").innerHTML = `<i data-lucide="award" class="icon"></i> ${e.anios_experiencia} aÃ±os`;
+    document.getElementById("marcaExperiencia").innerHTML = `<i data-lucide="award" class="icon"></i> ${e.anios_experiencia} años`;
     document.getElementById("statExperiencia").textContent = e.anios_experiencia;
   } else {
-    document.getElementById("statExperiencia").textContent = "â€”";
+    document.getElementById("statExperiencia").textContent = "—";
   }
 
   const contactos = document.getElementById("marcaContactos");
@@ -73,7 +73,7 @@ async function cargarMarca(){
   if (e.correo) items.push(`<a href="mailto:${e.correo}" class="marca-contact-btn"><i data-lucide="mail" class="icon"></i> Enviar correo</a>`);
   if (e.instagram) items.push(`<a href="${e.instagram}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="instagram" class="icon"></i> Instagram</a>`);
   if (e.facebook) items.push(`<a href="${e.facebook}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="facebook" class="icon"></i> Facebook</a>`);
-  contactos.innerHTML = items.length ? items.join("") : `<p style="font-size:.85rem;color:#888">Sin datos de contacto pÃºblicos.</p>`;
+  contactos.innerHTML = items.length ? items.join("") : `<p style="font-size:.85rem;color:#888">Sin datos de contacto públicos.</p>`;
 
   document.getElementById("btnCompartir")?.addEventListener("click", async () => {
     const shareData = { title: e.emprendimiento, text: `Descubre ${e.emprendimiento} en Lojanova`, url: location.href };
@@ -100,7 +100,7 @@ async function cargarProductosDeMarca(emprendedorId){
   document.getElementById("marcaProductosCount").textContent = total === 1 ? "1 producto" : `${total} productos`;
 
   if (error || total === 0){
-    grid.innerHTML = `<div class="empty-state">Esta marca aÃºn no tiene productos publicados.</div>`;
+    grid.innerHTML = `<div class="empty-state">Esta marca aún no tiene productos publicados.</div>`;
     return;
   }
 
@@ -108,7 +108,7 @@ async function cargarProductosDeMarca(emprendedorId){
     <article class="card-producto reveal visible">
       <div class="thumb">
         <img src="${escapeHtml(urlImagen(p.imagen_principal_url, "product"))}" alt="${escapeHtml(lnTexto(p.nombre, p.nombre_en))}" loading="lazy">
-        ${p.es_exportacion ? '<span class="badge">ExportaciÃ³n</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
+        ${p.es_exportacion ? '<span class="badge">Exportación</span>' : (p.es_artesanal ? '<span class="badge">Artesanal</span>' : '')}
       </div>
       <div class="card-body">
         <div class="card-meta"><span>${escapeHtml(lnTexto(p.categorias?.nombre || '', p.categorias?.nombre_en))}</span><span>${escapeHtml(p.cantones?.nombre || '')}</span></div>
