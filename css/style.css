@@ -1096,3 +1096,91 @@ section[data-parallax-section] > .container{
     padding:16px 18px;
   }
 }
+
+/* Logo Prefectura: sello institucional sobrio */
+.hero-inner{
+  grid-template-columns:minmax(0,780px) minmax(190px,260px);
+  gap:clamp(36px,6vw,84px);
+}
+.hero-institutional-logo{
+  position:relative;
+  align-self:center;
+  justify-self:center;
+  width:min(238px,22vw);
+  min-width:210px;
+  padding:12px;
+  margin-top:-18px;
+  border-radius:24px;
+  background:linear-gradient(145deg,rgba(255,252,245,.92),rgba(245,238,222,.82));
+  border:1px solid rgba(201,161,90,.42);
+  box-shadow:0 18px 46px rgba(6,18,12,.18), inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter:blur(16px);
+  animation:institutionalFloat 7s ease-in-out infinite;
+}
+.hero-institutional-logo::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:18px;
+  border:1px solid rgba(30,90,58,.08);
+  pointer-events:none;
+}
+.hero-institutional-logo span{
+  display:block;
+  margin:2px 0 8px;
+  color:var(--verde-bosque-dark);
+  font-size:.58rem;
+  font-weight:800;
+  text-align:center;
+  letter-spacing:.2em;
+  opacity:.9;
+}
+.hero-institutional-logo img{
+  display:block;
+  width:100%;
+  max-height:122px;
+  object-fit:contain;
+  margin:auto;
+  filter:saturate(.92) contrast(1.02);
+}
+@keyframes institutionalFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(max-width:900px){
+  .hero-institutional-logo{
+    justify-self:start;
+    width:min(210px,70vw);
+    min-width:0;
+    margin-top:0;
+  }
+  .hero-institutional-logo img{max-height:104px}
+}
+
+/* Ocultar por completo la interfaz inyectada por Google Translate */
+.skiptranslate,
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget,
+.goog-logo-link,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+#google_translate_element{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+iframe.goog-te-banner-frame,
+iframe.skiptranslate,
+body > .skiptranslate{
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+}
+html,body{
+  top:0!important;
+  margin-top:0!important;
+}
+body.translated-ltr,
+body.translated-rtl{
+  top:0!important;
+  margin-top:0!important;
+}

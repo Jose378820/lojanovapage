@@ -17,6 +17,21 @@ function applyGoogleTranslate(language) {
   if (!combo || language === "es") return;
   combo.value = language;
   combo.dispatchEvent(new Event("change"));
+  hideGoogleTranslateChrome();
+}
+
+function hideGoogleTranslateChrome() {
+  document.documentElement.style.top = "0px";
+  document.body.style.top = "0px";
+  document.body.style.marginTop = "0px";
+
+  document
+    .querySelectorAll(".skiptranslate, .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt")
+    .forEach(element => {
+      element.style.display = "none";
+      element.style.visibility = "hidden";
+      element.style.height = "0";
+    });
 }
 
 function setupLanguageSelector() {
@@ -38,10 +53,15 @@ window.googleTranslateElementInit = function googleTranslateElementInit() {
   }, "google_translate_element");
 
   setTimeout(() => applyGoogleTranslate(getCurrentLanguage()), 800);
+  setInterval(hideGoogleTranslateChrome, 350);
 };
 
 window.lojanovaRefreshTranslation = function lojanovaRefreshTranslation() {
-  setTimeout(() => applyGoogleTranslate(getCurrentLanguage()), 500);
+  setTimeout(() => {
+    applyGoogleTranslate(getCurrentLanguage());
+    hideGoogleTranslateChrome();
+  }, 500);
 };
 
 setupLanguageSelector();
+hideGoogleTranslateChrome();
