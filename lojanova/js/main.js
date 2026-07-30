@@ -314,7 +314,7 @@ async function cargarStats(){
 /* ---------- Init ---------- */
 (async function init(){
   lucide.createIcons();
-  await Promise.all([cargarCategorias(), cargarCantones(), cargarProductos(), cargarEmprendedores(), cargarNoticias(), cargarStats()]);
+  await Promise.all([cargarCategorias(), cargarCantones(), cargarProductos(), cargarNoticias(), cargarStats()]);
   window.lojanovaRefreshTranslation?.();
 })();
 

@@ -8,7 +8,7 @@
 <meta property="og:title" content="Lojanova — Loja al mundo">
 <meta property="og:description" content="Descubre productos únicos elaborados por emprendedores de la provincia de Loja y conecta directamente con quienes los producen.">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/style.css?v=20260730-visual-fix">
+<link rel="stylesheet" href="css/style.css?v=20260730-section-fix">
 <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -21,7 +21,6 @@
       <a href="#sobre">Sobre el proyecto</a>
       <a href="#categorias">Categorías</a>
       <a href="#catalogo">Productos</a>
-      <a href="#emprendedores">Emprendedores</a>
       <a href="#loja">Loja</a>
       <a href="#noticias">Noticias</a>
       <a href="login.html">Productores</a>
@@ -76,9 +75,7 @@
                 Explorar catálogo
             </a>
 
-            <a href="#emprendedores" class="btn btn-outline magnetic">
-                Conocer emprendedores
-            </a>
+            <a href="#catalogo" class="btn btn-outline magnetic">Ver marcas lojanas</a>
 
         </div>
 
@@ -191,20 +188,6 @@
   </div>
 </section>
 
-<!-- ===================== EMPRENDEDORES ===================== -->
-<section id="emprendedores" class="soft-section" data-parallax-section>
-  <div class="container">
-    <div class="section-head center reveal">
-      <span class="eyebrow">Rostros de Lojanova</span>
-      <h2>Emprendedores lojanos</h2>
-      <p>Historias de esfuerzo, tradición e innovación detrás de cada producto.</p>
-    </div>
-    <div class="emp-grid" id="empGrid">
-      <div class="loading-spinner">Cargando emprendedores…</div>
-    </div>
-  </div>
-</section>
-
 <!-- ===================== LOJA ===================== -->
 <section id="loja" class="loja-section" data-parallax-section>
   <div class="container loja-grid">
@@ -215,7 +198,7 @@
       <div class="canton-list" id="cantonList" style="margin-top:32px"></div>
     </div>
     <div class="loja-media reveal">
-      <img src="https://images.unsplash.com/photo-1531880558861-4d5b0d9c0f0e?q=80&w=1200" alt="Paisaje turístico de Loja, Ecuador">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Paisaje natural de la provincia de Loja, Ecuador" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1400&auto=format&fit=crop';">
     </div>
   </div>
 </section>
@@ -224,15 +207,16 @@
 <section id="beneficios" data-parallax-section>
   <div class="container">
     <div class="section-head center reveal">
-      <span class="eyebrow">Por qué Lojanova</span>
-      <h2>Beneficios de comprar lojano</h2>
+      <span class="eyebrow">Valor territorial</span>
+      <h2>Razones para elegir productos lojanos</h2>
+      <p>Una propuesta que conecta origen, calidad y desarrollo local con oportunidades comerciales sostenibles.</p>
     </div>
     <div class="benefits-grid">
-      <div class="benefit-card reveal"><i data-lucide="map-pin" class="benefit-icon"></i><h4>Productos locales</h4><p>Origen verificado, directo de la provincia de Loja.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="badge-check" class="benefit-icon"></i><h4>Calidad garantizada</h4><p>Emprendedores comprometidos con procesos de calidad.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="handshake" class="benefit-icon"></i><h4>Contacto directo</h4><p>Habla directamente con quien produce, sin intermediarios.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="trending-up" class="benefit-icon"></i><h4>Economía local</h4><p>Cada contacto impulsa el desarrollo de la provincia.</p></div>
-      <div class="benefit-card reveal"><i data-lucide="globe" class="benefit-icon"></i><h4>Proyección internacional</h4><p>Un puente entre Loja y mercados de todo el mundo.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="map-pin" class="benefit-icon"></i><h4>Origen territorial</h4><p>Productos vinculados a la identidad productiva, cultural y geográfica de la provincia de Loja.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="badge-check" class="benefit-icon"></i><h4>Oferta verificada</h4><p>Emprendimientos registrados que presentan información clara sobre sus productos y capacidades.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="handshake" class="benefit-icon"></i><h4>Vinculación directa</h4><p>Facilita el contacto entre compradores, distribuidores y marcas lojanas sin intermediación innecesaria.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="trending-up" class="benefit-icon"></i><h4>Desarrollo productivo</h4><p>Promueve nuevas oportunidades comerciales para emprendimientos y productores de los cantones lojanos.</p></div>
+      <div class="benefit-card reveal"><i data-lucide="globe" class="benefit-icon"></i><h4>Proyección comercial</h4><p>Fortalece la visibilidad de la oferta lojana en mercados nacionales e internacionales.</p></div>
     </div>
   </div>
 </section>
@@ -279,7 +263,7 @@
           <li><a href="#sobre">Sobre el proyecto</a></li>
           <li><a href="#categorias">Categorías</a></li>
           <li><a href="#catalogo">Productos</a></li>
-          <li><a href="#emprendedores">Emprendedores</a></li>
+          <li></li>
           <li><a href="#noticias">Noticias</a></li>
         </ul>
       </div>
@@ -310,10 +294,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js?v=20260722-hero-visible"></script>
-<script src="js/supabase-client.js?v=20260730-visual-fix"></script>
-<script src="js/main.js?v=20260730-visual-fix"></script>
+<script src="js/supabase-client.js?v=20260730-section-fix"></script>
+<script src="js/main.js?v=20260730-section-fix"></script>
 <div id="google_translate_element" aria-hidden="true"></div>
-<script src="js/translator.js?v=20260730-visual-fix"></script>
+<script src="js/translator.js?v=20260730-section-fix"></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
