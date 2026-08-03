@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso productor - Lojanova</title>
 <link rel="stylesheet" href="admin/css/admin.css">
-<link rel="manifest" href="/manifest.webmanifest?v=20260803-install-visible">
+<link rel="manifest" href="/manifest.webmanifest?v=20260803-force-floating">
 <meta name="theme-color" content="#1E5A3A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,6 +13,10 @@
 <link rel="apple-touch-icon" href="/assets/lojanova-app-icon.svg">
 </head>
 <body>
+<button class="mobile-app-download notranslate" id="mobileAppDownload" type="button" aria-label="Descargar Lojanova como app">
+  <span aria-hidden="true">↓</span>
+  <strong>App</strong>
+</button>
 
 <div class="login-screen">
   <div class="login-card">
@@ -142,9 +146,10 @@ form.addEventListener("submit", async (event) => {
 });
 </script>
 
-<script src="/js/pwa-install.js?v=20260803-install-visible"></script>
+<script src="/js/pwa-install.js?v=20260803-force-floating"></script>
 </body>
 </html>
+
 
 
 

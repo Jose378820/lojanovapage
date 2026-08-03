@@ -9,36 +9,17 @@ function isMobileDevice() {
   return window.matchMedia("(max-width: 900px), (hover: none), (pointer: coarse)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-function getInstallButtons() {
-  return [...document.querySelectorAll("[data-install-app]")];
-}
-
-function ensureFloatingInstallButton() {
-  let button = document.getElementById("installAppFloatingBtn");
-  if (button) return button;
-
-  button = document.createElement("button");
-  button.id = "installAppFloatingBtn";
-  button.type = "button";
-  button.className = "install-app-floating-btn notranslate";
-  button.setAttribute("data-install-app", "");
-  button.setAttribute("aria-label", "Descargar Lojanova como app");
-  button.innerHTML = '<span aria-hidden="true">↓</span><strong>Descargar app</strong>';
-  document.body.appendChild(button);
-  return button;
-}
-
-function showInstallButton() {
+function showInstallControls() {
   if (!isMobileDevice() || isStandaloneMode()) return;
-  ensureFloatingInstallButton();
-  getInstallButtons().forEach(button => {
+  document.querySelectorAll("[data-install-app], .mobile-app-download").forEach(button => {
     button.hidden = false;
     button.classList.add("is-visible");
+    button.style.removeProperty("display");
   });
 }
 
-function hideInstallButton() {
-  getInstallButtons().forEach(button => {
+function hideInstallControlsAfterInstall() {
+  document.querySelectorAll("[data-install-app], .mobile-app-download").forEach(button => {
     button.hidden = true;
     button.classList.remove("is-visible");
   });
@@ -46,47 +27,42 @@ function hideInstallButton() {
 
 function showManualInstallHelp() {
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const message = isIOS
+  alert(isIOS
     ? "Para instalar Lojanova en iPhone: abre esta página en Safari, toca Compartir y elige ‘Agregar a pantalla de inicio’."
-    : "Si no aparece la ventana automática, instala Lojanova desde Chrome: toca ⋮ arriba a la derecha y elige ‘Instalar app’ o ‘Añadir a pantalla de inicio’.";
-  alert(message);
+    : "Para instalar Lojanova: toca el menú ⋮ de Chrome y elige ‘Instalar app’ o ‘Añadir a pantalla de inicio’."
+  );
 }
 
 window.addEventListener("beforeinstallprompt", event => {
   event.preventDefault();
   deferredInstallPrompt = event;
-  showInstallButton();
+  showInstallControls();
 });
 
 window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
-  hideInstallButton();
+  hideInstallControlsAfterInstall();
 });
 
-async function handleInstallClick(event) {
-  const target = event.target.closest("[data-install-app]");
-  if (!target) return;
-
+async function installApp() {
   if (deferredInstallPrompt) {
     deferredInstallPrompt.prompt();
     const choice = await deferredInstallPrompt.userChoice;
     deferredInstallPrompt = null;
-    if (choice?.outcome === "accepted") hideInstallButton();
+    if (choice?.outcome === "accepted") hideInstallControlsAfterInstall();
     return;
   }
-
   showManualInstallHelp();
 }
 
-document.addEventListener("click", handleInstallClick);
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (isMobileDevice() && !isStandaloneMode()) showInstallButton();
+document.addEventListener("click", event => {
+  if (event.target.closest("[data-install-app], .mobile-app-download")) installApp();
 });
 
-window.addEventListener("load", () => {
-  if (isMobileDevice() && !isStandaloneMode()) showInstallButton();
+["DOMContentLoaded", "load", "pageshow", "visibilitychange"].forEach(eventName => {
+  window.addEventListener(eventName, showInstallControls);
 });
+setInterval(showInstallControls, 1500);
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -97,21 +73,16 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-install-visible");
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-force-floating");
       const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-
       if (registration.waiting) activateWaitingWorker();
-
       registration.addEventListener("updatefound", () => {
         const newWorker = registration.installing;
         if (!newWorker) return;
         newWorker.addEventListener("statechange", () => {
-          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-            activateWaitingWorker();
-          }
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) activateWaitingWorker();
         });
       });
-
       await registration.update();
       setInterval(() => registration.update(), 15 * 60 * 1000);
     } catch (error) {
@@ -120,4 +91,4 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-showInstallButton();
+showInstallControls();
