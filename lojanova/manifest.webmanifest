@@ -1,0 +1,21 @@
+﻿{
+  "name": "Lojanova - Productos de Loja",
+  "short_name": "Lojanova",
+  "description": "Vitrina digital oficial para productos, marcas y emprendimientos de la provincia de Loja.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#123824",
+  "theme_color": "#1E5A3A",
+  "categories": ["business", "shopping", "productivity"],
+  "lang": "es-EC",
+  "icons": [
+    {
+      "src": "/assets/lojanova-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

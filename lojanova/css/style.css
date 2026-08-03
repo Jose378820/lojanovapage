@@ -1184,3 +1184,22 @@ body.translated-rtl{
   top:0!important;
   margin-top:0!important;
 }
+
+/* ---------- PWA install ---------- */
+.install-app-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 18px;border-radius:999px;border:1px solid rgba(201,161,90,.46);
+  background:rgba(255,255,255,.10);color:var(--blanco);font-weight:800;font-size:.78rem;
+  cursor:pointer;transition:transform .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+.install-app-btn:hover{transform:translateY(-2px);background:rgba(201,161,90,.18);border-color:var(--dorado)}
+.navbar.scrolled .install-app-btn{color:var(--verde-bosque-dark);background:rgba(201,161,90,.12);border-color:rgba(30,90,58,.16)}
+.install-app-btn[hidden]{display:none!important}
+.offline-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,var(--verde-bosque-dark),var(--verde-bosque));}
+.offline-card{width:min(460px,100%);background:#fff;border-radius:24px;padding:38px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+.offline-card .logo{font-family:var(--f-display);font-weight:700;font-size:1.8rem;color:var(--verde-bosque-dark);margin-bottom:14px}
+.offline-card .logo span{color:var(--dorado)}
+.offline-card h1{font-size:2rem;color:var(--verde-bosque-dark);margin-bottom:12px}
+.offline-card p{margin-bottom:24px;color:#666}
+@media(max-width:1100px){.install-app-btn{padding:10px 14px;font-size:.74rem}}
+@media(max-width:900px){.install-app-btn{position:relative;z-index:1001}}
