@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Acceso administrador — Lojanova</title>
+<title>Acceso administrador â€” Lojanova</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260723-admin-fix">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-old-traffic-analytics">
 </head>
 <body>
 
 <div class="login-screen">
   <div class="login-card">
     <div class="logo">Loja<span>nova</span></div>
-    <p class="sub">Panel de administración</p>
+    <p class="sub">Panel de administraciÃ³n</p>
 
     <div class="error-msg" id="errorMsg"></div>
 
@@ -23,20 +23,20 @@
         <input type="email" id="email" required autocomplete="username" placeholder="admin@lojanova.gob.ec">
       </div>
       <div class="field">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
+        <label for="password">ContraseÃ±a</label>
+        <input type="password" id="password" required autocomplete="current-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
       </div>
       <button type="submit" class="btn btn-primary" id="loginBtn">Ingresar</button>
     </form>
-    <p style="text-align:center;margin-top:22px;font-size:.82rem"><a href="/index.html" style="color:var(--verde-bosque)">← Volver al sitio público</a></p>
+    <p style="text-align:center;margin-top:22px;font-size:.82rem"><a href="/index.html" style="color:var(--verde-bosque)">â† Volver al sitio pÃºblico</a></p>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/config.js?v=20260723-admin-fix"></script>
-<script src="/js/supabase-client.js?v=20260723-admin-fix"></script>
+<script src="/js/config.js?v=20260803-old-traffic-analytics"></script>
+<script src="/js/supabase-client.js?v=20260803-old-traffic-analytics"></script>
 <script>
-// Si ya hay sesión activa y es admin, redirige directo al dashboard
+// Si ya hay sesiÃ³n activa y es admin, redirige directo al dashboard
 (async () => {
   const { data: { session } } = await db.auth.getSession();
   if (session){
@@ -52,7 +52,7 @@ const loginBtn = document.getElementById("loginBtn");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   errorMsg.style.display = "none";
-  loginBtn.textContent = "Ingresando…";
+  loginBtn.textContent = "Ingresandoâ€¦";
   loginBtn.disabled = true;
 
   const email = document.getElementById("email").value.trim();
@@ -61,7 +61,7 @@ form.addEventListener("submit", async (e) => {
   const { data, error } = await db.auth.signInWithPassword({ email, password });
 
   if (error){
-    errorMsg.textContent = "Correo o contraseña incorrectos.";
+    errorMsg.textContent = "Correo o contraseÃ±a incorrectos.";
     errorMsg.style.display = "block";
     loginBtn.textContent = "Ingresar";
     loginBtn.disabled = false;
@@ -70,7 +70,7 @@ form.addEventListener("submit", async (e) => {
 
   const { data: perfil } = await db.from("admins").select("id").eq("id", data.user.id).maybeSingle();
   if (!perfil){
-    errorMsg.textContent = "Esta cuenta no tiene permisos de administrador. Contacta al equipo técnico.";
+    errorMsg.textContent = "Esta cuenta no tiene permisos de administrador. Contacta al equipo tÃ©cnico.";
     errorMsg.style.display = "block";
     await db.auth.signOut();
     loginBtn.textContent = "Ingresar";
@@ -83,3 +83,4 @@ form.addEventListener("submit", async (e) => {
 </script>
 </body>
 </html>
+
