@@ -117,7 +117,7 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-app-only-add");
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-app-analytics");
       const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
       if (registration.waiting) activateWaitingWorker();
       registration.addEventListener("updatefound", () => {
@@ -138,21 +138,3 @@ if ("serviceWorker" in navigator) {
 showInstallControls();
 
 
-
-
-// lojanova_app_download_tracking_listener
-window.addEventListener("appinstalled", () => {
-  trackAppInstallEvent("instalada", sessionStorage.getItem("lojanova_last_app_install_control") || "Instalación confirmada");
-});
-
-document.addEventListener("click", event => {
-  const trigger = event.target.closest("[data-install-app], .mobile-app-download, #mobileAppDownload, #installAppBtn, #installAppMenuBtn");
-  if (!trigger) return;
-  const control = trigger.classList.contains("mobile-app-download") || trigger.id === "mobileAppDownload"
-    ? "Botón flotante inferior izquierdo"
-    : trigger.classList.contains("install-app-menu-btn") || trigger.id === "installAppMenuBtn"
-      ? "Menú móvil"
-      : "Navbar";
-  sessionStorage.setItem("lojanova_last_app_install_control", control);
-  trackAppInstallEvent("clic", control);
-}, true);
