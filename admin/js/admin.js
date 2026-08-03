@@ -31,100 +31,11 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
     document.querySelectorAll(".view").forEach(v => v.style.display = "none");
     document.getElementById("view-" + btn.dataset.view).style.display = "block";
     document.getElementById("sidebar").classList.remove("open");
+    if (btn.dataset.view === "resumen") cargarKPIs();
+    if (btn.dataset.view === "analiticas") cargarAnaliticas();
   });
 });
-/* =========================================================
-   ANALÍTICAS
-   ========================================================= */
-async function cargarAnaliticas(){
-  const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
-    db.from("vista_visitas_diarias").select("*"),
-    db.from("vista_horas_pico").select("*"),
-    db.from("vista_paginas_top").select("*"),
-    db.from("vista_dispositivos").select("*"),
-    db.from("vista_duracion_sesiones").select("duracion_segundos"),
-    db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", new Date().toISOString().slice(0,10)),
-    db.from("vista_navegadores").select("*"),
-    db.from("vista_sistemas_operativos").select("*"),
-    db.from("vista_paises").select("*"),
-    db.from("vista_ciudades").select("*"),
-    db.from("vista_origenes_trafico").select("*"),
-    db.from("vista_terminos_busqueda").select("*"),
-    db.from("vista_clics_cta").select("*"),
-    db.from("vista_productos_mas_vistos").select("*"),
-    db.from("vista_tiempo_por_pagina").select("*"),
-    db.from("vista_tasa_rebote").select("*").maybeSingle(),
-  ]);
-
-  document.getElementById("kpiVisitasHoy").textContent = hoy.count ?? 0;
-
-  const totalUnicos = (diarias.data || []).reduce((acc, d) => acc + (d.visitantes_unicos || 0), 0);
-  document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos;
-
-  const dur = (duraciones.data || []).map(d => d.duracion_segundos || 0);
-  const promedio = dur.length ? Math.round(dur.reduce((a,b) => a+b, 0) / dur.length) : 0;
-  document.getElementById("kpiDuracionProm").textContent = promedio > 60 ? `${Math.floor(promedio/60)} min ${promedio%60}s` : `${promedio}s`;
-
-  const topData = top.data || [];
-  document.getElementById("kpiPaginaTop").textContent = topData[0]?.pagina || "—";
-  document.getElementById("tablaPaginasTop").innerHTML = topData.length
-    ? topData.map(p => `<tr><td>${escapeHtml(p.pagina)}</td><td>${p.visitas}</td></tr>`).join("")
-    : `<tr class="empty-row"><td colspan="2">Sin datos aún</td></tr>`;
-
-  document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "—";
-
-  const tp = tiempoPag.data || [];
-  const scrollProm = tp.length ? Math.round(tp.reduce((a,d) => a + (d.scroll_promedio_pct||0), 0) / tp.length) : 0;
-  document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "—";
-
-  renderChart("chartVisitasDiarias", "line", {
-    labels: (diarias.data || []).map(d => d.dia),
-    datasets: [{ label: "Visitas", data: (diarias.data || []).map(d => d.visitas), borderColor: "#1E5A3A", backgroundColor: "rgba(30,90,58,.15)", tension: .3, fill: true }]
-  });
-
-  const horasMap = new Array(24).fill(0);
-  (horas.data || []).forEach(h => horasMap[h.hora] = h.visitas);
-  renderChart("chartHoras", "bar", {
-    labels: horasMap.map((_, i) => `${i}h`),
-    datasets: [{ label: "Visitas", data: horasMap, backgroundColor: "#C9A15A" }]
-  });
-
-  renderChart("chartDispositivos", "doughnut", {
-    labels: (dispositivos.data || []).map(d => d.dispositivo),
-    datasets: [{ data: (dispositivos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a"] }]
-  });
-
-  renderChart("chartNavegadores", "doughnut", {
-    labels: (navegadores.data || []).map(d => d.navegador),
-    datasets: [{ data: (navegadores.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
-  });
-
-  renderChart("chartSO", "doughnut", {
-    labels: (sos.data || []).map(d => d.so),
-    datasets: [{ data: (sos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
-  });
-
-  const tablaSimple = (id, rows, render, vacio) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerHTML = rows.length ? rows.map(render).join("") : `<tr class="empty-row"><td colspan="3">${vacio}</td></tr>`;
-  };
-
-  tablaSimple("tablaPaises", paises.data || [], p => `<tr><td>${escapeHtml(p.pais)}</td><td>${p.visitantes}</td></tr>`, "Sin datos aún");
-  tablaSimple("tablaCiudades", ciudades.data || [], c => `<tr><td>${escapeHtml(c.ciudad)}</td><td>${escapeHtml(c.pais)}</td><td>${c.visitantes}</td></tr>`, "Sin datos aún");
-  tablaSimple("tablaOrigenes", origenes.data || [], o => `<tr><td>${escapeHtml(o.origen)}</td><td>${o.visitas}</td></tr>`, "Sin datos aún");
-  tablaSimple("tablaBusquedas", busquedas.data || [], b => `<tr><td>${escapeHtml(b.termino)}</td><td>${b.veces}</td></tr>`, "Aún no hay búsquedas registradas");
-  tablaSimple("tablaClics", clics.data || [], c => `<tr><td>${escapeHtml(c.elemento)}</td><td>${c.clics}</td></tr>`, "Aún no hay clics registrados");
-  tablaSimple("tablaProductosTop", productos.data || [], p => `<tr><td>${escapeHtml(p.slug)}</td><td>${p.vistas}</td></tr>`, "Sin datos aún");
-}
-
-const CHART_INSTANCES = {};
-function renderChart(canvasId, type, data){
-  const ctx = document.getElementById(canvasId);
-  if (!ctx) return;
-  if (CHART_INSTANCES[canvasId]) CHART_INSTANCES[canvasId].destroy();
-  CHART_INSTANCES[canvasId] = new Chart(ctx, { type, data, options: { responsive: true, plugins: { legend: { display: type === "doughnut" } } } });
-}
+document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
 
 /* ---------- Utilidades ---------- */
 function escapeHtml(str){
@@ -147,7 +58,7 @@ document.querySelectorAll(".modal-overlay").forEach(ov => {
 async function iniciarDashboard(){
   lucide.createIcons();
   await cargarListasBase();
-  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes(), cargarAnaliticas()]);
+  await Promise.all([cargarKPIs(), cargarAnaliticas(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes()]);
 }
 
 async function cargarListasBase(){
@@ -169,17 +80,178 @@ async function cargarListasBase(){
 }
 
 async function cargarKPIs(){
-  const [p, e, c, n] = await Promise.all([
-    db.from("productos").select("id", { count: "exact", head: true }).eq("activo", true),
-    db.from("emprendedores").select("id", { count: "exact", head: true }).eq("activo", true),
-    db.from("categorias").select("id", { count: "exact", head: true }),
-    db.from("noticias").select("id", { count: "exact", head: true }).eq("activo", true),
+  const setKpi = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  const countOrZero = async (label, query) => {
+    const { count, error } = await query;
+    if (error) {
+      console.warn(`No se pudo actualizar KPI ${label}:`, error);
+      return "!";
+    }
+    return count ?? 0;
+  };
+
+  const [productos, emprendedores, categorias, noticias] = await Promise.all([
+    countOrZero(
+      "productos",
+      db.from("productos")
+        .select("id, emprendedores!inner(id)", { count: "exact", head: true })
+        .eq("activo", true)
+        .eq("emprendedores.activo", true)
+        .eq("emprendedores.estado", "aprobado")
+    ),
+    countOrZero(
+      "emprendedores",
+      db.from("emprendedores")
+        .select("id", { count: "exact", head: true })
+        .eq("activo", true)
+        .eq("estado", "aprobado")
+    ),
+    countOrZero("categorias", db.from("categorias").select("id", { count: "exact", head: true })),
+    countOrZero("noticias", db.from("noticias").select("id", { count: "exact", head: true }).eq("activo", true)),
   ]);
-  document.getElementById("kpiProductos").textContent = p.count ?? 0;
-  document.getElementById("kpiEmprendedores").textContent = e.count ?? 0;
-  document.getElementById("kpiCategorias").textContent = c.count ?? 0;
-  document.getElementById("kpiNoticias").textContent = n.count ?? 0;
+
+  setKpi("kpiProductos", productos);
+  setKpi("kpiEmprendedores", emprendedores);
+  setKpi("kpiCategorias", categorias);
+  setKpi("kpiNoticias", noticias);
 }
+
+function contarPor(lista, selector, fallback = "Sin clasificar"){
+  return lista.reduce((acc, item) => {
+    const key = selector(item) || fallback;
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+
+
+function getAppInstallOriginLabel(pagina = "", titulo = ""){
+  const text = `${pagina} ${titulo}`.toLowerCase();
+  if (text.includes("producto")) return "Ficha de producto";
+  if (text.includes("marca")) return "Página de marca";
+  if (text.includes("login")) return "Portal productores";
+  if (text.includes("registro")) return "Registro de productores";
+  if (text.includes("mi-panel")) return "Panel del productor";
+  if (text.includes("index") || text.includes("inicio") || text === "/app-instalada/" || text === "/app-clic/") return "Inicio / Hero";
+  return "Otra sección";
+}
+
+function percent(value, total){
+  if (!total) return "0%";
+  return `${Math.round((value / total) * 100)}%`;
+}
+
+async function cargarAnaliticasApp(){
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  const resumen = document.getElementById("analyticsAppResumen");
+  const origenesBox = document.getElementById("analyticsAppOrigenes");
+
+  try{
+    const { data, error } = await db
+      .from("visitas_plataforma")
+      .select("pagina,titulo,created_at")
+      .like("pagina", "/app-%")
+      .order("created_at", { ascending:false })
+      .limit(5000);
+
+    if (error) throw error;
+
+    const eventos = data || [];
+    const clics = eventos.filter(e => (e.pagina || "").startsWith("/app-clic")).length;
+    const instaladas = eventos.filter(e => (e.pagina || "").startsWith("/app-instalada")).length;
+    const conversion = clics ? `${Math.round((instaladas / clics) * 100)}%` : "0%";
+    const origenes = {};
+
+    eventos
+      .filter(e => (e.pagina || "").startsWith("/app-instalada"))
+      .forEach(e => {
+        const label = getAppInstallOriginLabel(e.pagina, e.titulo);
+        origenes[label] = (origenes[label] || 0) + 1;
+      });
+
+    const principal = Object.entries(origenes).sort((a,b) => b[1] - a[1])[0]?.[0] || "Sin datos";
+
+    setText("analyticsAppInstaladas", instaladas);
+    setText("analyticsAppClicks", clics);
+    setText("analyticsAppConversion", conversion);
+    setText("analyticsAppPrincipal", principal);
+    renderAnalyticsBars("analyticsAppOrigenes", origenes);
+
+    if (resumen){
+      resumen.innerHTML = `
+        <p><strong>${instaladas}</strong> instalaciones registradas por el navegador.</p>
+        <p><strong>${clics}</strong> personas tocaron el botón de descarga de la app.</p>
+        <p>La sección con más instalaciones es <strong>${escapeHtml(principal)}</strong>.</p>
+        <p style="font-size:.82rem;color:#777">Nota: en Android Chrome se registra la instalación real cuando el navegador confirma el evento; en iPhone se registra principalmente el clic porque iOS no siempre reporta la instalación.</p>
+      `;
+    }
+  }catch(error){
+    console.warn("No se pudieron cargar analíticas de app:", error);
+    setText("analyticsAppInstaladas", "!");
+    setText("analyticsAppClicks", "!");
+    setText("analyticsAppConversion", "!");
+    setText("analyticsAppPrincipal", "Error");
+    if (origenesBox) origenesBox.innerHTML = `<div class="empty-row">No se pudieron cargar las descargas de la app.</div>`;
+    if (resumen) resumen.textContent = "No se pudo consultar visitas_plataforma. Revisa permisos RLS de lectura para administradores.";
+  }
+}
+
+async function cargarAnaliticas(){
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  const [productosRes, emprendedoresRes, noticiasRes] = await Promise.all([
+    db.from("productos").select("id, activo, categorias(nombre), cantones(nombre), emprendedores!inner(id, activo, estado)"),
+    db.from("emprendedores").select("id, activo, estado"),
+    db.from("noticias").select("id, activo"),
+  ]);
+
+  if (productosRes.error || emprendedoresRes.error || noticiasRes.error){
+    console.warn("No se pudieron cargar analíticas:", productosRes.error || emprendedoresRes.error || noticiasRes.error);
+    ["analyticsCategorias","analyticsCantones","analyticsEstados"].forEach(id => {
+      const box = document.getElementById(id);
+      if (box) box.innerHTML = `<div class="empty-row">No se pudieron cargar las analíticas.</div>`;
+    });
+    return;
+  }
+
+  const productosVisibles = (productosRes.data || []).filter(p =>
+    p.activo && p.emprendedores?.activo && p.emprendedores?.estado === "aprobado"
+  );
+  const emprendedores = emprendedoresRes.data || [];
+  const aprobados = emprendedores.filter(e => e.activo && e.estado === "aprobado").length;
+  const pendientes = emprendedores.filter(e => e.estado === "pendiente" || !e.estado).length;
+  const rechazados = emprendedores.filter(e => e.estado === "rechazado").length;
+  const noticias = (noticiasRes.data || []).filter(n => n.activo).length;
+
+  setText("analyticsProductos", productosVisibles.length);
+  setText("analyticsMarcas", aprobados);
+  setText("analyticsPendientes", pendientes);
+  setText("analyticsNoticias", noticias);
+  await cargarAnaliticasApp();
+
+  renderAnalyticsBars("analyticsCategorias", contarPor(productosVisibles, p => p.categorias?.nombre));
+  renderAnalyticsBars("analyticsCantones", contarPor(productosVisibles, p => p.cantones?.nombre));
+  renderAnalyticsBars("analyticsEstados", {
+    "Aprobados": aprobados,
+    "Pendientes": pendientes,
+    "Rechazados": rechazados,
+  });
+
+  const resumen = document.getElementById("analyticsResumen");
+  if (resumen){
+    const promedio = aprobados ? (productosVisibles.length / aprobados).toFixed(1) : "0";
+    resumen.innerHTML = `
+      <p><strong>${productosVisibles.length}</strong> productos visibles pertenecen a marcas aprobadas.</p>
+      <p><strong>${aprobados}</strong> marcas están activas y aprobadas; <strong>${pendientes}</strong> solicitudes requieren revisión.</p>
+      <p>Promedio actual: <strong>${promedio}</strong> productos por marca aprobada.</p>
+    `;
+  }
+}
+
+document.getElementById("btnRefreshAnalytics")?.addEventListener("click", cargarAnaliticas);
 
 /* =========================================================
    PRODUCTOS
@@ -190,7 +262,7 @@ async function cargarProductos(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay productos. Crea el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(p => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(p.imagen_principal_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${p.imagen_principal_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(p.nombre)}</td>
       <td>${escapeHtml(p.categorias?.nombre || '—')}</td>
       <td>${escapeHtml(p.cantones?.nombre || '—')}</td>
@@ -222,9 +294,6 @@ window.editarProducto = function(id){
   document.getElementById("p_emprendedor").value = p.emprendedor_id || "";
   document.getElementById("p_desc_corta").value = p.descripcion_corta || "";
   document.getElementById("p_desc_larga").value = p.descripcion_larga || "";
-  document.getElementById("p_nombre_en").value = p.nombre_en || "";
-  document.getElementById("p_desc_corta_en").value = p.descripcion_corta_en || "";
-  document.getElementById("p_desc_larga_en").value = p.descripcion_larga_en || "";
   document.getElementById("p_historia").value = p.historia || "";
   document.getElementById("p_proceso").value = p.proceso_elaboracion || "";
   document.getElementById("p_ingredientes").value = p.ingredientes || "";
@@ -262,9 +331,6 @@ document.getElementById("formProducto").addEventListener("submit", async (e) => 
     emprendedor_id: document.getElementById("p_emprendedor").value || null,
     descripcion_corta: document.getElementById("p_desc_corta").value.trim(),
     descripcion_larga: document.getElementById("p_desc_larga").value.trim(),
-    nombre_en: document.getElementById("p_nombre_en").value.trim() || null,
-    descripcion_corta_en: document.getElementById("p_desc_corta_en").value.trim() || null,
-    descripcion_larga_en: document.getElementById("p_desc_larga_en").value.trim() || null,
     historia: document.getElementById("p_historia").value.trim(),
     proceso_elaboracion: document.getElementById("p_proceso").value.trim(),
     ingredientes: document.getElementById("p_ingredientes").value.trim(),
@@ -301,7 +367,7 @@ async function cargarEmprendedores(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay emprendedores. Registra el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td>${escapeHtml(e.cantones?.nombre || '—')}</td>
@@ -384,7 +450,7 @@ async function cargarCategorias(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Aún no hay categorías.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(c.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${c.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(c.nombre)}</td>
       <td>${escapeHtml(c.slug)}</td>
       <td>${c.orden ?? 0}</td>
@@ -410,7 +476,6 @@ window.editarCategoria = function(id){
   document.getElementById("tituloModalCategoria").textContent = "Editar categoría";
   document.getElementById("c_id").value = c.id;
   document.getElementById("c_nombre").value = c.nombre || "";
-  document.getElementById("c_nombre_en").value = c.nombre_en || "";
   document.getElementById("c_orden").value = c.orden ?? 0;
   document.getElementById("c_descripcion").value = c.descripcion || "";
   document.getElementById("c_imagen").value = c.imagen_url || "";
@@ -430,7 +495,6 @@ document.getElementById("formCategoria").addEventListener("submit", async (e) =>
   const nombre = document.getElementById("c_nombre").value.trim();
   const payload = {
     nombre,
-    nombre_en: document.getElementById("c_nombre_en").value.trim() || null,
     slug: slugify(nombre),
     orden: Number(document.getElementById("c_orden").value) || 0,
     descripcion: document.getElementById("c_descripcion").value.trim(),
@@ -454,7 +518,7 @@ async function cargarNoticias(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay noticias.</td></tr>`; return; }
   tbody.innerHTML = data.map(n => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(n.titulo)}</td>
       <td>${TIPO_LABEL[n.tipo] || n.tipo || '—'}</td>
       <td>${n.fecha_evento || '—'}</td>
@@ -549,7 +613,7 @@ async function cargarSolicitudes(){
 
   tPend.innerHTML = pendientes.length ? pendientes.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td>${escapeHtml(e.correo || '—')}</td>
@@ -559,11 +623,11 @@ async function cargarSolicitudes(){
         <button class="btn btn-outline btn-sm" onclick="rechazarSolicitud('${e.id}')">Rechazar</button>
       </td>
     </tr>
-  `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes.</td></tr>`;
+  `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes 🎉</td></tr>`;
 
   tHist.innerHTML = historial.length ? historial.map(e => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td><span class="status-pill ${e.estado === 'aprobado' ? 'on' : 'off'}">${e.estado === 'aprobado' ? 'Aprobado' : 'Rechazado'}</span></td>
@@ -606,6 +670,5 @@ async function cargarCantones(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="2">Sin datos.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.orden ?? 0}</td></tr>`).join("");
 }
-
 
 

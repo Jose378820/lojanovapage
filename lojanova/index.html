@@ -10,7 +10,7 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/style.css?v=20260803-traffic-analytics">
 <script src="https://unpkg.com/lucide@latest"></script>
-<link rel="manifest" href="/manifest.webmanifest?v=20260803-traffic-analytics">
+<link rel="manifest" href="/manifest.webmanifest?v=20260803-app-analytics">
 <meta name="theme-color" content="#1E5A3A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,6 +18,10 @@
 <link rel="apple-touch-icon" href="/assets/lojanova-app-icon.svg">
 </head>
 <body>
+<button class="mobile-app-download notranslate" id="mobileAppDownload" type="button" aria-label="Descargar Lojanova como app">
+  <span aria-hidden="true">↓</span>
+  <strong>App</strong>
+</button>
 
 <!-- ===================== NAVBAR ===================== -->
 <header class="navbar" id="navbar">
@@ -30,10 +34,10 @@
       <a href="#loja">Loja</a>
       <a href="#noticias">Noticias</a>
       <a href="login.html">Productores</a>
-          <button class="install-app-menu-btn notranslate" id="installAppMenuBtn" data-install-app type="button">Instalar app</button>
+          <button class="install-app-menu-btn notranslate" id="installAppMenuBtn" data-install-app type="button">Descargar app</button>
     </nav>
     <a href="#catalogo" class="btn btn-primary btn-sm nav-cta">Explorar productos</a>
-    <button class="install-app-btn notranslate" id="installAppBtn" data-install-app type="button">Instalar app</button>
+    <button class="install-app-btn notranslate" id="installAppBtn" data-install-app type="button">Descargar app</button>
         <div class="language-menu notranslate">
       <label for="languageSelect" class="sr-only">Idioma</label>
       <select id="languageSelect" aria-label="Seleccionar idioma">
@@ -311,9 +315,12 @@
 <div id="google_translate_element" aria-hidden="true"></div>
 <script src="js/translator.js?v=20260803-traffic-analytics"></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script src="/js/pwa-install.js?v=20260803-traffic-analytics"></script>
+<script src="/js/pwa-install.js?v=20260803-app-analytics"></script>
 </body>
 </html>
+
+
+
 
 
 

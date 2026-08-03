@@ -1539,3 +1539,60 @@ body.translated-rtl{
 @media (min-width:901px) and (hover:hover){
   [data-install-app]{display:none!important;}
 }
+
+/* ---------- Forced bottom-left mobile app button ---------- */
+.mobile-app-download{
+  display:none!important;
+}
+@media (max-width:900px), (hover:none), (pointer:coarse){
+  .mobile-app-download{
+    display:inline-flex!important;
+    position:fixed!important;
+    left:14px!important;
+    bottom:calc(18px + env(safe-area-inset-bottom))!important;
+    z-index:2147483647!important;
+    width:auto!important;
+    min-width:92px!important;
+    height:54px!important;
+    padding:0 17px!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:8px!important;
+    border:1px solid rgba(255,255,255,.24)!important;
+    border-radius:999px!important;
+    background:linear-gradient(135deg,#d6ae60 0%,#b88935 100%)!important;
+    color:#103f29!important;
+    box-shadow:0 14px 36px rgba(0,0,0,.34)!important;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+    font-size:15px!important;
+    font-weight:900!important;
+    line-height:1!important;
+    text-decoration:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+    pointer-events:auto!important;
+  }
+  .mobile-app-download span{
+    width:25px!important;
+    height:25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:rgba(16,63,41,.16)!important;
+    color:#103f29!important;
+    font-size:18px!important;
+    line-height:1!important;
+  }
+  .mobile-app-download strong{
+    display:block!important;
+    color:#103f29!important;
+    font-weight:900!important;
+  }
+  body.nav-open .mobile-app-download{
+    display:inline-flex!important;
+  }
+}
+@media (min-width:901px) and (hover:hover) and (pointer:fine){
+  .mobile-app-download{display:none!important;}
+}

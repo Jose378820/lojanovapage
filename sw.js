@@ -1,13 +1,13 @@
-﻿const CACHE_VERSION = "lojanova-pwa-v20260803-force-floating";
+﻿const CACHE_VERSION = "lojanova-pwa-v20260803-app-analytics";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/offline.html",
-  "/css/style.css?v=20260803-force-floating",
+  "/css/style.css?v=20260803-app-analytics",
   "/js/config.js",
-  "/js/supabase-client.js?v=20260803-force-floating",
-  "/js/main.js?v=20260803-force-floating",
-  "/js/translator.js?v=20260803-force-floating",
+  "/js/supabase-client.js?v=20260803-app-analytics",
+  "/js/main.js?v=20260803-app-analytics",
+  "/js/translator.js?v=20260803-app-analytics",
   "/assets/lojanova-app-icon.svg",
   "/assets/lojanova-app-icon-192.png",
   "/assets/lojanova-app-icon-512.png",
@@ -72,6 +72,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(staleWhileRevalidate(request));
   }
 });
+
 
 
 

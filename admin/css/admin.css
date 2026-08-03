@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    LOJANOVA ADMIN — Panel de administración
    Reutiliza tokens del sitio público, con layout tipo dashboard
    ========================================================= */
@@ -138,144 +138,21 @@ tbody tr:hover{background:var(--gris-claro)}
   .mobile-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--verde-bosque-dark);color:#fff}
 }
 
-/* ---------- Admin premium refresh ---------- */
-:root{
-  --admin-bg:#f3f5f0;
-  --admin-card:#ffffff;
-  --admin-ink:#10291b;
-  --admin-muted:#6d756d;
-  --admin-line:rgba(21,63,40,.10);
-}
-body{
-  background:
-    radial-gradient(circle at 82% 8%, rgba(201,161,90,.12), transparent 30%),
-    linear-gradient(135deg,#f8f8f4 0%,#eef3eb 100%);
-  color:var(--admin-ink);
-}
-.app{background:transparent}
-.sidebar{
-  width:276px;
-  background:linear-gradient(180deg,#0e3422 0%,#123f29 52%,#0b2519 100%);
-  padding:28px 18px;
-  box-shadow:22px 0 60px rgba(12,45,30,.16);
-}
-.sidebar .logo{
-  font-size:1.5rem;
-  padding:2px 10px 28px;
-  border-bottom:1px solid rgba(255,255,255,.14);
-}
-.sidebar nav{gap:8px}
-.sidebar nav button,
-.sidebar nav .nav-link,
-.sidebar .logout{
-  min-height:48px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  color:rgba(255,255,255,.78);
-  background:rgba(255,255,255,.035);
-}
-.sidebar nav button:hover,
-.sidebar nav .nav-link:hover{
-  background:rgba(255,255,255,.10);
-  transform:translateX(3px);
-}
-.sidebar nav button.active,
-.sidebar nav .nav-link.active{
-  background:linear-gradient(135deg,var(--verde-bosque),#237047);
-  color:#fff;
-  border-color:rgba(201,161,90,.35);
-  box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.10);
-}
-.main{
-  max-width:none;
-  padding:42px clamp(24px,4vw,56px);
-}
-.main-header{
-  padding:4px 0 6px;
-  margin-bottom:28px;
-}
-.main-header h1{
-  font-size:clamp(2rem,3vw,3.1rem);
-  letter-spacing:-.04em;
-}
-.main-header p{font-size:1rem;color:var(--admin-muted)}
-.kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.kpi-card{
-  position:relative;
-  overflow:hidden;
-  min-height:118px;
-  padding:26px;
-  border:1px solid rgba(255,255,255,.72);
-  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(250,247,238,.88));
-  box-shadow:0 22px 56px rgba(16,41,27,.09);
-}
-.kpi-card::after{
-  content:"";
-  position:absolute;
-  width:120px;height:120px;
-  right:-42px;top:-48px;
-  border-radius:50%;
-  background:rgba(201,161,90,.12);
-}
-.kpi-num{
-  position:relative;
-  z-index:1;
-  font-size:2.25rem;
-  line-height:1;
-  letter-spacing:-.04em;
-}
-.kpi-label{
-  position:relative;
-  z-index:1;
-  color:var(--admin-muted);
-  font-weight:600;
-}
-.panel{
-  border:1px solid rgba(255,255,255,.76);
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(14px);
-  box-shadow:0 24px 70px rgba(16,41,27,.08);
-  border-radius:22px;
-  padding:28px;
-}
-.panel-title h3{
-  font-size:1.08rem;
-  color:var(--admin-ink);
-}
-table{border-collapse:separate;border-spacing:0 8px}
-thead th{border:0;color:#7f877f;padding:10px 14px}
-tbody td{
-  border:0;
-  background:#fff;
-  padding:14px;
-}
-tbody tr td:first-child{border-radius:12px 0 0 12px}
-tbody tr td:last-child{border-radius:0 12px 12px 0}
-tbody tr:hover td{background:#f8faf5}
-.btn{border-radius:12px;border:1px solid transparent}
-.btn-primary{background:linear-gradient(135deg,var(--verde-bosque),var(--verde-bosque-dark));box-shadow:0 14px 28px rgba(30,90,58,.18)}
-.btn-outline{border-color:rgba(21,63,40,.16);background:#fff}
-.status-pill{padding:6px 12px;border-radius:999px}
-.analytics-layout{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:22px;
-}
-#view-analiticas > .panel:nth-of-type(1),
-#view-analiticas > .panel:nth-of-type(2){
-  min-height:340px;
-}
-#view-analiticas canvas{max-height:330px}
-.mobile-topbar{
-  background:linear-gradient(135deg,#0e3422,#123f29)!important;
-  box-shadow:0 12px 30px rgba(0,0,0,.16);
-}
-@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){
-  .sidebar{width:282px;left:-292px}
-  .main{padding:28px 20px}
-  .kpi-grid{grid-template-columns:1fr 1fr;gap:14px}
-  .kpi-card{padding:20px;min-height:104px}
-  .panel{padding:20px;border-radius:18px;overflow-x:auto}
-}
-@media(max-width:560px){.kpi-grid{grid-template-columns:1fr}.main-header h1{font-size:2rem}}
+/* ---------- Anal�ticas ---------- */
+.analytics-kpis{margin-bottom:24px}
+.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.analytics-bars{display:flex;flex-direction:column;gap:14px}
+.analytics-row{display:grid;grid-template-columns:minmax(110px,1fr) 2fr auto;gap:12px;align-items:center;font-size:.86rem}
+.analytics-label{font-weight:700;color:var(--gris-oscuro);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.analytics-track{height:10px;border-radius:999px;background:#eceae2;overflow:hidden}
+.analytics-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--verde-bosque),var(--dorado));min-width:4px}
+.analytics-value{font-weight:800;color:var(--verde-bosque-dark);font-variant-numeric:tabular-nums}
+.analytics-summary{font-size:.92rem;line-height:1.8;color:#555}
+.analytics-summary strong{color:var(--verde-bosque-dark)}
+@media(max-width:900px){.analytics-grid{grid-template-columns:1fr}.analytics-row{grid-template-columns:1fr;gap:7px}.analytics-value{justify-self:start}}
+
+/* App install analytics */
+.app-analytics-kpis{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:-6px;margin-bottom:24px}
+.analytics-app-panel{border:1px solid rgba(30,90,58,.08);background:linear-gradient(180deg,#fff,#fbfaf6)}
+@media(max-width:900px){.app-analytics-kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.app-analytics-kpis{grid-template-columns:1fr}}

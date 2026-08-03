@@ -25,6 +25,45 @@ function hideInstallControlsAfterInstall() {
   });
 }
 
+
+function getAppInstallSource() {
+  const path = location.pathname || "/";
+  if (path === "/" || path.endsWith("/index.html")) return "Inicio / Hero";
+  if (path.includes("producto")) return "Ficha de producto";
+  if (path.includes("marca")) return "Página de marca";
+  if (path.includes("login")) return "Portal productores";
+  if (path.includes("registro")) return "Registro de productores";
+  if (path.includes("mi-panel")) return "Panel del productor";
+  return path;
+}
+
+function getDeviceType() {
+  const ua = navigator.userAgent || "";
+  if (/Mobi|Android|iPhone|iPod/i.test(ua)) return "móvil";
+  if (/iPad|Tablet/i.test(ua)) return "tablet";
+  return "escritorio";
+}
+
+async function trackAppInstallEvent(kind, control = "Botón de descarga") {
+  try {
+    if (!window.db) return;
+    const sessionId = localStorage.getItem("lojanova_visit_session_id") || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+    localStorage.setItem("lojanova_visit_session_id", sessionId);
+
+    const source = getAppInstallSource();
+    await window.db.from("visitas_plataforma").insert({
+      session_id: sessionId,
+      pagina: `/app-${kind}${location.pathname || "/"}`,
+      titulo: `${kind === "instalada" ? "App instalada" : "Clic descargar app"} - ${source} - ${control}`,
+      referrer: document.referrer || null,
+      dispositivo: getDeviceType(),
+      idioma: navigator.language || null,
+      user_agent: navigator.userAgent || null,
+    });
+  } catch (error) {
+    console.warn("No se pudo registrar evento de app:", error?.message || error);
+  }
+}
 function showManualInstallHelp() {
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   alert(isIOS
@@ -40,11 +79,15 @@ window.addEventListener("beforeinstallprompt", event => {
 });
 
 window.addEventListener("appinstalled", () => {
+  trackAppInstallEvent("instalada", sessionStorage.getItem("lojanova_last_app_install_control") || "Instalación confirmada");
   deferredInstallPrompt = null;
   hideInstallControlsAfterInstall();
 });
 
-async function installApp() {
+async function installApp(trigger) {
+  const control = trigger?.classList.contains("mobile-app-download") ? "Botón flotante inferior izquierdo" : trigger?.classList.contains("install-app-menu-btn") ? "Menú móvil" : "Navbar";
+  sessionStorage.setItem("lojanova_last_app_install_control", control);
+  trackAppInstallEvent("clic", control);
   if (deferredInstallPrompt) {
     deferredInstallPrompt.prompt();
     const choice = await deferredInstallPrompt.userChoice;
@@ -56,7 +99,8 @@ async function installApp() {
 }
 
 document.addEventListener("click", event => {
-  if (event.target.closest("[data-install-app], .mobile-app-download")) installApp();
+  const trigger = event.target.closest("[data-install-app], .mobile-app-download");
+  if (trigger) installApp(trigger);
 });
 
 ["DOMContentLoaded", "load", "pageshow", "visibilitychange"].forEach(eventName => {
@@ -73,7 +117,7 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-force-floating");
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-app-analytics");
       const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
       if (registration.waiting) activateWaitingWorker();
       registration.addEventListener("updatefound", () => {
@@ -92,3 +136,5 @@ if ("serviceWorker" in navigator) {
 }
 
 showInstallControls();
+
+
