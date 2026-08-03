@@ -1,5 +1,6 @@
 ﻿let deferredInstallPrompt = null;
 const installButton = document.getElementById("installAppBtn");
+let refreshingApp = false;
 
 function isStandaloneMode() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
@@ -46,11 +47,31 @@ installButton?.addEventListener("click", async () => {
 });
 
 if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshingApp) return;
+    refreshingApp = true;
+    window.location.reload();
+  });
+
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260802-pwa");
-      registration.update();
-      setInterval(() => registration.update(), 60 * 60 * 1000);
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-menu-autoupdate");
+      const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+
+      if (registration.waiting) activateWaitingWorker();
+
+      registration.addEventListener("updatefound", () => {
+        const newWorker = registration.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener("statechange", () => {
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            activateWaitingWorker();
+          }
+        });
+      });
+
+      await registration.update();
+      setInterval(() => registration.update(), 15 * 60 * 1000);
     } catch (error) {
       console.warn("No se pudo registrar la app instalable:", error);
     }
@@ -58,3 +79,4 @@ if ("serviceWorker" in navigator) {
 }
 
 if (isMobileDevice()) showInstallButton();
+

@@ -1,13 +1,13 @@
-﻿const CACHE_VERSION = "lojanova-pwa-v20260803-mobile";
+﻿const CACHE_VERSION = "lojanova-pwa-v20260803-menu-autoupdate";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/offline.html",
-  "/css/style.css?v=20260803-mobile-pwa",
+  "/css/style.css?v=20260803-menu-autoupdate",
   "/js/config.js",
-  "/js/supabase-client.js?v=20260803-mobile-pwa",
-  "/js/main.js?v=20260803-mobile-pwa",
-  "/js/translator.js?v=20260803-mobile-pwa",
+  "/js/supabase-client.js?v=20260803-menu-autoupdate",
+  "/js/main.js?v=20260803-menu-autoupdate",
+  "/js/translator.js?v=20260803-menu-autoupdate",
   "/assets/lojanova-app-icon.svg",
   "/assets/logo-prefectura-loja.png"
 ];
@@ -15,6 +15,10 @@ const APP_SHELL = [
 self.addEventListener("install", event => {
   self.skipWaiting();
   event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)));
+});
+
+self.addEventListener("message", event => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", event => {
@@ -66,4 +70,6 @@ self.addEventListener("fetch", event => {
     event.respondWith(staleWhileRevalidate(request));
   }
 });
+
+
 

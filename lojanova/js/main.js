@@ -14,8 +14,16 @@ function setNavbarState() {
 }
 setNavbarState();
 window.addEventListener("scroll", setNavbarState, { passive: true });
-navToggle?.addEventListener("click", () => navLinks.classList.toggle("open"));
-navLinks?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => navLinks.classList.remove("open")));
+navToggle?.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("open");
+  document.body.classList.toggle("nav-open", isOpen);
+  navToggle.setAttribute("aria-expanded", String(isOpen));
+});
+navLinks?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+  navLinks.classList.remove("open");
+  document.body.classList.remove("nav-open");
+  navToggle?.setAttribute("aria-expanded", "false");
+}));
 
 /* ---------- Hero slider + movimiento ---------- */
 const heroSlides = [...document.querySelectorAll(".hero-bg")];

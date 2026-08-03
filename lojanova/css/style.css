@@ -1391,3 +1391,73 @@ body.translated-rtl{
   .magnetic,.card-producto,.card-emp,.cat-card,.btn{transition:background .2s ease,color .2s ease,border-color .2s ease,opacity .2s ease!important;}
   .magnetic:hover,.card-producto:hover,.card-emp:hover,.cat-card:hover,.btn:hover{transform:none!important;}
 }
+
+/* ---------- Mobile menu fix + visible install app button ---------- */
+@media (max-width: 900px){
+  body.nav-open{overflow:hidden; touch-action:none;}
+  body.nav-open::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:999;
+    background:rgba(4,18,12,.74);
+    backdrop-filter:blur(6px);
+  }
+
+  .navbar{
+    background:rgba(10,38,25,.92)!important;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    box-shadow:0 10px 30px rgba(0,0,0,.14);
+  }
+  .navbar .container{position:relative; z-index:1002;}
+
+  .nav-links{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:auto!important;
+    width:min(86vw,360px)!important;
+    height:100dvh!important;
+    padding:104px 22px 30px!important;
+    background:linear-gradient(180deg,#0b2f1f 0%,#123824 100%)!important;
+    opacity:1!important;
+    backdrop-filter:none!important;
+    box-shadow:-28px 0 70px rgba(0,0,0,.45)!important;
+    z-index:1001!important;
+    overflow-y:auto;
+  }
+  .nav-links:not(.open){pointer-events:none;}
+  .nav-links.open{transform:translateX(0)!important;}
+  .nav-links a{
+    color:#fff!important;
+    background:rgba(255,255,255,.11)!important;
+    border:1px solid rgba(255,255,255,.13);
+    text-shadow:none!important;
+    box-shadow:0 10px 22px rgba(0,0,0,.10);
+  }
+
+  .nav-toggle{
+    position:relative;
+    z-index:1003!important;
+    background:rgba(255,255,255,.16)!important;
+    border:1px solid rgba(255,255,255,.18);
+  }
+
+  .install-app-btn{
+    display:inline-flex!important;
+    position:fixed!important;
+    left:22px;
+    right:22px;
+    bottom:calc(18px + env(safe-area-inset-bottom));
+    z-index:998;
+    min-height:52px;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--verde-bosque),var(--verde-bosque-dark))!important;
+    color:#fff!important;
+    border:1px solid rgba(255,255,255,.20)!important;
+    box-shadow:0 18px 42px rgba(9,39,25,.26);
+  }
+  .install-app-btn[hidden]{display:none!important;}
+  body.nav-open .install-app-btn{display:none!important;}
+}
