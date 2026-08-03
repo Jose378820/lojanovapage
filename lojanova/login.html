@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso productor - Lojanova</title>
 <link rel="stylesheet" href="admin/css/admin.css">
-<link rel="manifest" href="/manifest.webmanifest?v=20260802-pwa">
+<link rel="manifest" href="/manifest.webmanifest?v=20260803-mobile-pwa">
 <meta name="theme-color" content="#1E5A3A">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,7 +28,7 @@
       </div>
 
       <div class="field">
-        <label>Contraseña</label>
+        <label>ContraseÃ±a</label>
         <input type="password" id="password" required autocomplete="current-password">
       </div>
 
@@ -36,16 +36,16 @@
     </form>
 
     <p style="text-align:center;margin-top:22px;font-size:.82rem">
-      <a href="recuperar-password.html" style="color:var(--verde-bosque);font-weight:700">Olvidé mi contraseña</a>
+      <a href="recuperar-password.html" style="color:var(--verde-bosque);font-weight:700">OlvidÃ© mi contraseÃ±a</a>
     </p>
 
     <p style="text-align:center;margin-top:14px;font-size:.82rem">
-      ¿No tienes cuenta?
-      <a href="registro.html" style="color:var(--verde-bosque);font-weight:700">Regístrate</a>
+      Â¿No tienes cuenta?
+      <a href="registro.html" style="color:var(--verde-bosque);font-weight:700">RegÃ­strate</a>
     </p>
 
     <p style="text-align:center;margin-top:10px;font-size:.82rem">
-      <a href="index.html" style="color:var(--verde-bosque)">Volver al sitio público</a>
+      <a href="index.html" style="color:var(--verde-bosque)">Volver al sitio pÃºblico</a>
     </p>
   </div>
 </div>
@@ -113,7 +113,7 @@ form.addEventListener("submit", async (event) => {
     });
 
     if (error) {
-      showError(error.message || "Correo o contraseña incorrectos.");
+      showError(error.message || "Correo o contraseÃ±a incorrectos.");
       return;
     }
 
@@ -134,7 +134,7 @@ form.addEventListener("submit", async (event) => {
     window.location.href = "mi-panel.html";
 
   } catch (error) {
-    showError(error.message || "No se pudo iniciar sesión.");
+    showError(error.message || "No se pudo iniciar sesiÃ³n.");
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Ingresar";
@@ -142,6 +142,7 @@ form.addEventListener("submit", async (event) => {
 });
 </script>
 
-<script src="/js/pwa-install.js?v=20260802-pwa"></script>
+<script src="/js/pwa-install.js?v=20260803-mobile-pwa"></script>
 </body>
 </html>
+

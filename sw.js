@@ -1,13 +1,13 @@
-﻿const CACHE_VERSION = "lojanova-pwa-v20260802";
+﻿const CACHE_VERSION = "lojanova-pwa-v20260803-mobile";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/offline.html",
-  "/css/style.css?v=20260802-pwa",
+  "/css/style.css?v=20260803-mobile-pwa",
   "/js/config.js",
-  "/js/supabase-client.js?v=20260802-pwa",
-  "/js/main.js?v=20260802-pwa",
-  "/js/translator.js?v=20260802-pwa",
+  "/js/supabase-client.js?v=20260803-mobile-pwa",
+  "/js/main.js?v=20260803-mobile-pwa",
+  "/js/translator.js?v=20260803-mobile-pwa",
   "/assets/lojanova-app-icon.svg",
   "/assets/logo-prefectura-loja.png"
 ];
@@ -66,3 +66,4 @@ self.addEventListener("fetch", event => {
     event.respondWith(staleWhileRevalidate(request));
   }
 });
+
