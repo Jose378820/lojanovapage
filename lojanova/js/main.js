@@ -311,32 +311,13 @@ async function cargarNoticias(){
 
 /* ---------- Estadísticas ---------- */
 async function cargarStats(){
-  const countOrZero = async (query) => {
-    const { count, error } = await query;
-    if (error) {
-      console.warn("No se pudo actualizar estadística:", error);
-      return 0;
-    }
-    return count ?? 0;
-  };
-  const [emprendedores, productos, cantones, categorias] = await Promise.all([
-    countOrZero(
-      db.from("emprendedores")
-        .select("id", { count: "exact", head: true })
-        .eq("activo", true)
-        .eq("estado", "aprobado")
-    ),
-    countOrZero(
-      db.from("productos")
-        .select("id, emprendedores!inner(id)", { count: "exact", head: true })
-        .eq("activo", true)
-        .eq("emprendedores.activo", true)
-        .eq("emprendedores.estado", "aprobado")
-    ),
-    countOrZero(db.from("cantones").select("id", { count: "exact", head: true })),
-    countOrZero(db.from("categorias").select("id", { count: "exact", head: true })),
+  const [emp, prod, cant, cat] = await Promise.all([
+    db.from("emprendedores").select("id", { count: "exact", head: true }).eq("activo", true),
+    db.from("productos").select("id", { count: "exact", head: true }).eq("activo", true),
+    db.from("cantones").select("id", { count: "exact", head: true }),
+    db.from("categorias").select("id", { count: "exact", head: true }),
   ]);
-  const vals = { emprendedores, productos, cantones, categorias };
+  const vals = { emprendedores: emp.count || 0, productos: prod.count || 0, cantones: cant.count || 0, categorias: cat.count || 0 };
   document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = vals[el.dataset.stat] ?? "0"; });
   const heroProductos = document.getElementById("heroProductos");
   const heroEmp = document.getElementById("heroEmp");

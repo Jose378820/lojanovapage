@@ -67,7 +67,7 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-stats-fix");
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-footer-contacto");
       const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
 
       if (registration.waiting) activateWaitingWorker();
@@ -91,5 +91,4 @@ if ("serviceWorker" in navigator) {
 }
 
 showInstallButton();
-
 

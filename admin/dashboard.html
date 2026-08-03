@@ -1,12 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel de administraciÃ³n â€” Lojanova</title>
-<link rel="icon" href="data:,">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-analytics-admin">
-<script src="https://unpkg.com/lucide@latest"></script>
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de administración — Lojanova</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260723-admin-fix">
+<script src="https://unpkg.com/lucide@1.26.0"></script>
 </head>
 <body>
 
@@ -24,12 +25,12 @@
       <button data-view="solicitudes"><i data-lucide="user-check" class="icon"></i> Solicitudes</button>
       <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
       <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
-      <button data-view="categorias"><i data-lucide="tags" class="icon"></i> CategorÃ­as</button>
+      <button data-view="categorias"><i data-lucide="tags" class="icon"></i> Categorías</button>
       <button data-view="noticias"><i data-lucide="newspaper" class="icon"></i> Noticias</button>
       <button data-view="cantones"><i data-lucide="map" class="icon"></i> Cantones</button>
     </nav>
-    <a href="../index.html" class="logout" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio pÃºblico</a>
-    <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesiÃ³n</button>
+    <a href="../index.html" class="logout" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio público</a>
+    <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesión</button>
   </aside>
 
   <main class="main">
@@ -40,72 +41,124 @@
         <div><h1>Resumen</h1><p>Estado general de la plataforma Lojanova</p></div>
       </div>
       <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi-card"><div class="kpi-num" id="kpiProductos">â€”</div><div class="kpi-label">Productos publicados</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiEmprendedores">â€”</div><div class="kpi-label">Emprendedores activos</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiCategorias">â€”</div><div class="kpi-label">CategorÃ­as</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiNoticias">â€”</div><div class="kpi-label">Noticias publicadas</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos publicados</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiEmprendedores">—</div><div class="kpi-label">Emprendedores activos</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiCategorias">—</div><div class="kpi-label">Categorías</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiNoticias">—</div><div class="kpi-label">Noticias publicadas</div></div>
       </div>
       <div class="panel">
         <div class="panel-title"><h3>Primeros pasos</h3></div>
         <p style="font-size:.9rem;color:#666;line-height:1.7">
-          1. Crea las categorÃ­as de productos.<br>
+          1. Crea las categorías de productos.<br>
           2. Registra a los emprendedores.<br>
-          3. Publica productos asociÃ¡ndolos a un emprendedor y una categorÃ­a.<br>
-          4. Comparte novedades en la secciÃ³n de Noticias.<br>
-          Los cambios aparecen de inmediato en el sitio pÃºblico.
+          3. Publica productos asociándolos a un emprendedor y una categoría.<br>
+          4. Comparte novedades en la sección de Noticias.<br>
+          Los cambios aparecen de inmediato en el sitio público.
         </p>
       </div>
     </section>
-    <!-- ============ ANALÍTICAS ============ -->
+
+    <!-- ============ ANALITICAS ============ -->
     <section id="view-analiticas" class="view" style="display:none">
       <div class="main-header">
-        <div><h1>Analíticas</h1><p>Indicadores dinámicos del catálogo, productores y actividad de la plataforma</p></div>
-        <button class="btn btn-outline auto-width" id="btnRefreshAnalytics"><i data-lucide="refresh-cw" class="icon"></i> Actualizar</button>
+        <div><h1>Analíticas</h1><p>Patrones de tráfico de los últimos 30 días</p></div>
       </div>
-      <div class="kpi-grid analytics-kpis">
-        <div class="kpi-card"><div class="kpi-num" id="analyticsProductos">—</div><div class="kpi-label">Productos visibles</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="analyticsMarcas">—</div><div class="kpi-label">Marcas aprobadas</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="analyticsPendientes">—</div><div class="kpi-label">Solicitudes pendientes</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="analyticsNoticias">—</div><div class="kpi-label">Noticias publicadas</div></div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiPaginaTop">—</div><div class="kpi-label">Página más visitada</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiTasaRebote">—</div><div class="kpi-label">Tasa de rebote</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="kpiScrollProm">—</div><div class="kpi-label">Scroll promedio</div></div>
       </div>
-      <div class="analytics-grid">
-        <div class="panel">
-          <div class="panel-title"><h3>Productos por categoría</h3></div>
-          <div class="analytics-bars" id="analyticsCategorias"><div class="empty-row">Cargando…</div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-title"><h3>Productos por cantón</h3></div>
-          <div class="analytics-bars" id="analyticsCantones"><div class="empty-row">Cargando…</div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-title"><h3>Estado de productores</h3></div>
-          <div class="analytics-bars" id="analyticsEstados"><div class="empty-row">Cargando…</div></div>
-        </div>
-        <div class="panel">
-          <div class="panel-title"><h3>Lectura rápida</h3></div>
-          <div class="analytics-summary" id="analyticsResumen">Cargando indicadores…</div>
-        </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Visitas por día</h3></div>
+        <canvas id="chartVisitasDiarias" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Hora del día en que se conectan</h3></div>
+        <canvas id="chartHoras" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Páginas más visitadas</h3></div>
+        <table>
+          <thead><tr><th>Página</th><th>Visitas</th></tr></thead>
+          <tbody id="tablaPaginasTop"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Productos más vistos</h3></div>
+        <table>
+          <thead><tr><th>Producto (slug)</th><th>Vistas</th></tr></thead>
+          <tbody id="tablaProductosTop"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Dispositivos</h3></div>
+        <canvas id="chartDispositivos" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Navegadores</h3></div>
+        <canvas id="chartNavegadores" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Sistemas operativos</h3></div>
+        <canvas id="chartSO" height="90"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Países</h3></div>
+        <table>
+          <thead><tr><th>País</th><th>Visitantes</th></tr></thead>
+          <tbody id="tablaPaises"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Ciudades</h3></div>
+        <table>
+          <thead><tr><th>Ciudad</th><th>País</th><th>Visitantes</th></tr></thead>
+          <tbody id="tablaCiudades"><tr class="empty-row"><td colspan="3">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Origen del tráfico</h3></div>
+        <table>
+          <thead><tr><th>Origen</th><th>Visitas</th></tr></thead>
+          <tbody id="tablaOrigenes"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Búsquedas más frecuentes</h3></div>
+        <table>
+          <thead><tr><th>Término</th><th>Veces</th></tr></thead>
+          <tbody id="tablaBusquedas"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><h3>Clics en botones clave</h3></div>
+        <table>
+          <thead><tr><th>Elemento</th><th>Clics</th></tr></thead>
+          <tbody id="tablaClics"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
+        </table>
       </div>
     </section>
-
 
     <!-- ============ SOLICITUDES ============ -->
     <section id="view-solicitudes" class="view" style="display:none">
       <div class="main-header">
-        <div><h1>Solicitudes de productores</h1><p>Revisa y aprueba las cuentas nuevas antes de que aparezcan en el sitio pÃºblico</p></div>
+        <div><h1>Solicitudes de productores</h1><p>Revisa y aprueba las cuentas nuevas antes de que aparezcan en el sitio público</p></div>
       </div>
       <div class="panel">
-        <div class="panel-title"><h3>Pendientes de revisiÃ³n</h3></div>
+        <div class="panel-title"><h3>Pendientes de revisión</h3></div>
         <table>
           <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Correo</th><th>Fecha</th><th></th></tr></thead>
-          <tbody id="tablaSolicitudes"><tr class="empty-row"><td colspan="6">Cargandoâ€¦</td></tr></tbody>
+          <tbody id="tablaSolicitudes"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
         </table>
       </div>
       <div class="panel">
         <div class="panel-title"><h3>Historial (aprobados y rechazados)</h3></div>
         <table>
           <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tablaHistorialSolicitudes"><tr class="empty-row"><td colspan="5">Cargandoâ€¦</td></tr></tbody>
+          <tbody id="tablaHistorialSolicitudes"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -113,13 +166,13 @@
     <!-- ============ PRODUCTOS ============ -->
     <section id="view-productos" class="view" style="display:none">
       <div class="main-header">
-        <div><h1>Productos</h1><p>CatÃ¡logo publicado en la vitrina digital</p></div>
+        <div><h1>Productos</h1><p>Catálogo publicado en la vitrina digital</p></div>
         <button class="btn btn-primary" id="btnNuevoProducto"><i data-lucide="plus" class="icon"></i> Nuevo producto</button>
       </div>
       <div class="panel">
         <table>
-          <thead><tr><th></th><th>Nombre</th><th>CategorÃ­a</th><th>CantÃ³n</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tablaProductos"><tr class="empty-row"><td colspan="6">Cargandoâ€¦</td></tr></tbody>
+          <thead><tr><th></th><th>Nombre</th><th>Categoría</th><th>Cantón</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaProductos"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -132,8 +185,8 @@
       </div>
       <div class="panel">
         <table>
-          <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>CantÃ³n</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tablaEmprendedores"><tr class="empty-row"><td colspan="6">Cargandoâ€¦</td></tr></tbody>
+          <thead><tr><th></th><th>Nombre</th><th>Emprendimiento</th><th>Cantón</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaEmprendedores"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -141,13 +194,13 @@
     <!-- ============ CATEGORIAS ============ -->
     <section id="view-categorias" class="view" style="display:none">
       <div class="main-header">
-        <div><h1>CategorÃ­as</h1><p>ClasificaciÃ³n del catÃ¡logo</p></div>
-        <button class="btn btn-primary" id="btnNuevaCategoria"><i data-lucide="plus" class="icon"></i> Nueva categorÃ­a</button>
+        <div><h1>Categorías</h1><p>Clasificación del catálogo</p></div>
+        <button class="btn btn-primary" id="btnNuevaCategoria"><i data-lucide="plus" class="icon"></i> Nueva categoría</button>
       </div>
       <div class="panel">
         <table>
           <thead><tr><th></th><th>Nombre</th><th>Slug</th><th>Orden</th><th></th></tr></thead>
-          <tbody id="tablaCategorias"><tr class="empty-row"><td colspan="5">Cargandoâ€¦</td></tr></tbody>
+          <tbody id="tablaCategorias"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -160,8 +213,8 @@
       </div>
       <div class="panel">
         <table>
-          <thead><tr><th></th><th>TÃ­tulo</th><th>Tipo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
-          <tbody id="tablaNoticias"><tr class="empty-row"><td colspan="6">Cargandoâ€¦</td></tr></tbody>
+          <thead><tr><th></th><th>Título</th><th>Tipo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="tablaNoticias"><tr class="empty-row"><td colspan="6">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -174,7 +227,7 @@
       <div class="panel">
         <table>
           <thead><tr><th>Nombre</th><th>Orden</th></tr></thead>
-          <tbody id="tablaCantones"><tr class="empty-row"><td colspan="2">Cargandoâ€¦</td></tr></tbody>
+          <tbody id="tablaCantones"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -190,25 +243,31 @@
       <input type="hidden" id="p_id">
       <div class="form-grid">
         <div class="field full"><label>Nombre del producto *</label><input type="text" id="p_nombre" required></div>
-        <div class="field"><label>CategorÃ­a *</label><select id="p_categoria" required></select></div>
-        <div class="field"><label>CantÃ³n *</label><select id="p_canton" required></select></div>
+        <div class="field"><label>Categoría *</label><select id="p_categoria" required></select></div>
+        <div class="field"><label>Cantón *</label><select id="p_canton" required></select></div>
         <div class="field full"><label>Emprendedor *</label><select id="p_emprendedor" required></select></div>
-        <div class="field full"><label>DescripciÃ³n corta (para tarjeta)</label><textarea id="p_desc_corta" maxlength="160"></textarea></div>
-        <div class="field full"><label>DescripciÃ³n extensa</label><textarea id="p_desc_larga"></textarea></div>
+        <div class="field full"><label>Descripción corta (para tarjeta)</label><textarea id="p_desc_corta" maxlength="160"></textarea></div>
+        <div class="field full"><label>Descripción extensa</label><textarea id="p_desc_larga"></textarea></div>
+        <div class="field full" style="border-top:1px dashed #ccc;padding-top:12px;margin-top:4px">
+          <label style="font-weight:700">🇬🇧 English (opcional — para versión exportadora del sitio)</label>
+        </div>
+        <div class="field full"><label>Product name (EN)</label><input type="text" id="p_nombre_en"></div>
+        <div class="field full"><label>Short description (EN)</label><textarea id="p_desc_corta_en" maxlength="160"></textarea></div>
+        <div class="field full"><label>Full description (EN)</label><textarea id="p_desc_larga_en"></textarea></div>
         <div class="field full"><label>Historia del producto</label><textarea id="p_historia"></textarea></div>
-        <div class="field full"><label>Proceso de elaboraciÃ³n</label><textarea id="p_proceso"></textarea></div>
+        <div class="field full"><label>Proceso de elaboración</label><textarea id="p_proceso"></textarea></div>
         <div class="field"><label>Ingredientes / materiales</label><input type="text" id="p_ingredientes"></div>
         <div class="field"><label>Certificaciones</label><input type="text" id="p_certificaciones"></div>
-        <div class="field"><label>Capacidad de producciÃ³n</label><input type="text" id="p_capacidad"></div>
-        <div class="field"><label>PresentaciÃ³n</label><input type="text" id="p_presentacion"></div>
+        <div class="field"><label>Capacidad de producción</label><input type="text" id="p_capacidad"></div>
+        <div class="field"><label>Presentación</label><input type="text" id="p_presentacion"></div>
         <div class="field"><label>Peso</label><input type="text" id="p_peso"></div>
         <div class="field"><label>Disponibilidad</label><input type="text" id="p_disponibilidad"></div>
         <div class="field full"><label>Mercados donde se comercializa</label><input type="text" id="p_mercados"></div>
-        <div class="field"><label>Tipo de emprendimiento</label><input type="text" id="p_tipo" placeholder="Artesanal, Agroindustrialâ€¦"></div>
-        <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="p_etiquetas" placeholder="orgÃ¡nico, gourmet, exportaciÃ³n"></div>
+        <div class="field"><label>Tipo de emprendimiento</label><input type="text" id="p_tipo" placeholder="Artesanal, Agroindustrial…"></div>
+        <div class="field"><label>Etiquetas (separadas por coma)</label><input type="text" id="p_etiquetas" placeholder="orgánico, gourmet, exportación"></div>
         <div class="field full"><label>URL de imagen principal</label><input type="text" id="p_imagen" placeholder="https://..."></div>
         <div class="field full">
-          <div class="checkbox-row"><input type="checkbox" id="p_exportacion"><label for="p_exportacion">Producto de exportaciÃ³n</label></div>
+          <div class="checkbox-row"><input type="checkbox" id="p_exportacion"><label for="p_exportacion">Producto de exportación</label></div>
           <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="p_artesanal"><label for="p_artesanal">Producto artesanal</label></div>
           <div class="checkbox-row" style="margin-top:8px"><input type="checkbox" id="p_activo" checked><label for="p_activo">Publicado (visible en el sitio)</label></div>
         </div>
@@ -230,16 +289,16 @@
       <div class="form-grid">
         <div class="field"><label>Nombre completo *</label><input type="text" id="e_nombre" required></div>
         <div class="field"><label>Nombre del emprendimiento *</label><input type="text" id="e_emprendimiento" required></div>
-        <div class="field"><label>CantÃ³n</label><select id="e_canton"></select></div>
-        <div class="field"><label>AÃ±os de experiencia</label><input type="number" id="e_anios" min="0"></div>
+        <div class="field"><label>Cantón</label><select id="e_canton"></select></div>
+        <div class="field"><label>Años de experiencia</label><input type="number" id="e_anios" min="0"></div>
         <div class="field full"><label>Historia</label><textarea id="e_historia"></textarea></div>
-        <div class="field"><label>TelÃ©fono</label><input type="text" id="e_telefono"></div>
-        <div class="field"><label>WhatsApp (con cÃ³digo de paÃ­s)</label><input type="text" id="e_whatsapp" placeholder="593999999999"></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="e_telefono"></div>
+        <div class="field"><label>WhatsApp (con código de país)</label><input type="text" id="e_whatsapp" placeholder="593999999999"></div>
         <div class="field"><label>Correo</label><input type="email" id="e_correo"></div>
-        <div class="field"><label>UbicaciÃ³n</label><input type="text" id="e_ubicacion"></div>
+        <div class="field"><label>Ubicación</label><input type="text" id="e_ubicacion"></div>
         <div class="field"><label>Facebook (URL)</label><input type="text" id="e_facebook"></div>
         <div class="field"><label>Instagram (URL)</label><input type="text" id="e_instagram"></div>
-        <div class="field full"><label>URL de fotografÃ­a</label><input type="text" id="e_foto" placeholder="https://..."></div>
+        <div class="field full"><label>URL de fotografía</label><input type="text" id="e_foto" placeholder="https://..."></div>
         <div class="field full"><div class="checkbox-row"><input type="checkbox" id="e_activo" checked><label for="e_activo">Publicado (visible en el sitio)</label></div></div>
       </div>
       <div class="modal-actions">
@@ -253,18 +312,19 @@
 <!-- ============ MODAL CATEGORIA ============ -->
 <div class="modal-overlay" id="modalCategoria">
   <div class="modal">
-    <div class="modal-header"><h3 id="tituloModalCategoria">Nueva categorÃ­a</h3><button data-close>&times;</button></div>
+    <div class="modal-header"><h3 id="tituloModalCategoria">Nueva categoría</h3><button data-close>&times;</button></div>
     <form id="formCategoria">
       <input type="hidden" id="c_id">
       <div class="form-grid">
         <div class="field"><label>Nombre *</label><input type="text" id="c_nombre" required></div>
+        <div class="field"><label>Name (EN)</label><input type="text" id="c_nombre_en"></div>
         <div class="field"><label>Orden</label><input type="number" id="c_orden" value="0"></div>
-        <div class="field full"><label>DescripciÃ³n</label><textarea id="c_descripcion"></textarea></div>
+        <div class="field full"><label>Descripción</label><textarea id="c_descripcion"></textarea></div>
         <div class="field full"><label>URL de imagen</label><input type="text" id="c_imagen" placeholder="https://..."></div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn btn-outline" data-close>Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar categorÃ­a</button>
+        <button type="submit" class="btn btn-primary">Guardar categoría</button>
       </div>
     </form>
   </div>
@@ -277,12 +337,12 @@
     <form id="formNoticia">
       <input type="hidden" id="n_id">
       <div class="form-grid">
-        <div class="field full"><label>TÃ­tulo *</label><input type="text" id="n_titulo" required></div>
+        <div class="field full"><label>Título *</label><input type="text" id="n_titulo" required></div>
         <div class="field"><label>Tipo</label>
           <select id="n_tipo">
             <option value="feria">Feria</option>
             <option value="rueda_negocios">Rueda de negocios</option>
-            <option value="capacitacion">CapacitaciÃ³n</option>
+            <option value="capacitacion">Capacitación</option>
             <option value="convocatoria">Convocatoria</option>
             <option value="evento">Evento</option>
           </select>
@@ -301,13 +361,10 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/config.js?v=20260803-analytics-admin"></script>
-<script src="/js/supabase-client.js?v=20260803-analytics-admin"></script>
-<script src="/admin/js/admin.js?v=20260803-analytics-admin"></script>
+<script src="/js/config.js?v=20260723-admin-fix"></script>
+<script src="/js/supabase-client.js?v=20260723-admin-fix"></script>
+<script src="/admin/js/admin.js?v=20260723-admin-fix"></script>
 </body>
 </html>
-
-
-
-
