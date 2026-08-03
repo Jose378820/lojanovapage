@@ -1,25 +1,35 @@
 ﻿let deferredInstallPrompt = null;
-const installButton = document.getElementById("installAppBtn");
 let refreshingApp = false;
+const installButtons = [...document.querySelectorAll("[data-install-app]")];
 
 function isStandaloneMode() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 }
 
 function isMobileDevice() {
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  return window.matchMedia("(max-width: 900px), (hover: none), (pointer: coarse)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
 function showInstallButton() {
-  if (!installButton || isStandaloneMode()) return;
-  installButton.hidden = false;
+  if (!installButtons.length || isStandaloneMode() || !isMobileDevice()) return;
+  installButtons.forEach(button => {
+    button.hidden = false;
+    button.classList.add("is-visible");
+  });
+}
+
+function hideInstallButton() {
+  installButtons.forEach(button => {
+    button.hidden = true;
+    button.classList.remove("is-visible");
+  });
 }
 
 function showManualInstallHelp() {
   const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   const message = isIOS
     ? "Para instalar Lojanova en iPhone: abre esta página en Safari, toca Compartir y elige ‘Agregar a pantalla de inicio’."
-    : "Para instalar Lojanova: abre el menú del navegador y elige ‘Instalar app’ o ‘Añadir a pantalla de inicio’.";
+    : "Para instalar Lojanova: toca el menú de Chrome y elige ‘Instalar app’ o ‘Añadir a pantalla de inicio’.";
   alert(message);
 }
 
@@ -31,20 +41,22 @@ window.addEventListener("beforeinstallprompt", event => {
 
 window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
-  if (installButton) installButton.hidden = true;
+  hideInstallButton();
 });
 
-installButton?.addEventListener("click", async () => {
+async function handleInstallClick() {
   if (deferredInstallPrompt) {
     deferredInstallPrompt.prompt();
     await deferredInstallPrompt.userChoice;
     deferredInstallPrompt = null;
-    installButton.hidden = true;
+    hideInstallButton();
     return;
   }
 
   showManualInstallHelp();
-});
+}
+
+installButtons.forEach(button => button.addEventListener("click", handleInstallClick));
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -55,7 +67,7 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-menu-autoupdate");
+      const registration = await navigator.serviceWorker.register("/sw.js?v=20260803-install-visible");
       const activateWaitingWorker = () => registration.waiting?.postMessage({ type: "SKIP_WAITING" });
 
       if (registration.waiting) activateWaitingWorker();
@@ -78,5 +90,4 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-if (isMobileDevice()) showInstallButton();
-
+showInstallButton();
