@@ -156,3 +156,11 @@ tbody tr:hover{background:var(--gris-claro)}
 .analytics-app-panel{border:1px solid rgba(30,90,58,.08);background:linear-gradient(180deg,#fff,#fbfaf6)}
 @media(max-width:900px){.app-analytics-kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.app-analytics-kpis{grid-template-columns:1fr}}
+
+
+/* Analíticas de descarga de app: estilos agregados sin alterar el dashboard existente */
+.app-download-kpis{margin-top:10px;margin-bottom:24px}
+.app-download-grid{margin-bottom:24px}
+.analytics-app-panel{border:1px solid rgba(30,90,58,.08);background:linear-gradient(180deg,#fff,#fbfaf6)}
+@media(max-width:900px){.app-download-kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.app-download-kpis{grid-template-columns:1fr}}

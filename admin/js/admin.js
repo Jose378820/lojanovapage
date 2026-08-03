@@ -32,7 +32,7 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
     document.getElementById("view-" + btn.dataset.view).style.display = "block";
     document.getElementById("sidebar").classList.remove("open");
     if (btn.dataset.view === "resumen") cargarKPIs();
-    if (btn.dataset.view === "analiticas") cargarAnaliticas();
+    if (btn.dataset.view === "analiticas") { cargarAnaliticas(); cargarAnaliticasApp(); }
   });
 });
 document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
