@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel de administraciÃ³n â€” Lojanova</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-stats-fix">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-analytics-admin">
 <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -20,6 +20,7 @@
     <div class="logo">Loja<span>nova</span></div>
     <nav>
       <button data-view="resumen" class="active"><i data-lucide="layout-dashboard" class="icon"></i> Resumen</button>
+      <button data-view="analiticas"><i data-lucide="bar-chart-3" class="icon"></i> Analíticas</button>
       <button data-view="solicitudes"><i data-lucide="user-check" class="icon"></i> Solicitudes</button>
       <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
       <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
@@ -55,6 +56,38 @@
         </p>
       </div>
     </section>
+    <!-- ============ ANALÍTICAS ============ -->
+    <section id="view-analiticas" class="view" style="display:none">
+      <div class="main-header">
+        <div><h1>Analíticas</h1><p>Indicadores dinámicos del catálogo, productores y actividad de la plataforma</p></div>
+        <button class="btn btn-outline auto-width" id="btnRefreshAnalytics"><i data-lucide="refresh-cw" class="icon"></i> Actualizar</button>
+      </div>
+      <div class="kpi-grid analytics-kpis">
+        <div class="kpi-card"><div class="kpi-num" id="analyticsProductos">—</div><div class="kpi-label">Productos visibles</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="analyticsMarcas">—</div><div class="kpi-label">Marcas aprobadas</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="analyticsPendientes">—</div><div class="kpi-label">Solicitudes pendientes</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="analyticsNoticias">—</div><div class="kpi-label">Noticias publicadas</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="panel">
+          <div class="panel-title"><h3>Productos por categoría</h3></div>
+          <div class="analytics-bars" id="analyticsCategorias"><div class="empty-row">Cargando…</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Productos por cantón</h3></div>
+          <div class="analytics-bars" id="analyticsCantones"><div class="empty-row">Cargando…</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Estado de productores</h3></div>
+          <div class="analytics-bars" id="analyticsEstados"><div class="empty-row">Cargando…</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><h3>Lectura rápida</h3></div>
+          <div class="analytics-summary" id="analyticsResumen">Cargando indicadores…</div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- ============ SOLICITUDES ============ -->
     <section id="view-solicitudes" class="view" style="display:none">
@@ -269,9 +302,12 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/config.js?v=20260803-stats-fix"></script>
-<script src="/js/supabase-client.js?v=20260803-stats-fix"></script>
-<script src="/admin/js/admin.js?v=20260803-stats-fix"></script>
+<script src="/js/config.js?v=20260803-analytics-admin"></script>
+<script src="/js/supabase-client.js?v=20260803-analytics-admin"></script>
+<script src="/admin/js/admin.js?v=20260803-analytics-admin"></script>
 </body>
 </html>
+
+
+
 

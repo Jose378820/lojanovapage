@@ -32,6 +32,7 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
     document.getElementById("view-" + btn.dataset.view).style.display = "block";
     document.getElementById("sidebar").classList.remove("open");
     if (btn.dataset.view === "resumen") cargarKPIs();
+    if (btn.dataset.view === "analiticas") cargarAnaliticas();
   });
 });
 document.getElementById("mobileToggle")?.addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
@@ -57,7 +58,7 @@ document.querySelectorAll(".modal-overlay").forEach(ov => {
 async function iniciarDashboard(){
   lucide.createIcons();
   await cargarListasBase();
-  await Promise.all([cargarKPIs(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes()]);
+  await Promise.all([cargarKPIs(), cargarAnaliticas(), cargarProductos(), cargarEmprendedores(), cargarCategorias(), cargarNoticias(), cargarCantones(), cargarSolicitudes()]);
 }
 
 async function cargarListasBase(){
@@ -117,6 +118,84 @@ async function cargarKPIs(){
   setKpi("kpiCategorias", categorias);
   setKpi("kpiNoticias", noticias);
 }
+
+function contarPor(lista, selector, fallback = "Sin clasificar"){
+  return lista.reduce((acc, item) => {
+    const key = selector(item) || fallback;
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function renderAnalyticsBars(id, dataMap){
+  const box = document.getElementById(id);
+  if (!box) return;
+  const entries = Object.entries(dataMap).sort((a,b) => b[1] - a[1]);
+  if (!entries.length){
+    box.innerHTML = `<div class="empty-row">Sin datos disponibles.</div>`;
+    return;
+  }
+  const max = Math.max(...entries.map(([,value]) => value), 1);
+  box.innerHTML = entries.map(([label, value]) => `
+    <div class="analytics-row">
+      <div class="analytics-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+      <div class="analytics-track"><div class="analytics-fill" style="width:${Math.max(6, (value / max) * 100)}%"></div></div>
+      <div class="analytics-value">${value}</div>
+    </div>
+  `).join("");
+}
+
+async function cargarAnaliticas(){
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  const [productosRes, emprendedoresRes, noticiasRes] = await Promise.all([
+    db.from("productos").select("id, activo, categorias(nombre), cantones(nombre), emprendedores!inner(id, activo, estado)"),
+    db.from("emprendedores").select("id, activo, estado"),
+    db.from("noticias").select("id, activo"),
+  ]);
+
+  if (productosRes.error || emprendedoresRes.error || noticiasRes.error){
+    console.warn("No se pudieron cargar analíticas:", productosRes.error || emprendedoresRes.error || noticiasRes.error);
+    ["analyticsCategorias","analyticsCantones","analyticsEstados"].forEach(id => {
+      const box = document.getElementById(id);
+      if (box) box.innerHTML = `<div class="empty-row">No se pudieron cargar las analíticas.</div>`;
+    });
+    return;
+  }
+
+  const productosVisibles = (productosRes.data || []).filter(p =>
+    p.activo && p.emprendedores?.activo && p.emprendedores?.estado === "aprobado"
+  );
+  const emprendedores = emprendedoresRes.data || [];
+  const aprobados = emprendedores.filter(e => e.activo && e.estado === "aprobado").length;
+  const pendientes = emprendedores.filter(e => e.estado === "pendiente" || !e.estado).length;
+  const rechazados = emprendedores.filter(e => e.estado === "rechazado").length;
+  const noticias = (noticiasRes.data || []).filter(n => n.activo).length;
+
+  setText("analyticsProductos", productosVisibles.length);
+  setText("analyticsMarcas", aprobados);
+  setText("analyticsPendientes", pendientes);
+  setText("analyticsNoticias", noticias);
+
+  renderAnalyticsBars("analyticsCategorias", contarPor(productosVisibles, p => p.categorias?.nombre));
+  renderAnalyticsBars("analyticsCantones", contarPor(productosVisibles, p => p.cantones?.nombre));
+  renderAnalyticsBars("analyticsEstados", {
+    "Aprobados": aprobados,
+    "Pendientes": pendientes,
+    "Rechazados": rechazados,
+  });
+
+  const resumen = document.getElementById("analyticsResumen");
+  if (resumen){
+    const promedio = aprobados ? (productosVisibles.length / aprobados).toFixed(1) : "0";
+    resumen.innerHTML = `
+      <p><strong>${productosVisibles.length}</strong> productos visibles pertenecen a marcas aprobadas.</p>
+      <p><strong>${aprobados}</strong> marcas están activas y aprobadas; <strong>${pendientes}</strong> solicitudes requieren revisión.</p>
+      <p>Promedio actual: <strong>${promedio}</strong> productos por marca aprobada.</p>
+    `;
+  }
+}
+
+document.getElementById("btnRefreshAnalytics")?.addEventListener("click", cargarAnaliticas);
 
 /* =========================================================
    PRODUCTOS
