@@ -1,11 +1,11 @@
 ﻿// =========================================================
-// LOJANOVA ADMIN â€” admin.js
-// Auth guard + CRUD de productos, emprendedores, categorÃ­as y noticias
+// LOJANOVA ADMIN — admin.js
+// Auth guard + CRUD de productos, emprendedores, categorías y noticias
 // =========================================================
 
 let CATEGORIAS = [], CANTONES = [], EMPRENDEDORES = [];
 
-/* ---------- Guard de sesiÃ³n ---------- */
+/* ---------- Guard de sesión ---------- */
 (async function guard(){
   const { data: { session } } = await db.auth.getSession();
   if (!session){ location.href = "index.html"; return; }
@@ -23,7 +23,7 @@ document.getElementById("btnLogout").addEventListener("click", async () => {
   location.href = "index.html";
 });
 
-/* ---------- NavegaciÃ³n entre vistas ---------- */
+/* ---------- Navegación entre vistas ---------- */
 document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".sidebar nav button").forEach(b => b.classList.remove("active"));
@@ -34,7 +34,7 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
   });
 });
 /* =========================================================
-   ANALÃTICAS
+   ANALÍTICAS
    ========================================================= */
 async function cargarAnaliticas(){
   const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
@@ -66,16 +66,16 @@ async function cargarAnaliticas(){
   document.getElementById("kpiDuracionProm").textContent = promedio > 60 ? `${Math.floor(promedio/60)} min ${promedio%60}s` : `${promedio}s`;
 
   const topData = top.data || [];
-  document.getElementById("kpiPaginaTop").textContent = topData[0]?.pagina || "â€”";
+  document.getElementById("kpiPaginaTop").textContent = topData[0]?.pagina || "—";
   document.getElementById("tablaPaginasTop").innerHTML = topData.length
     ? topData.map(p => `<tr><td>${escapeHtml(p.pagina)}</td><td>${p.visitas}</td></tr>`).join("")
-    : `<tr class="empty-row"><td colspan="2">Sin datos aÃºn</td></tr>`;
+    : `<tr class="empty-row"><td colspan="2">Sin datos aún</td></tr>`;
 
-  document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "â€”";
+  document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "—";
 
   const tp = tiempoPag.data || [];
   const scrollProm = tp.length ? Math.round(tp.reduce((a,d) => a + (d.scroll_promedio_pct||0), 0) / tp.length) : 0;
-  document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "â€”";
+  document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "—";
 
   renderChart("chartVisitasDiarias", "line", {
     labels: (diarias.data || []).map(d => d.dia),
@@ -110,12 +110,12 @@ async function cargarAnaliticas(){
     el.innerHTML = rows.length ? rows.map(render).join("") : `<tr class="empty-row"><td colspan="3">${vacio}</td></tr>`;
   };
 
-  tablaSimple("tablaPaises", paises.data || [], p => `<tr><td>${escapeHtml(p.pais)}</td><td>${p.visitantes}</td></tr>`, "Sin datos aÃºn");
-  tablaSimple("tablaCiudades", ciudades.data || [], c => `<tr><td>${escapeHtml(c.ciudad)}</td><td>${escapeHtml(c.pais)}</td><td>${c.visitantes}</td></tr>`, "Sin datos aÃºn");
-  tablaSimple("tablaOrigenes", origenes.data || [], o => `<tr><td>${escapeHtml(o.origen)}</td><td>${o.visitas}</td></tr>`, "Sin datos aÃºn");
-  tablaSimple("tablaBusquedas", busquedas.data || [], b => `<tr><td>${escapeHtml(b.termino)}</td><td>${b.veces}</td></tr>`, "AÃºn no hay bÃºsquedas registradas");
-  tablaSimple("tablaClics", clics.data || [], c => `<tr><td>${escapeHtml(c.elemento)}</td><td>${c.clics}</td></tr>`, "AÃºn no hay clics registrados");
-  tablaSimple("tablaProductosTop", productos.data || [], p => `<tr><td>${escapeHtml(p.slug)}</td><td>${p.vistas}</td></tr>`, "Sin datos aÃºn");
+  tablaSimple("tablaPaises", paises.data || [], p => `<tr><td>${escapeHtml(p.pais)}</td><td>${p.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaCiudades", ciudades.data || [], c => `<tr><td>${escapeHtml(c.ciudad)}</td><td>${escapeHtml(c.pais)}</td><td>${c.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaOrigenes", origenes.data || [], o => `<tr><td>${escapeHtml(o.origen)}</td><td>${o.visitas}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaBusquedas", busquedas.data || [], b => `<tr><td>${escapeHtml(b.termino)}</td><td>${b.veces}</td></tr>`, "Aún no hay búsquedas registradas");
+  tablaSimple("tablaClics", clics.data || [], c => `<tr><td>${escapeHtml(c.elemento)}</td><td>${c.clics}</td></tr>`, "Aún no hay clics registrados");
+  tablaSimple("tablaProductosTop", productos.data || [], p => `<tr><td>${escapeHtml(p.slug)}</td><td>${p.vistas}</td></tr>`, "Sin datos aún");
 }
 
 const CHART_INSTANCES = {};
@@ -158,9 +158,9 @@ async function cargarListasBase(){
   ]);
   CATEGORIAS = cats || []; CANTONES = cants || []; EMPRENDEDORES = emps || [];
 
-  const optsCat = `<option value="">Seleccionaâ€¦</option>` + CATEGORIAS.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
-  const optsCant = `<option value="">Seleccionaâ€¦</option>` + CANTONES.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
-  const optsEmp = `<option value="">Seleccionaâ€¦</option>` + EMPRENDEDORES.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)} â€” ${escapeHtml(e.emprendimiento)}</option>`).join("");
+  const optsCat = `<option value="">Selecciona…</option>` + CATEGORIAS.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  const optsCant = `<option value="">Selecciona…</option>` + CANTONES.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  const optsEmp = `<option value="">Selecciona…</option>` + EMPRENDEDORES.map(e => `<option value="${e.id}">${escapeHtml(e.nombre)} — ${escapeHtml(e.emprendimiento)}</option>`).join("");
 
   document.getElementById("p_categoria").innerHTML = optsCat;
   document.getElementById("p_canton").innerHTML = optsCant;
@@ -187,13 +187,13 @@ async function cargarKPIs(){
 async function cargarProductos(){
   const { data, error } = await db.from("productos").select("*, categorias(nombre), cantones(nombre)").order("created_at", { ascending:false });
   const tbody = document.getElementById("tablaProductos");
-  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">AÃºn no hay productos. Crea el primero.</td></tr>`; return; }
+  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay productos. Crea el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(p => `
     <tr>
       <td><img class="thumb-sm" src="${escapeHtml(p.imagen_principal_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(p.nombre)}</td>
-      <td>${escapeHtml(p.categorias?.nombre || 'â€”')}</td>
-      <td>${escapeHtml(p.cantones?.nombre || 'â€”')}</td>
+      <td>${escapeHtml(p.categorias?.nombre || '—')}</td>
+      <td>${escapeHtml(p.cantones?.nombre || '—')}</td>
       <td><span class="status-pill ${p.activo ? 'on':'off'}">${p.activo ? 'Publicado':'Oculto'}</span></td>
       <td class="row-actions">
         <button class="btn btn-outline btn-sm" onclick="editarProducto('${p.id}')">Editar</button>
@@ -244,7 +244,7 @@ window.editarProducto = function(id){
 };
 
 window.eliminarProducto = async function(id, nombre){
-  if (!confirm(`Â¿Eliminar el producto "${nombre}"? Esta acciÃ³n no se puede deshacer.`)) return;
+  if (!confirm(`¿Eliminar el producto "${nombre}"? Esta acción no se puede deshacer.`)) return;
   const { error } = await db.from("productos").delete().eq("id", id);
   if (error){ alert("No se pudo eliminar: " + error.message); return; }
   cargarProductos(); cargarKPIs();
@@ -298,13 +298,13 @@ document.getElementById("formProducto").addEventListener("submit", async (e) => 
 async function cargarEmprendedores(){
   const { data, error } = await db.from("emprendedores").select("*, cantones(nombre)").order("created_at", { ascending:false });
   const tbody = document.getElementById("tablaEmprendedores");
-  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">AÃºn no hay emprendedores. Registra el primero.</td></tr>`; return; }
+  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay emprendedores. Registra el primero.</td></tr>`; return; }
   tbody.innerHTML = data.map(e => `
     <tr>
       <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
-      <td>${escapeHtml(e.cantones?.nombre || 'â€”')}</td>
+      <td>${escapeHtml(e.cantones?.nombre || '—')}</td>
       <td><span class="status-pill ${e.activo ? 'on':'off'}">${e.activo ? 'Publicado':'Oculto'}</span></td>
       <td class="row-actions">
         <button class="btn btn-outline btn-sm" onclick="editarEmprendedor('${e.id}')">Editar</button>
@@ -344,7 +344,7 @@ window.editarEmprendedor = function(id){
 };
 
 window.eliminarEmprendedor = async function(id, nombre){
-  if (!confirm(`Â¿Eliminar a "${nombre}"? Esto tambiÃ©n puede afectar productos asociados.`)) return;
+  if (!confirm(`¿Eliminar a "${nombre}"? Esto también puede afectar productos asociados.`)) return;
   const { error } = await db.from("emprendedores").delete().eq("id", id);
   if (error){ alert("No se pudo eliminar: " + error.message); return; }
   cargarEmprendedores(); cargarKPIs(); cargarListasBase();
@@ -376,12 +376,12 @@ document.getElementById("formEmprendedor").addEventListener("submit", async (e) 
 });
 
 /* =========================================================
-   CATEGORÃAS
+   CATEGORÍAS
    ========================================================= */
 async function cargarCategorias(){
   const { data, error } = await db.from("categorias").select("*").order("orden");
   const tbody = document.getElementById("tablaCategorias");
-  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="5">AÃºn no hay categorÃ­as.</td></tr>`; return; }
+  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Aún no hay categorías.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `
     <tr>
       <td><img class="thumb-sm" src="${escapeHtml(c.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
@@ -400,14 +400,14 @@ async function cargarCategorias(){
 document.getElementById("btnNuevaCategoria").addEventListener("click", () => {
   document.getElementById("formCategoria").reset();
   document.getElementById("c_id").value = "";
-  document.getElementById("tituloModalCategoria").textContent = "Nueva categorÃ­a";
+  document.getElementById("tituloModalCategoria").textContent = "Nueva categoría";
   abrirModal("modalCategoria");
 });
 
 window.editarCategoria = function(id){
   const c = window.__catCache.find(x => x.id === id);
   if (!c) return;
-  document.getElementById("tituloModalCategoria").textContent = "Editar categorÃ­a";
+  document.getElementById("tituloModalCategoria").textContent = "Editar categoría";
   document.getElementById("c_id").value = c.id;
   document.getElementById("c_nombre").value = c.nombre || "";
   document.getElementById("c_nombre_en").value = c.nombre_en || "";
@@ -418,7 +418,7 @@ window.editarCategoria = function(id){
 };
 
 window.eliminarCategoria = async function(id, nombre){
-  if (!confirm(`Â¿Eliminar la categorÃ­a "${nombre}"? Los productos asociados quedarÃ¡n sin categorÃ­a.`)) return;
+  if (!confirm(`¿Eliminar la categoría "${nombre}"? Los productos asociados quedarán sin categoría.`)) return;
   const { error } = await db.from("categorias").delete().eq("id", id);
   if (error){ alert("No se pudo eliminar: " + error.message); return; }
   cargarCategorias(); cargarKPIs(); cargarListasBase();
@@ -446,18 +446,18 @@ document.getElementById("formCategoria").addEventListener("submit", async (e) =>
 /* =========================================================
    NOTICIAS
    ========================================================= */
-const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"CapacitaciÃ³n", convocatoria:"Convocatoria", evento:"Evento" };
+const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
 
 async function cargarNoticias(){
   const { data, error } = await db.from("noticias").select("*").order("created_at", { ascending:false });
   const tbody = document.getElementById("tablaNoticias");
-  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">AÃºn no hay noticias.</td></tr>`; return; }
+  if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay noticias.</td></tr>`; return; }
   tbody.innerHTML = data.map(n => `
     <tr>
       <td><img class="thumb-sm" src="${escapeHtml(n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(n.titulo)}</td>
-      <td>${TIPO_LABEL[n.tipo] || n.tipo || 'â€”'}</td>
-      <td>${n.fecha_evento || 'â€”'}</td>
+      <td>${TIPO_LABEL[n.tipo] || n.tipo || '—'}</td>
+      <td>${n.fecha_evento || '—'}</td>
       <td><span class="status-pill ${n.activo ? 'on':'off'}">${n.activo ? 'Publicada':'Oculta'}</span></td>
       <td class="row-actions">
         <button class="btn btn-outline btn-sm" onclick="editarNoticia('${n.id}')">Editar</button>
@@ -491,7 +491,7 @@ window.editarNoticia = function(id){
 };
 
 window.eliminarNoticia = async function(id, titulo){
-  if (!confirm(`Â¿Eliminar la noticia "${titulo}"?`)) return;
+  if (!confirm(`¿Eliminar la noticia "${titulo}"?`)) return;
   const { error } = await db.from("noticias").delete().eq("id", id);
   if (error){ alert("No se pudo eliminar: " + error.message); return; }
   cargarNoticias(); cargarKPIs();
@@ -531,7 +531,7 @@ async function llamarEdgeFunction(nombre, payload){
     body: JSON.stringify(payload),
   });
   const data = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(data.error || "OcurriÃ³ un error inesperado.");
+  if (!resp.ok) throw new Error(data.error || "Ocurrió un error inesperado.");
   return data;
 }
 
@@ -552,14 +552,14 @@ async function cargarSolicitudes(){
       <td><img class="thumb-sm" src="${escapeHtml(e.foto_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
       <td>${escapeHtml(e.nombre)}</td>
       <td>${escapeHtml(e.emprendimiento)}</td>
-      <td>${escapeHtml(e.correo || 'â€”')}</td>
+      <td>${escapeHtml(e.correo || '—')}</td>
       <td>${new Date(e.created_at).toLocaleDateString('es-EC')}</td>
       <td class="row-actions">
         <button class="btn btn-primary btn-sm" onclick="aprobarSolicitud('${e.id}')">Aprobar</button>
         <button class="btn btn-outline btn-sm" onclick="rechazarSolicitud('${e.id}')">Rechazar</button>
       </td>
     </tr>
-  `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes ðŸŽ‰</td></tr>`;
+  `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes.</td></tr>`;
 
   tHist.innerHTML = historial.length ? historial.map(e => `
     <tr>
@@ -571,7 +571,7 @@ async function cargarSolicitudes(){
         <button class="btn btn-danger btn-sm" onclick="eliminarSolicitud('${e.id}','${escapeHtml(e.nombre)}')">Eliminar cuenta</button>
       </td>
     </tr>
-  `).join("") : `<tr class="empty-row"><td colspan="5">AÃºn no hay historial.</td></tr>`;
+  `).join("") : `<tr class="empty-row"><td colspan="5">Aún no hay historial.</td></tr>`;
 }
 
 window.aprobarSolicitud = async function(id){
@@ -582,7 +582,7 @@ window.aprobarSolicitud = async function(id){
 };
 
 window.rechazarSolicitud = async function(id){
-  if (!confirm("Â¿Rechazar esta solicitud? El productor no verÃ¡ sus productos publicados.")) return;
+  if (!confirm("¿Rechazar esta solicitud? El productor no verá sus productos publicados.")) return;
   try{
     await llamarEdgeFunction("rechazar-productor", { emprendedor_id: id });
     cargarSolicitudes(); cargarKPIs();
@@ -590,7 +590,7 @@ window.rechazarSolicitud = async function(id){
 };
 
 window.eliminarSolicitud = async function(id, nombre){
-  if (!confirm(`Â¿Eliminar por completo a "${nombre}"? Esto borra su perfil, sus productos y su acceso al sistema. No se puede deshacer.`)) return;
+  if (!confirm(`¿Eliminar por completo a "${nombre}"? Esto borra su perfil, sus productos y su acceso al sistema. No se puede deshacer.`)) return;
   try{
     await llamarEdgeFunction("eliminar-productor", { emprendedor_id: id });
     cargarSolicitudes(); cargarEmprendedores(); cargarKPIs(); cargarListasBase();
@@ -598,7 +598,7 @@ window.eliminarSolicitud = async function(id, nombre){
 };
 
 /* =========================================================
-   CANTONES (solo lectura desde el panel â€” vienen precargados)
+   CANTONES (solo lectura desde el panel — vienen precargados)
    ========================================================= */
 async function cargarCantones(){
   const { data, error } = await db.from("cantones").select("*").order("orden");
@@ -606,4 +606,6 @@ async function cargarCantones(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="2">Sin datos.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.orden ?? 0}</td></tr>`).join("");
 }
+
+
 
