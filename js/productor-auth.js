@@ -103,7 +103,7 @@ form.addEventListener("submit", async (event) => {
     const confirmPassword = document.getElementById("confirmPassword").value;
 
     if (password !== confirmPassword) {
-      showMessage(errorMsg, "Las contrasenas no coinciden.");
+      showMessage(errorMsg, "Las contraseñas no coinciden.");
       submitBtn.disabled = false;
       submitBtn.textContent = "Crear cuenta";
       return;

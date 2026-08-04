@@ -7,6 +7,60 @@ const profileForm = document.getElementById("profileForm");
 const productForm = document.getElementById("productForm");
 const statusBox = document.getElementById("statusBox");
 
+const PANEL_IMAGE_BUCKET = typeof BUCKET !== "undefined" ? BUCKET : "lojanova-imagenes";
+
+function setImagePreview(previewId, url, fallback = "Selecciona una imagen desde tu dispositivo.") {
+  const preview = document.getElementById(previewId);
+  if (!preview) return;
+  if (!url) {
+    preview.innerHTML = `<span>${fallback}</span>`;
+    preview.classList.remove("has-image");
+    return;
+  }
+  preview.innerHTML = `<img src="${escapeHtml(url)}" alt="Vista previa de imagen">`;
+  preview.classList.add("has-image");
+}
+
+function previewLocalImage(inputId, previewId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.addEventListener("change", () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showStatus("Selecciona un archivo de imagen válido.", "error");
+      input.value = "";
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      showStatus("La imagen no debe superar los 8 MB.", "error");
+      input.value = "";
+      return;
+    }
+    setImagePreview(previewId, URL.createObjectURL(file));
+  });
+}
+
+async function uploadPanelImage(file, folder) {
+  if (!file) return null;
+  if (!file.type.startsWith("image/")) throw new Error("Selecciona un archivo de imagen válido.");
+  if (file.size > 8 * 1024 * 1024) throw new Error("La imagen no debe superar los 8 MB.");
+
+  const extension = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const safeName = slugify(file.name.replace(/\.[^.]+$/, "")) || "imagen";
+  const owner = EMPRENDEDOR?.id || "productor";
+  const filePath = `${folder}/${owner}/${Date.now()}-${safeName}.${extension}`;
+
+  const { error } = await db.storage
+    .from(PANEL_IMAGE_BUCKET)
+    .upload(filePath, file, { cacheControl: "3600", upsert: false, contentType: file.type });
+
+  if (error) throw error;
+  const { data } = db.storage.from(PANEL_IMAGE_BUCKET).getPublicUrl(filePath);
+  return data.publicUrl;
+}
+
+
 (async function guard() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) {
@@ -144,8 +198,8 @@ async function cargarListas() {
   CATEGORIAS = categorias || [];
   CANTONES = cantones || [];
 
-  const categoriaOptions = `<option value="">Selecciona...</option>` + CATEGORIAS.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
-  const cantonOptions = `<option value="">Selecciona...</option>` + CANTONES.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  const categoriaOptions = `<option value="">Selecciona…</option>` + CATEGORIAS.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
+  const cantonOptions = `<option value="">Selecciona…</option>` + CANTONES.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join("");
 
   document.getElementById("productoCategoria").innerHTML = categoriaOptions;
   document.getElementById("productoCanton").innerHTML = cantonOptions;
@@ -165,6 +219,7 @@ function pintarPerfil() {
   document.getElementById("perfilFacebook").value = EMPRENDEDOR.facebook || "";
   document.getElementById("perfilInstagram").value = EMPRENDEDOR.instagram || "";
   document.getElementById("perfilFoto").value = EMPRENDEDOR.foto_url || "";
+  setImagePreview("perfilFotoPreview", EMPRENDEDOR.foto_url);
   mostrarPreview("perfilFotoPreviewWrap", "perfilFotoPreview", EMPRENDEDOR.foto_url);
 }
 
@@ -181,7 +236,7 @@ async function cargarProductos() {
 
   const tbody = document.getElementById("tablaProductos");
   if (error || PRODUCTOS.length === 0) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Aun no tienes productos registrados.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Aún no tienes productos registrados.</td></tr>`;
     return;
   }
 
@@ -209,6 +264,9 @@ function resetProductForm() {
   document.getElementById("productoActivo").checked = true;
   document.getElementById("productoArtesanal").checked = false;
   document.getElementById("productoExportacion").checked = false;
+  const productoImagenArchivo = document.getElementById("productoImagenArchivo");
+  if (productoImagenArchivo) productoImagenArchivo.value = "";
+  setImagePreview("productoImagenPreview", "");
   document.getElementById("productFormTitle").textContent = "Nuevo producto";
 }
 
@@ -230,6 +288,7 @@ window.editarProducto = function(id) {
   document.getElementById("productoMercados").value = producto.mercados || "";
   document.getElementById("productoEtiquetas").value = (producto.etiquetas || []).join(", ");
   document.getElementById("productoImagen").value = producto.imagen_principal_url || "";
+  setImagePreview("productoImagenPreview", producto.imagen_principal_url);
   mostrarPreview("productoImagenPreviewWrap", "productoImagenPreview", producto.imagen_principal_url);
   document.getElementById("productoActivo").checked = !!producto.activo;
   document.getElementById("productoArtesanal").checked = !!producto.es_artesanal;
@@ -238,7 +297,7 @@ window.editarProducto = function(id) {
 };
 
 window.eliminarProducto = async function(id) {
-  if (!confirm("Eliminar este producto?")) return;
+  if (!confirm("¿Eliminar este producto?")) return;
   const { error } = await db.from("productos").delete().eq("id", id);
   if (error) {
     showStatus("No se pudo eliminar: " + error.message, "error");
@@ -251,6 +310,18 @@ window.eliminarProducto = async function(id) {
 
 profileForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  const perfilFotoArchivo = document.getElementById("perfilFotoArchivo")?.files?.[0];
+  if (perfilFotoArchivo) {
+    try {
+      showStatus("Subiendo fotografía…");
+      const uploadedUrl = await uploadPanelImage(perfilFotoArchivo, "emprendedores");
+      if (uploadedUrl) document.getElementById("perfilFoto").value = uploadedUrl;
+    } catch (error) {
+      showStatus("No se pudo subir la fotografía: " + error.message, "error");
+      return;
+    }
+  }
 
   const payload = {
     nombre: document.getElementById("perfilNombre").value.trim(),
@@ -287,6 +358,18 @@ profileForm.addEventListener("submit", async (event) => {
 
 productForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  const productoImagenArchivo = document.getElementById("productoImagenArchivo")?.files?.[0];
+  if (productoImagenArchivo) {
+    try {
+      showStatus("Subiendo imagen del producto…");
+      const uploadedUrl = await uploadPanelImage(productoImagenArchivo, "productos");
+      if (uploadedUrl) document.getElementById("productoImagen").value = uploadedUrl;
+    } catch (error) {
+      showStatus("No se pudo subir la imagen: " + error.message, "error");
+      return;
+    }
+  }
 
   const id = document.getElementById("productoId").value;
   const nombre = document.getElementById("productoNombre").value.trim();
@@ -332,6 +415,8 @@ document.getElementById("btnNuevoProducto").addEventListener("click", () => {
 });
 
 document.getElementById("btnCancelarProducto").addEventListener("click", resetProductForm);
+previewLocalImage("perfilFotoArchivo", "perfilFotoPreview");
+previewLocalImage("productoImagenArchivo", "productoImagenPreview");
 
 document.getElementById("btnLogout").addEventListener("click", async () => {
   await db.auth.signOut();
