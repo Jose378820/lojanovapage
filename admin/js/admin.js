@@ -324,6 +324,38 @@ async function cargarKPIs(){
   document.getElementById("kpiNoticias").textContent = n.count ?? 0;
 }
 
+
+/* KPI tráfico mensual total */
+async function cargarTraficoMensualTotalKpi(){
+  const ids = ["kpiTraficoMensual", "kpiTraficoMensualAnaliticas"];
+  const pintar = (valor) => ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor;
+  });
+
+  try{
+    const { data, error } = await db.from("vista_origenes_trafico").select("*");
+    if (error) throw error;
+
+    const total = (data || []).reduce((sum, row) => {
+      const raw = row.visitas ?? row.total ?? row.count ?? row.conteo ?? row.cantidad ?? 0;
+      const visitas = Number(raw);
+      return sum + (Number.isFinite(visitas) ? visitas : 0);
+    }, 0);
+
+    pintar(total.toLocaleString("es-EC"));
+  }catch(error){
+    console.warn("No se pudo calcular el tráfico mensual total:", error);
+    pintar("—");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(cargarTraficoMensualTotalKpi, 600);
+});
+document.getElementById("btnRefreshAnalytics")?.addEventListener("click", cargarTraficoMensualTotalKpi);
+/* Fin KPI tráfico mensual total */
+
 /* =========================================================
    PRODUCTOS
    ========================================================= */
