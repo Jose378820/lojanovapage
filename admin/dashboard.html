@@ -6,7 +6,8 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Panel de administración — Lojanova</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-admin-polish">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260804-trafico-real">
+<link rel="stylesheet" href="/admin/css/admin-enhancements.css?v=20260804-institucional">
 <script src="https://unpkg.com/lucide@1.26.0"></script>
 </head>
 <body>
@@ -28,20 +29,46 @@
       <button data-view="categorias"><i data-lucide="tags" class="icon"></i> Categorías</button>
       <button data-view="noticias"><i data-lucide="newspaper" class="icon"></i> Noticias</button>
       <button data-view="cantones"><i data-lucide="map" class="icon"></i> Cantones</button>
+      <button data-view="contactos"><i data-lucide="mouse-pointer-click" class="icon"></i> Contactos comerciales</button>
+      <button data-view="contenido"><i data-lucide="layout-template" class="icon"></i> Contenido institucional</button>
+      <button data-view="usuarios"><i data-lucide="shield-check" class="icon"></i> Usuarios y permisos</button>
+      <button data-view="auditoria"><i data-lucide="file-search" class="icon"></i> Registros de auditoría</button>
+      <button data-view="salud"><i data-lucide="activity" class="icon"></i> Salud del sistema</button>
+      <button data-view="copias"><i data-lucide="database-backup" class="icon"></i> Copias de seguridad</button>
+      <button data-view="reportes"><i data-lucide="file-down" class="icon"></i> Reportes</button>
+      <button data-view="ajustes"><i data-lucide="settings" class="icon"></i> Ajustes</button>
     </nav>
     <a href="../index.html" class="logout" target="_blank"><i data-lucide="external-link" class="icon"></i> Ver sitio público</a>
     <button class="logout" id="btnLogout"><i data-lucide="log-out" class="icon"></i> Cerrar sesión</button>
   </aside>
 
   <main class="main">
+    <div class="admin-topbar" id="adminTopbar">
+      <div class="breadcrumb"><span>Panel</span><strong id="currentViewTitle">Resumen</strong></div>
+      <div class="admin-search"><i data-lucide="search" class="icon"></i><input id="globalAdminSearch" type="search" placeholder="Buscar productos, emprendedores, categorías o noticias…" autocomplete="off"><span class="kbd">Ctrl K</span></div>
+      <div class="topbar-actions">
+        <span class="realtime-pill" id="realtimeStatus"><span></span> Conectado</span>
+        <button class="icon-btn" id="btnNotifications" title="Notificaciones"><i data-lucide="bell" class="icon"></i><em id="notificationCount">0</em></button>
+        <button class="icon-btn" id="btnTheme" title="Cambiar modo"><i data-lucide="moon" class="icon"></i></button>
+        <button class="btn btn-primary auto-width" id="btnQuickExport"><i data-lucide="download" class="icon"></i> Exportar resumen</button>
+      </div>
+    </div>
+    <div class="search-results" id="globalSearchResults" hidden></div>
+    <div class="notification-drawer" id="notificationDrawer" hidden></div>
 
     <!-- ============ RESUMEN ============ -->
     <section id="view-resumen" class="view">
       <div class="main-header">
         <div><h1>Resumen</h1><p>Estado general de la plataforma Lojanova</p></div>
       </div>
+            <div class="executive-grid" id="executiveDashboard">
+        <div class="executive-card"><span>Visitantes únicos hoy</span><strong id="execUnicosHoy">—</strong><small>Calculado desde analytics_eventos.</small></div>
+        <div class="executive-card"><span>Vistas de página hoy</span><strong id="execPageviewsHoy">—</strong><small>Cada carga pública registrada.</small></div>
+        <div class="executive-card"><span>Contactos comerciales</span><strong id="execContactos">—</strong><small>Clics en WhatsApp, correo, teléfono o CTA.</small></div>
+        <div class="executive-card"><span>Aprobaciones pendientes</span><strong id="execPendientes">—</strong><small>Productores esperando revisión.</small></div>
+      </div>
       <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi-card"><div class="kpi-num" id="kpiTraficoMensual">—</div><div class="kpi-label">Tráfico mensual total</div></div>
+        <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensual">—</div><div class="kpi-label">Tráfico mensual</div><small class="kpi-help">Total de visitas registradas este mes.</small></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos publicados</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiEmprendedores">—</div><div class="kpi-label">Emprendedores activos</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiCategorias">—</div><div class="kpi-label">Categorías</div></div>
@@ -65,7 +92,7 @@
         <div><h1>Analíticas</h1><p>Patrones de tráfico de los últimos 30 días</p></div>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div></div>
+        <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div><small class="kpi-help">Suma automática de todas las visitas del mes.</small></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
@@ -236,6 +263,56 @@
 
   </main>
 </div>
+    <!-- ============ CONTACTOS COMERCIALES ============ -->
+    <section id="view-contactos" class="view" style="display:none">
+      <div class="main-header"><div><h1>Contactos comerciales</h1><p>Acciones de contacto generadas desde la plataforma pública.</p></div><button class="btn btn-outline auto-width" data-export="contactos">Exportar CSV</button></div>
+      <div class="kpi-grid"><div class="kpi-card"><div class="kpi-num" id="contactosTotal">—</div><div class="kpi-label">Contactos registrados</div></div><div class="kpi-card"><div class="kpi-num" id="contactosWhatsapp">—</div><div class="kpi-label">WhatsApp</div></div><div class="kpi-card"><div class="kpi-num" id="contactosEmail">—</div><div class="kpi-label">Correo</div></div><div class="kpi-card"><div class="kpi-num" id="contactosTelefono">—</div><div class="kpi-label">Teléfono</div></div></div>
+      <div class="panel"><div class="panel-title"><h3>Clics por elemento</h3></div><table><thead><tr><th>Elemento</th><th>Clics</th></tr></thead><tbody id="tablaContactosComerciales"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody></table></div>
+    </section>
+
+    <!-- ============ CONTENIDO INSTITUCIONAL ============ -->
+    <section id="view-contenido" class="view" style="display:none">
+      <div class="main-header"><div><h1>Contenido institucional</h1><p>Mapa de secciones editables y elementos públicos preservados.</p></div></div>
+      <div class="panel"><div class="admin-checklist"><article><strong>Inicio y hero</strong><span>Gestionado desde archivos públicos actuales. Vista previa conservada.</span></article><article><strong>Categorías, cantones y noticias</strong><span>Se mantienen en sus módulos actuales para no duplicar edición.</span></article><article><strong>SEO y vista previa social</strong><span>Metadatos Open Graph listos para WhatsApp y redes.</span></article><article><strong>Idiomas</strong><span>Traducción pública conservada sin modificar datos.</span></article></div></div>
+    </section>
+
+    <!-- ============ USUARIOS Y PERMISOS ============ -->
+    <section id="view-usuarios" class="view" style="display:none">
+      <div class="main-header"><div><h1>Usuarios y permisos</h1><p>Administradores registrados y roles disponibles.</p></div></div>
+      <div class="panel"><table><thead><tr><th>ID</th><th>Rol</th><th>Estado</th></tr></thead><tbody id="tablaUsuariosPermisos"><tr class="empty-row"><td colspan="3">Cargando…</td></tr></tbody></table></div>
+      <div class="panel info-panel"><strong>Seguridad:</strong> los permisos reales deben reforzarse con políticas RLS en Supabase. Este panel no expone claves privadas.</div>
+    </section>
+
+    <!-- ============ REGISTROS DE AUDITORÍA ============ -->
+    <section id="view-auditoria" class="view" style="display:none">
+      <div class="main-header"><div><h1>Registros de auditoría</h1><p>Consulta de acciones sensibles cuando la tabla de auditoría esté habilitada.</p></div><button class="btn btn-outline auto-width" data-export="auditoria">Exportar CSV</button></div>
+      <div class="panel"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Módulo</th><th>Resultado</th></tr></thead><tbody id="tablaAuditoria"><tr class="empty-row"><td colspan="5">Cargando…</td></tr></tbody></table></div>
+    </section>
+
+    <!-- ============ SALUD DEL SISTEMA ============ -->
+    <section id="view-salud" class="view" style="display:none">
+      <div class="main-header"><div><h1>Salud del sistema</h1><p>Estado operativo de Supabase, autenticación, almacenamiento y analíticas.</p></div><button class="btn btn-outline auto-width" id="btnRevisarSalud">Revisar ahora</button></div>
+      <div class="health-grid" id="healthGrid"><div class="empty-row">Cargando…</div></div>
+    </section>
+
+    <!-- ============ COPIAS DE SEGURIDAD ============ -->
+    <section id="view-copias" class="view" style="display:none">
+      <div class="main-header"><div><h1>Copias de seguridad</h1><p>Control documental de respaldo sin ejecutar acciones destructivas.</p></div></div>
+      <div class="panel"><div class="backup-grid"><article><strong>Base de datos</strong><span id="backupDbStatus">Verificar en Supabase Backups / PITR según plan.</span></article><article><strong>Imágenes</strong><span>Bucket actual: lojanova-imagenes. Recomendado: réplica a Cloudflare R2 o S3.</span></article><article><strong>Código</strong><span>Repositorio GitHub y despliegue Cloudflare Pages.</span></article><article><strong>Restauración</strong><span>Requiere confirmación manual y respaldo probado antes de restaurar.</span></article></div></div>
+    </section>
+
+    <!-- ============ REPORTES ============ -->
+    <section id="view-reportes" class="view" style="display:none">
+      <div class="main-header"><div><h1>Reportes</h1><p>Exportaciones ejecutivas a partir de datos reales del panel.</p></div></div>
+      <div class="report-actions"><button class="btn btn-primary auto-width" data-export="resumen">Reporte ejecutivo CSV</button><button class="btn btn-outline auto-width" data-export="productos">Productos CSV</button><button class="btn btn-outline auto-width" data-export="emprendedores">Emprendedores CSV</button><button class="btn btn-outline auto-width" onclick="window.print()">Versión imprimible / PDF</button></div>
+    </section>
+
+    <!-- ============ AJUSTES ============ -->
+    <section id="view-ajustes" class="view" style="display:none">
+      <div class="main-header"><div><h1>Ajustes</h1><p>Preferencias locales del panel administrativo.</p></div></div>
+      <div class="panel"><div class="settings-row"><span>Modo oscuro</span><button class="btn btn-outline auto-width" id="btnThemeSettings">Activar / desactivar</button></div><div class="settings-row"><span>Versión del panel</span><strong>2026.08 institucional</strong></div><div class="settings-row"><span>Dominio público</span><strong>prefecturalojanova.com</strong></div></div>
+    </section>
+
 
 <!-- ============ MODAL PRODUCTO ============ -->
 <div class="modal-overlay" id="modalProducto">
@@ -253,7 +330,7 @@
         <div class="field full" style="border-top:1px dashed #ccc;padding-top:12px;margin-top:4px">
           <label style="font-weight:700">English (opcional — para versión exportadora del sitio)</label>
         </div>
-        <div class="field full"><label>Product name (EN)</label><input type="text" id="p_nombre_en"></div>
+        <div class="field full"><label>Nombre del producto en inglés (opcional)</label><input type="text" id="p_nombre_en"></div>
         <div class="field full"><label>Short description (EN)</label><textarea id="p_desc_corta_en" maxlength="160"></textarea></div>
         <div class="field full"><label>Full description (EN)</label><textarea id="p_desc_larga_en"></textarea></div>
         <div class="field full"><label>Historia del producto</label><textarea id="p_historia"></textarea></div>
@@ -319,7 +396,7 @@
       <input type="hidden" id="c_id">
       <div class="form-grid">
         <div class="field"><label>Nombre *</label><input type="text" id="c_nombre" required></div>
-        <div class="field"><label>Name (EN)</label><input type="text" id="c_nombre_en"></div>
+        <div class="field"><label>Nombre en inglés (opcional)</label><input type="text" id="c_nombre_en"></div>
         <div class="field"><label>Orden</label><input type="number" id="c_orden" value="0"></div>
         <div class="field full"><label>Descripción</label><textarea id="c_descripcion"></textarea></div>
         <div class="field full"><label>URL de imagen</label><input type="text" id="c_imagen" placeholder="https://..."></div>
@@ -367,9 +444,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js?v=20260803-admin-polish"></script>
 <script src="/js/supabase-client.js?v=20260803-admin-polish"></script>
-<script src="/admin/js/admin.js?v=20260803-admin-polish"></script>
+<script src="/admin/js/admin.js?v=20260804-trafico-real"></script>
+<script src="/admin/js/admin-enhancements.js?v=20260804-institucional"></script>
 </body>
 </html>
+
+
+
 
 
 
