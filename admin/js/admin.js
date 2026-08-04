@@ -38,220 +38,95 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
    ========================================================= */
 
 async function cargarAnaliticas(){
-  const setText = (id, value) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  };
-
-  const numberOrZero = (value) => Number(value || 0);
-  const formatoNumero = (value) => Number(value || 0).toLocaleString("es-EC");
-  const formatoDuracion = (segundos) => {
-    const total = Math.max(0, Math.round(Number(segundos || 0)));
-    const minutos = Math.floor(total / 60);
-    const resto = total % 60;
-    return minutos ? `${minutos} min ${resto}s` : `${resto}s`;
-  };
-  const valorFila = (row, fields) => {
-    for (const field of fields){
-      if (row && row[field] !== undefined && row[field] !== null && row[field] !== "") return row[field];
-    }
-    return "—";
-  };
-  const totalFila = (row) => numberOrZero(valorFila(row, ["visitas", "total", "count", "conteo", "eventos", "cantidad", "clics"]));
-  const cargarSeguro = async (nombre, consulta) => {
-    try{
-      const res = await consulta;
-      if (res.error) throw res.error;
-      return res;
-    }catch(error){
-      console.warn(`No se pudo cargar ${nombre}:`, error);
-      return { data: [], count: 0, error };
-    }
-  };
-  const setTabla = (id, rows, columnas, emptyText) => {
-    const tbody = document.getElementById(id);
-    if (!tbody) return;
-    const lista = Array.isArray(rows) ? rows : [];
-    if (!lista.length){
-      tbody.innerHTML = `<tr class="empty-row"><td colspan="${columnas.length}">${emptyText || "Sin datos disponibles."}</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = lista.map(row => `<tr>${columnas.map(col => {
-      const value = typeof col.value === "function" ? col.value(row) : row[col.value];
-      return `<td>${escapeHtml(String(value ?? "—"))}</td>`;
-    }).join("")}</tr>`).join("");
-  };
-  const pintarGrafico = (id, type, labels, values, label) => {
-    try{
-      if (typeof renderChart === "function") renderChart(id, type, labels, values, label);
-    }catch(error){
-      console.warn(`No se pudo renderizar ${id}:`, error);
-    }
-  };
-
-  const ahora = new Date();
-  const inicioHoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()).toISOString();
-  const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1).toISOString();
-  const desde30Dias = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-
-  const [
-    traficoOrigenes,
-    traficoMesRaw,
-    visitasHoy,
-    sesiones30d,
-    visitasDiarias,
-    horasPico,
-    paginasTop,
-    dispositivos,
-    duracionSesiones,
-    navegadores,
-    sistemasOperativos,
-    paises,
-    ciudades,
-    busquedas,
-    clicsCta,
-    productosTop,
-    tiemposPagina,
-    tasaRebote,
-    scrollEventos,
-    productosRes,
-    emprendedoresRes,
-    noticiasRes,
-  ] = await Promise.all([
-    cargarSeguro("origen del tráfico", db.from("vista_origenes_trafico").select("*")),
-    cargarSeguro("tráfico mensual desde eventos", db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", inicioMes)),
-    cargarSeguro("visitas de hoy", db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", inicioHoy)),
-    cargarSeguro("visitantes únicos", db.from("analytics_eventos").select("session_id").eq("tipo", "pageview").gte("creado_en", desde30Dias).limit(10000)),
-    cargarSeguro("visitas por día", db.from("vista_visitas_diarias").select("*")),
-    cargarSeguro("horas pico", db.from("vista_horas_pico").select("*")),
-    cargarSeguro("páginas más visitadas", db.from("vista_paginas_top").select("*")),
-    cargarSeguro("dispositivos", db.from("vista_dispositivos").select("*")),
-    cargarSeguro("duración de sesiones", db.from("vista_duracion_sesiones").select("*")),
-    cargarSeguro("navegadores", db.from("vista_navegadores").select("*")),
-    cargarSeguro("sistemas operativos", db.from("vista_sistemas_operativos").select("*")),
-    cargarSeguro("países", db.from("vista_paises").select("*")),
-    cargarSeguro("ciudades", db.from("vista_ciudades").select("*")),
-    cargarSeguro("búsquedas", db.from("vista_terminos_busqueda").select("*")),
-    cargarSeguro("clics CTA", db.from("vista_clics_cta").select("*")),
-    cargarSeguro("productos más vistos", db.from("vista_productos_mas_vistos").select("*")),
-    cargarSeguro("tiempo por página", db.from("vista_tiempo_por_pagina").select("*")),
-    cargarSeguro("tasa de rebote", db.from("vista_tasa_rebote").select("*")),
-    cargarSeguro("scroll promedio", db.from("analytics_eventos").select("metadata, scroll_porcentaje").eq("tipo", "scroll").gte("creado_en", desde30Dias).limit(10000)),
-    cargarSeguro("productos", db.from("productos").select("id, activo, categorias(nombre), cantones(nombre), emprendedores!inner(id, activo, estado)")),
-    cargarSeguro("emprendedores", db.from("emprendedores").select("id, activo, estado")),
-    cargarSeguro("noticias", db.from("noticias").select("id, activo")),
+  const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
+    db.from("vista_visitas_diarias").select("*"),
+    db.from("vista_horas_pico").select("*"),
+    db.from("vista_paginas_top").select("*"),
+    db.from("vista_dispositivos").select("*"),
+    db.from("vista_duracion_sesiones").select("duracion_segundos"),
+    db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", new Date().toISOString().slice(0,10)),
+    db.from("vista_navegadores").select("*"),
+    db.from("vista_sistemas_operativos").select("*"),
+    db.from("vista_paises").select("*"),
+    db.from("vista_ciudades").select("*"),
+    db.from("vista_origenes_trafico").select("*"),
+    db.from("vista_terminos_busqueda").select("*"),
+    db.from("vista_clics_cta").select("*"),
+    db.from("vista_productos_mas_vistos").select("*"),
+    db.from("vista_tiempo_por_pagina").select("*"),
+    db.from("vista_tasa_rebote").select("*").maybeSingle(),
   ]);
 
-  const totalPorOrigen = (traficoOrigenes.data || []).reduce((sum, row) => sum + totalFila(row), 0);
-  const traficoMensual = totalPorOrigen || numberOrZero(traficoMesRaw.count);
-  setText("kpiTraficoMensual", formatoNumero(traficoMensual));
-  setText("kpiTraficoMensualAnaliticas", formatoNumero(traficoMensual));
-  setText("execPageviewsMes", formatoNumero(traficoMensual));
+  document.getElementById("kpiVisitasHoy").textContent = hoy.count ?? 0;
 
-  setText("kpiVisitasHoy", formatoNumero(visitasHoy.count || 0));
-  const visitantesUnicos = new Set((sesiones30d.data || []).map(row => row.session_id).filter(Boolean)).size;
-  setText("kpiVisitantesUnicos", formatoNumero(visitantesUnicos));
+  const traficoMensualTotal = (origenes.data || []).reduce((sum, row) => {
+    const visitas = Number(row.visitas ?? row.total ?? row.count ?? row.conteo ?? row.cantidad ?? 0);
+    return sum + (Number.isFinite(visitas) ? visitas : 0);
+  }, 0);
+  ["kpiTraficoMensual", "kpiTraficoMensualAnaliticas"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = traficoMensualTotal.toLocaleString("es-EC");
+  });
 
-  const paginaTop = (paginasTop.data || [])[0];
-  setText("kpiPaginaTop", paginaTop ? String(valorFila(paginaTop, ["pagina", "path", "url", "nombre"])) : "—");
 
-  const duraciones = duracionSesiones.data || [];
-  const duracionPromedio = duraciones.length
-    ? duraciones.reduce((sum, row) => sum + numberOrZero(valorFila(row, ["duracion_promedio", "duracion_segundos", "duracion", "promedio"])), 0) / duraciones.length
-    : 0;
-  setText("kpiDuracionProm", duracionPromedio ? formatoDuracion(duracionPromedio) : "—");
+  const totalUnicos = (diarias.data || []).reduce((acc, d) => acc + (d.visitantes_unicos || 0), 0);
+  document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos;
 
-  const reboteRow = Array.isArray(tasaRebote.data) ? tasaRebote.data[0] : tasaRebote.data;
-  const reboteValor = reboteRow ? numberOrZero(valorFila(reboteRow, ["tasa_rebote", "rebote", "porcentaje", "rate"])) : null;
-  setText("kpiTasaRebote", reboteValor !== null ? `${Math.round(reboteValor * (reboteValor <= 1 ? 100 : 1) * 10) / 10}%` : "—");
+  const dur = (duraciones.data || []).map(d => d.duracion_segundos || 0);
+  const promedio = dur.length ? Math.round(dur.reduce((a,b) => a+b, 0) / dur.length) : 0;
+  document.getElementById("kpiDuracionProm").textContent = promedio > 60 ? `${Math.floor(promedio/60)} min ${promedio%60}s` : `${promedio}s`;
 
-  const scrollValores = (scrollEventos.data || []).map(row => {
-    const direct = row.scroll_porcentaje;
-    const meta = row.metadata || {};
-    return Number(direct ?? meta.scroll_porcentaje ?? meta.scrollPercent ?? meta.maxScroll ?? 0);
-  }).filter(value => Number.isFinite(value) && value > 0);
-  const scrollPromedio = scrollValores.length ? Math.round(scrollValores.reduce((sum, value) => sum + value, 0) / scrollValores.length) : null;
-  setText("kpiScrollProm", scrollPromedio !== null ? `${scrollPromedio}%` : "—");
+  const topData = top.data || [];
+  document.getElementById("kpiPaginaTop").textContent = topData[0]?.pagina || "—";
+  document.getElementById("tablaPaginasTop").innerHTML = topData.length
+    ? topData.map(p => `<tr><td>${escapeHtml(p.pagina)}</td><td>${p.visitas}</td></tr>`).join("")
+    : `<tr class="empty-row"><td colspan="2">Sin datos aún</td></tr>`;
 
-  const diarias = visitasDiarias.data || [];
-  pintarGrafico("chartVisitasDiarias", "line", diarias.map(row => String(valorFila(row, ["fecha", "dia", "created_at"]))), diarias.map(totalFila), "Visitas");
-  const horas = horasPico.data || [];
-  pintarGrafico("chartHoras", "bar", horas.map(row => String(valorFila(row, ["hora", "hour"]))) , horas.map(totalFila), "Visitas");
-  const disp = dispositivos.data || [];
-  pintarGrafico("chartDispositivos", "doughnut", disp.map(row => String(valorFila(row, ["dispositivo", "device"]))) , disp.map(totalFila), "Visitas");
-  const navs = navegadores.data || [];
-  pintarGrafico("chartNavegadores", "bar", navs.map(row => String(valorFila(row, ["navegador", "browser"]))) , navs.map(totalFila), "Visitas");
-  const sistemas = sistemasOperativos.data || [];
-  pintarGrafico("chartSO", "doughnut", sistemas.map(row => String(valorFila(row, ["sistema_operativo", "sistema", "so", "os"]))) , sistemas.map(totalFila), "Visitas");
+  document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "—";
 
-  setTabla("tablaPaginasTop", paginasTop.data, [
-    { value: row => valorFila(row, ["pagina", "path", "url", "nombre"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay páginas registradas.");
-  setTabla("tablaProductosTop", productosTop.data, [
-    { value: row => valorFila(row, ["producto", "nombre_producto", "nombre", "titulo"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay productos vistos.");
-  setTabla("tablaPaises", paises.data, [
-    { value: row => valorFila(row, ["pais", "country"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay países registrados.");
-  setTabla("tablaCiudades", ciudades.data, [
-    { value: row => valorFila(row, ["ciudad", "city"]) },
-    { value: row => valorFila(row, ["pais", "country"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay ciudades registradas.");
-  setTabla("tablaOrigenes", traficoOrigenes.data, [
-    { value: row => valorFila(row, ["origen", "referrer", "fuente", "source"]) || "Directo" },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay origen de tráfico registrado.");
-  setTabla("tablaBusquedas", busquedas.data, [
-    { value: row => valorFila(row, ["termino", "busqueda", "query", "keyword"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay búsquedas registradas.");
-  setTabla("tablaClics", clicsCta.data, [
-    { value: row => valorFila(row, ["cta", "accion", "nombre", "boton"]) },
-    { value: row => formatoNumero(totalFila(row)) },
-  ], "Aún no hay clics registrados.");
+  const tp = tiempoPag.data || [];
+  const scrollProm = tp.length ? Math.round(tp.reduce((a,d) => a + (d.scroll_promedio_pct||0), 0) / tp.length) : 0;
+  document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "—";
 
-  const productosVisibles = (productosRes.data || []).filter(p =>
-    p.activo && p.emprendedores?.activo && p.emprendedores?.estado === "aprobado"
-  );
-  const emprendedores = emprendedoresRes.data || [];
-  const aprobados = emprendedores.filter(e => e.activo && e.estado === "aprobado").length;
-  const pendientes = emprendedores.filter(e => e.estado === "pendiente" || !e.estado).length;
-  const rechazados = emprendedores.filter(e => e.estado === "rechazado").length;
-  const noticias = (noticiasRes.data || []).filter(n => n.activo).length;
+  renderChart("chartVisitasDiarias", "line", {
+    labels: (diarias.data || []).map(d => d.dia),
+    datasets: [{ label: "Visitas", data: (diarias.data || []).map(d => d.visitas), borderColor: "#1E5A3A", backgroundColor: "rgba(30,90,58,.15)", tension: .3, fill: true }]
+  });
 
-  setText("analyticsProductos", formatoNumero(productosVisibles.length));
-  setText("analyticsMarcas", formatoNumero(aprobados));
-  setText("analyticsPendientes", formatoNumero(pendientes));
-  setText("analyticsNoticias", formatoNumero(noticias));
+  const horasMap = new Array(24).fill(0);
+  (horas.data || []).forEach(h => horasMap[h.hora] = h.visitas);
+  renderChart("chartHoras", "bar", {
+    labels: horasMap.map((_, i) => `${i}h`),
+    datasets: [{ label: "Visitas", data: horasMap, backgroundColor: "#C9A15A" }]
+  });
 
-  if (typeof renderAnalyticsBars === "function"){
-    renderAnalyticsBars("analyticsCategorias", contarPor(productosVisibles, p => p.categorias?.nombre));
-    renderAnalyticsBars("analyticsCantones", contarPor(productosVisibles, p => p.cantones?.nombre));
-    renderAnalyticsBars("analyticsEstados", {
-      "Aprobados": aprobados,
-      "Pendientes": pendientes,
-      "Rechazados": rechazados,
-    });
-  }
+  renderChart("chartDispositivos", "doughnut", {
+    labels: (dispositivos.data || []).map(d => d.dispositivo),
+    datasets: [{ data: (dispositivos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a"] }]
+  });
 
-  const resumen = document.getElementById("analyticsResumen");
-  if (resumen){
-    const promedio = aprobados ? (productosVisibles.length / aprobados).toFixed(1) : "0";
-    resumen.innerHTML = `
-      <p><strong>${formatoNumero(traficoMensual)}</strong> visitas totales se han registrado en el mes.</p>
-      <p><strong>${productosVisibles.length}</strong> productos visibles pertenecen a marcas aprobadas.</p>
-      <p><strong>${aprobados}</strong> marcas están activas y aprobadas; <strong>${pendientes}</strong> solicitudes requieren revisión.</p>
-      <p>Promedio actual: <strong>${promedio}</strong> productos por marca aprobada.</p>
-    `;
-  }
+  renderChart("chartNavegadores", "doughnut", {
+    labels: (navegadores.data || []).map(d => d.navegador),
+    datasets: [{ data: (navegadores.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
+  });
 
-  if (typeof cargarAnaliticasApp === "function"){
-    try { await cargarAnaliticasApp(); } catch(error){ console.warn("No se pudieron cargar analíticas de app:", error); }
-  }
+  renderChart("chartSO", "doughnut", {
+    labels: (sos.data || []).map(d => d.so),
+    datasets: [{ data: (sos.data || []).map(d => d.visitas), backgroundColor: ["#1E5A3A", "#C9A15A", "#123824", "#8a8a8a", "#4a7a5f"] }]
+  });
+
+  const tablaSimple = (id, rows, render, vacio) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = rows.length ? rows.map(render).join("") : `<tr class="empty-row"><td colspan="3">${vacio}</td></tr>`;
+  };
+
+  tablaSimple("tablaPaises", paises.data || [], p => `<tr><td>${escapeHtml(p.pais)}</td><td>${p.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaCiudades", ciudades.data || [], c => `<tr><td>${escapeHtml(c.ciudad)}</td><td>${escapeHtml(c.pais)}</td><td>${c.visitantes}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaOrigenes", origenes.data || [], o => `<tr><td>${escapeHtml(o.origen)}</td><td>${o.visitas}</td></tr>`, "Sin datos aún");
+  tablaSimple("tablaBusquedas", busquedas.data || [], b => `<tr><td>${escapeHtml(b.termino)}</td><td>${b.veces}</td></tr>`, "Aún no hay búsquedas registradas");
+  tablaSimple("tablaClics", clics.data || [], c => `<tr><td>${escapeHtml(c.elemento)}</td><td>${c.clics}</td></tr>`, "Aún no hay clics registrados");
+  tablaSimple("tablaProductosTop", productos.data || [], p => `<tr><td>${escapeHtml(p.slug)}</td><td>${p.vistas}</td></tr>`, "Sin datos aún");
 }
 
 
