@@ -129,31 +129,58 @@ function renderChart(canvasId, type, data){
 
 
 
-/* ---------- Tráfico mensual total ---------- */
-function primerDiaMesActualISO(){
-  const ahora = new Date();
-  return new Date(ahora.getFullYear(), ahora.getMonth(), 1).toISOString();
-}
 
-async function cargarTraficoMensual(){
+
+
+/* ---------- Tráfico mensual real desde Origen del tráfico ---------- */
+async function cargarTraficoMensualReal(){
   const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
-  try{
-    const { count, error } = await db
-      .from("analytics_eventos")
-      .select("id", { count: "exact", head: true })
-      .eq("tipo", "pageview")
-      .gte("creado_en", primerDiaMesActualISO());
+  const format = (value) => Number(value || 0).toLocaleString("es-EC");
 
+  try{
+    const { data, error } = await db.from("vista_origenes_trafico").select("*");
     if (error) throw error;
-    const total = count ?? 0;
-    setText("kpiTraficoMensual", total.toLocaleString("es-EC"));
-    setText("kpiTraficoMensualAnaliticas", total.toLocaleString("es-EC"));
+
+    const total = (data || []).reduce((sum, row) => {
+      const value = row.visitas ?? row.total ?? row.count ?? row.clics ?? 0;
+      return sum + Number(value || 0);
+    }, 0);
+
+    setText("kpiTraficoMensual", format(total));
+    setText("kpiTraficoMensualAnaliticas", format(total));
+    setText("execPageviewsMes", format(total));
+    return total;
   }catch(error){
-    console.warn("No se pudo calcular el tráfico mensual:", error);
-    setText("kpiTraficoMensual", "!");
-    setText("kpiTraficoMensualAnaliticas", "!");
+    console.warn("No se pudo sumar vista_origenes_trafico; usando fallback mensual:", error);
+    try{
+      const ahora = new Date();
+      const primerDiaMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1).toISOString();
+      const { count, error: countError } = await db
+        .from("analytics_eventos")
+        .select("id", { count: "exact", head: true })
+        .eq("tipo", "pageview")
+        .gte("creado_en", primerDiaMes);
+      if (countError) throw countError;
+      setText("kpiTraficoMensual", format(count || 0));
+      setText("kpiTraficoMensualAnaliticas", format(count || 0));
+      setText("execPageviewsMes", format(count || 0));
+      return count || 0;
+    }catch(finalError){
+      console.warn("No se pudo calcular tráfico mensual:", finalError);
+      setText("kpiTraficoMensual", "!");
+      setText("kpiTraficoMensualAnaliticas", "!");
+      setText("execPageviewsMes", "!");
+      return 0;
+    }
   }
 }
+
+window.addEventListener("load", () => {
+  cargarTraficoMensualReal();
+  setInterval(cargarTraficoMensualReal, 60 * 1000);
+  document.querySelector('[data-view="analiticas"]')?.addEventListener("click", () => setTimeout(cargarTraficoMensualReal, 500));
+  document.getElementById("btnRefreshAnalytics")?.addEventListener("click", () => setTimeout(cargarTraficoMensualReal, 500));
+});
 
 /* ---------- Utilidades ---------- */
 function escapeHtml(str){

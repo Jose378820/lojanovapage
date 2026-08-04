@@ -1,143 +1,96 @@
-// =========================================================
-// LOJANOVA — Tracking de visitas (avanzado)
-// Incluir DESPUÉS de supabase-client.js en cada página pública
-// =========================================================
-(function(){
-  function getSessionId(){
-    let id = sessionStorage.getItem("ln_session");
-    if (!id){ id = crypto.randomUUID(); sessionStorage.setItem("ln_session", id); }
-    return id;
+// LOJANOVA — analytics.js
+// Registro de visitas públicas compatible con el panel histórico y el panel nuevo.
+
+(function () {
+  if (!window.db || location.pathname.startsWith("/admin")) return;
+
+  const SESSION_KEY = "lojanova_visit_session_id";
+  const PAGE_HIT_KEY = `lojanova_last_hit_${location.pathname || "/"}`;
+  const now = Date.now();
+  const lastSamePageHit = Number(sessionStorage.getItem(PAGE_HIT_KEY) || 0);
+
+  // Evita duplicados por recargas inmediatas, pero permite contar navegación real entre páginas.
+  if (now - lastSamePageHit < 5 * 1000) return;
+  sessionStorage.setItem(PAGE_HIT_KEY, String(now));
+
+  let sessionId = localStorage.getItem(SESSION_KEY);
+  if (!sessionId) {
+    sessionId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem(SESSION_KEY, sessionId);
   }
 
-  function getDispositivo(){
-    const ua = navigator.userAgent;
-    if (/tablet|ipad/i.test(ua)) return "tablet";
-    if (/mobile|android|iphone/i.test(ua)) return "mobile";
-    return "desktop";
+  function getDeviceType() {
+    const ua = navigator.userAgent || "";
+    if (/Mobi|Android|iPhone|iPod/i.test(ua)) return "móvil";
+    if (/iPad|Tablet/i.test(ua)) return "tablet";
+    return "escritorio";
   }
 
-  function getNavegador(){
-    const ua = navigator.userAgent;
-    if (ua.includes("Edg")) return "Edge";
-    if (ua.includes("Chrome")) return "Chrome";
-    if (ua.includes("Firefox")) return "Firefox";
-    if (ua.includes("Safari")) return "Safari";
+  function getBrowser() {
+    const ua = navigator.userAgent || "";
+    if (/Edg/i.test(ua)) return "Edge";
+    if (/Chrome/i.test(ua)) return "Chrome";
+    if (/Firefox/i.test(ua)) return "Firefox";
+    if (/Safari/i.test(ua)) return "Safari";
     return "Otro";
   }
 
-  function getSO(){
-    const ua = navigator.userAgent;
-    if (ua.includes("Windows")) return "Windows";
-    if (ua.includes("Mac OS")) return "macOS";
-    if (ua.includes("Android")) return "Android";
-    if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
-    if (ua.includes("Linux")) return "Linux";
-    return "Otro";
-  }
-
-  function getReferrerDominio(){
-    if (!document.referrer) return null;
-    try { return new URL(document.referrer).hostname; } catch(e){ return null; }
-  }
-
-  function getUTM(){
-    const p = new URLSearchParams(location.search);
-    return {
-      utm_source: p.get("utm_source"),
-      utm_medium: p.get("utm_medium"),
-      utm_campaign: p.get("utm_campaign"),
-    };
-  }
-
-  async function getGeo(){
-    const cache = sessionStorage.getItem("ln_geo");
-    if (cache) return JSON.parse(cache);
+  async function getGeo() {
     try {
-      const res = await fetch("https://ipwho.is/");
-      const data = await res.json();
-      const geo = { pais: data.country || null, ciudad: data.city || null };
-      sessionStorage.setItem("ln_geo", JSON.stringify(geo));
-      return geo;
-    } catch(e){ return { pais: null, ciudad: null }; }
+      const response = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+      if (!response.ok) throw new Error("geo unavailable");
+      const data = await response.json();
+      return {
+        pais: data.country_name || "No identificado",
+        codigo_pais: data.country_code || null,
+        ciudad: data.city || "No identificada",
+        region: data.region || null,
+      };
+    } catch (error) {
+      return { pais: "No identificado", codigo_pais: null, ciudad: "No identificada", region: null };
+    }
   }
 
-  const contexto = {
-    session_id: getSessionId(),
-    dispositivo: getDispositivo(),
-    navegador: getNavegador(),
-    so: getSO(),
-    idioma: navigator.language || null,
-    resolucion: `${screen.width}x${screen.height}`,
-    conexion: navigator.connection?.effectiveType || null,
-    referrer: document.referrer || null,
-    referrer_dominio: getReferrerDominio(),
-    ...getUTM(),
-  };
-
-  async function registrarEvento(tipo, metadata){
+  async function insertSafely(table, payload) {
     try {
-      const geo = await getGeo();
-      await db.from("analytics_eventos").insert({
-        ...contexto,
+      const { error } = await window.db.from(table).insert(payload);
+      if (error) console.warn(`No se pudo registrar en ${table}:`, error.message);
+    } catch (error) {
+      console.warn(`No se pudo registrar en ${table}:`, error?.message || error);
+    }
+  }
+
+  async function trackVisit() {
+    const geo = await getGeo();
+    const pagePath = location.pathname || "/";
+    const referrer = document.referrer || null;
+    const device = getDeviceType();
+
+    await Promise.all([
+      insertSafely("visitas_plataforma", {
+        session_id: sessionId,
+        pagina: pagePath,
+        titulo: document.title || "Lojanova",
+        referrer,
         pais: geo.pais,
+        codigo_pais: geo.codigo_pais,
         ciudad: geo.ciudad,
-        pagina: location.pathname + location.search,
-        tipo,
-        metadata: metadata || {},
-      });
-    } catch(e){ /* no bloquear la navegación si falla */ }
+        region: geo.region,
+        dispositivo: device,
+        idioma: navigator.language || null,
+        user_agent: navigator.userAgent || null,
+      }),
+      insertSafely("analytics_eventos", {
+        session_id: sessionId,
+        pagina: pagePath,
+        tipo: "pageview",
+        referrer,
+        dispositivo: device,
+        navegador: getBrowser(),
+      }),
+    ]);
   }
 
-  // Pageview inicial
-  registrarEvento("pageview");
-
-  // Heartbeat cada 30s mientras la pestaña esté visible
-  setInterval(() => {
-    if (document.visibilityState === "visible") registrarEvento("heartbeat");
-  }, 30000);
-
-  // ---- Tiempo en página + profundidad de scroll ----
-  const inicio = Date.now();
-  let maxScroll = 0;
-  window.addEventListener("scroll", () => {
-    const alto = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = alto > 0 ? Math.min(100, Math.round((window.scrollY / alto) * 100)) : 100;
-    if (pct > maxScroll) maxScroll = pct;
-  }, { passive: true });
-
-  async function registrarSalida(){
-    const tiempo_en_pagina = Math.round((Date.now() - inicio) / 1000);
-    const geo = JSON.parse(sessionStorage.getItem("ln_geo") || "{}");
-    const payload = {
-      ...contexto,
-      pais: geo.pais || null,
-      ciudad: geo.ciudad || null,
-      pagina: location.pathname + location.search,
-      tipo: "engagement",
-      metadata: { tiempo_en_pagina, profundidad_scroll: maxScroll },
-    };
-    try {
-      await fetch(`${SUPABASE_URL}/rest/v1/analytics_eventos`, {
-        method: "POST",
-        keepalive: true,
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify(payload),
-      });
-    } catch(e){ /* silencioso */ }
-  }
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") registrarSalida(); });
-  window.addEventListener("pagehide", registrarSalida);
-
-  // ---- Clics en elementos con data-track="nombre" ----
-  document.addEventListener("click", (e) => {
-    const el = e.target.closest("[data-track]");
-    if (el) registrarEvento("click", { elemento: el.dataset.track });
-  });
-
-  window.lnTrackBusqueda = (termino) => registrarEvento("busqueda", { termino });
-  window.lnTrackFiltro = (filtro, valor) => registrarEvento("filtro", { filtro, valor });
+  if (document.readyState === "complete") trackVisit();
+  else window.addEventListener("load", trackVisit, { once: true });
 })();
