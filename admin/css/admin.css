@@ -323,3 +323,10 @@ tbody tr:hover td{background:#f8faf5}
   object-fit:cover;
   display:block;
 }
+
+
+/* Tráfico mensual total */
+.kpi-card.kpi-traffic-month{border-color:rgba(201,161,90,.28);background:linear-gradient(145deg,#fff,#fbf4e6)}
+.kpi-card .kpi-help{display:block;margin-top:8px;color:#7a7469;font-size:.74rem;line-height:1.35}
+body.admin-dark .kpi-card.kpi-traffic-month{background:linear-gradient(145deg,rgba(38,45,32,.96),rgba(46,38,24,.92))!important;border-color:rgba(201,161,90,.28)}
+body.admin-dark .kpi-card .kpi-help{color:#c7bfae}

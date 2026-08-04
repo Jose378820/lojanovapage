@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Panel de administración — Lojanova</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260803-admin-polish">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260804-trafico-mensual">
 <link rel="stylesheet" href="/admin/css/admin-enhancements.css?v=20260804-institucional">
 <script src="https://unpkg.com/lucide@1.26.0"></script>
 </head>
@@ -68,6 +68,7 @@
         <div class="executive-card"><span>Aprobaciones pendientes</span><strong id="execPendientes">—</strong><small>Productores esperando revisión.</small></div>
       </div>
       <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensual">—</div><div class="kpi-label">Tráfico mensual</div><small class="kpi-help">Total de visitas registradas este mes.</small></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiProductos">—</div><div class="kpi-label">Productos publicados</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiEmprendedores">—</div><div class="kpi-label">Emprendedores activos</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiCategorias">—</div><div class="kpi-label">Categorías</div></div>
@@ -91,6 +92,7 @@
         <div><h1>Analíticas</h1><p>Patrones de tráfico de los últimos 30 días</p></div>
       </div>
       <div class="kpi-grid">
+        <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div><small class="kpi-help">Suma automática de todas las visitas del mes.</small></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
         <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
@@ -442,7 +444,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js?v=20260803-admin-polish"></script>
 <script src="/js/supabase-client.js?v=20260803-admin-polish"></script>
-<script src="/admin/js/admin.js?v=20260803-admin-polish"></script>
+<script src="/admin/js/admin.js?v=20260804-trafico-mensual"></script>
 <script src="/admin/js/admin-enhancements.js?v=20260804-institucional"></script>
 </body>
 </html>

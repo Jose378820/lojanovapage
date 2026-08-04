@@ -37,6 +37,7 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
    ANALÍTICAS
    ========================================================= */
 async function cargarAnaliticas(){
+  await cargarTraficoMensual();
   const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
     db.from("vista_visitas_diarias").select("*"),
     db.from("vista_horas_pico").select("*"),
@@ -124,6 +125,34 @@ function renderChart(canvasId, type, data){
   if (!ctx) return;
   if (CHART_INSTANCES[canvasId]) CHART_INSTANCES[canvasId].destroy();
   CHART_INSTANCES[canvasId] = new Chart(ctx, { type, data, options: { responsive: true, plugins: { legend: { display: type === "doughnut" } } } });
+}
+
+
+
+/* ---------- Tráfico mensual total ---------- */
+function primerDiaMesActualISO(){
+  const ahora = new Date();
+  return new Date(ahora.getFullYear(), ahora.getMonth(), 1).toISOString();
+}
+
+async function cargarTraficoMensual(){
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  try{
+    const { count, error } = await db
+      .from("analytics_eventos")
+      .select("id", { count: "exact", head: true })
+      .eq("tipo", "pageview")
+      .gte("creado_en", primerDiaMesActualISO());
+
+    if (error) throw error;
+    const total = count ?? 0;
+    setText("kpiTraficoMensual", total.toLocaleString("es-EC"));
+    setText("kpiTraficoMensualAnaliticas", total.toLocaleString("es-EC"));
+  }catch(error){
+    console.warn("No se pudo calcular el tráfico mensual:", error);
+    setText("kpiTraficoMensual", "!");
+    setText("kpiTraficoMensualAnaliticas", "!");
+  }
 }
 
 /* ---------- Utilidades ---------- */
