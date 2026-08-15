@@ -175,7 +175,16 @@ form.addEventListener("submit", async (event) => {
 
   submitBtn.textContent = "Ingresando...";
 
-  const { data, error } = await db.auth.signInWithPassword({ email, password });
+  let data;
+  let error;
+  try {
+    ({ data, error } = await db.auth.signInWithPassword({ email, password }));
+  } catch (networkError) {
+    showMessage(errorMsg, "No se pudo conectar con Supabase. Revisa tu conexión e inténtalo nuevamente.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Ingresar";
+    return;
+  }
   if (error) {
     showMessage(errorMsg, "Correo o contraseña incorrectos.");
     submitBtn.disabled = false;
@@ -183,7 +192,14 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const { data: admin } = await db.from("admins").select("id").eq("id", data.user.id).maybeSingle();
+  const { data: admin, error: adminError } = await db.from("admins").select("id").eq("id", data.user.id).maybeSingle();
+  if (adminError) {
+    await db.auth.signOut();
+    showMessage(errorMsg, "No se pudo verificar el tipo de cuenta. Inténtalo nuevamente.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Ingresar";
+    return;
+  }
   if (admin) {
     await db.auth.signOut();
     showMessage(errorMsg, "Esta cuenta es administradora. Ingresa desde admin/index.html.");
@@ -192,13 +208,13 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  const { data: emprendedor } = await db
+  const { data: emprendedor, error: profileError } = await db
     .from("emprendedores")
     .select("id")
     .eq("auth_user_id", data.user.id)
     .maybeSingle();
 
-  if (!emprendedor) {
+  if (profileError || !emprendedor) {
     await db.auth.signOut();
     showMessage(errorMsg, "No existe un perfil de productor asociado a esta cuenta.");
     submitBtn.disabled = false;

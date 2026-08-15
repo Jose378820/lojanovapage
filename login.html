@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso productor - Lojanova</title>
 <link rel="stylesheet" href="admin/css/admin.css">
+<link rel="stylesheet" href="css/producer-panel.css">
 <link rel="manifest" href="/manifest.webmanifest?v=20260803-force-floating">
 <meta name="theme-color" content="#1E5A3A">
 <meta name="mobile-web-app-capable" content="yes">
@@ -55,101 +56,13 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://pfdyxxavadiyoaxduibp.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_sz0f8pdxD7zLaKqx1xykfQ_MGZN7h6y";
-
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const form = document.getElementById("authForm");
-const errorMsg = document.getElementById("errorMsg");
-const submitBtn = document.getElementById("submitBtn");
-
-function showError(message) {
-  errorMsg.textContent = message;
-  errorMsg.style.display = "block";
-}
-
-async function ensureProducerProfile(user) {
-  const { data: existingProfile, error: readError } = await db
-    .from("emprendedores")
-    .select("id")
-    .eq("auth_user_id", user.id)
-    .maybeSingle();
-
-  if (readError) throw readError;
-  if (existingProfile) return existingProfile;
-
-  const fallbackName = user.user_metadata?.nombre || user.email.split("@")[0];
-  const fallbackBusiness = user.user_metadata?.emprendimiento || "Emprendimiento sin nombre";
-
-  const { data: createdProfile, error: createError } = await db
-    .from("emprendedores")
-    .insert({
-      auth_user_id: user.id,
-      nombre: fallbackName,
-      emprendimiento: fallbackBusiness,
-      correo: user.email,
-      activo: true
-    })
-    .select("id")
-    .single();
-
-  if (createError) throw createError;
-  return createdProfile;
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  errorMsg.style.display = "none";
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Ingresando...";
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  try {
-    const { data, error } = await db.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      showError(error.message || "Correo o contraseña incorrectos.");
-      return;
-    }
-
-    const { data: admin } = await db
-      .from("admins")
-      .select("id")
-      .eq("id", data.user.id)
-      .maybeSingle();
-
-    if (admin) {
-      await db.auth.signOut();
-      showError("Esta cuenta es administradora. Ingresa desde admin/index.html.");
-      return;
-    }
-
-    await ensureProducerProfile(data.user);
-
-    window.location.href = "mi-panel.html";
-
-  } catch (error) {
-    showError(error.message || "No se pudo iniciar sesión.");
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Ingresar";
-  }
-});
-</script>
+<script src="js/config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/productor-auth.js"></script>
 
 <script src="/js/pwa-install.js?v=20260803-force-floating"></script>
 </body>
 </html>
-
 
 
 
