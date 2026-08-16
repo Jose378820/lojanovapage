@@ -311,13 +311,14 @@ async function cargarNoticias(){
 
 /* ---------- Estadísticas ---------- */
 async function cargarStats(){
-  const [emp, prod, cant, cat] = await Promise.all([
-    db.from("emprendedores").select("id", { count: "exact", head: true }).eq("activo", true),
+  const [owners, prod, cant, cat] = await Promise.all([
+    db.from("productos").select("emprendedor_id").eq("activo", true),
     db.from("productos").select("id", { count: "exact", head: true }).eq("activo", true),
     db.from("cantones").select("id", { count: "exact", head: true }),
     db.from("categorias").select("id", { count: "exact", head: true }),
   ]);
-  const vals = { emprendedores: emp.count || 0, productos: prod.count || 0, cantones: cant.count || 0, categorias: cat.count || 0 };
+  const emprendedoresVisibles = new Set((owners.data || []).map(item => item.emprendedor_id).filter(Boolean)).size;
+  const vals = { emprendedores: emprendedoresVisibles, productos: prod.count || 0, cantones: cant.count || 0, categorias: cat.count || 0 };
   document.querySelectorAll("[data-stat]").forEach(el => { el.textContent = vals[el.dataset.stat] ?? "0"; });
   const heroProductos = document.getElementById("heroProductos");
   const heroEmp = document.getElementById("heroEmp");

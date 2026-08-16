@@ -17,6 +17,7 @@
 - La ubicación guardada en el perfil ahora también aparece en la página pública de la marca.
 - Se corrigió una colisión global entre `main.js` y `pwa-install.js` que generaba un error JavaScript.
 - Se actualizaron las versiones de los scripts y del caché PWA para evitar que Cloudflare o el navegador mantengan archivos anteriores.
+- El KPI de emprendedores ahora cuenta únicamente marcas que tienen al menos un producto público y que, por tanto, aparecen realmente en el catálogo.
 
 ## Visibilidad esperada
 

@@ -7,7 +7,7 @@ const APP_SHELL = [
   "/css/style.css?v=20260803-force-floating",
   "/js/config.js",
   "/js/supabase-client.js?v=20260803-force-floating",
-  "/js/main.js?v=20260816-data-flow-fix",
+  "/js/main.js?v=20260816-visible-kpis",
   "/js/translator.js?v=20260803-force-floating",
   "/assets/lojanova-app-icon.svg",
   "/assets/lojanova-app-icon-192.png",
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "/assets/logo-prefectura-loja.png"
 ];
 
-const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260816-data-flow-fix";
+const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260816-visible-kpis";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
