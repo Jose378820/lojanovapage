@@ -1,4 +1,4 @@
-﻿const CACHE_VERSION = "lojanova-pwa-v20260803-force-floating";
+﻿const CACHE_VERSION = "lojanova-pwa-v20260816-compresor500kb";
 const APP_SHELL = [
   "/",
   "/index.html",
