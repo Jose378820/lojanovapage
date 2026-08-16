@@ -71,6 +71,7 @@ async function cargarMarca(){
   }
   if (e.telefono) items.push(`<a href="tel:${e.telefono}" class="marca-contact-btn"><i data-lucide="phone" class="icon"></i> ${escapeHtml(e.telefono)}</a>`);
   if (e.correo) items.push(`<a href="mailto:${e.correo}" class="marca-contact-btn"><i data-lucide="mail" class="icon"></i> Enviar correo</a>`);
+  if (e.ubicacion) items.push(`<span class="marca-contact-btn"><i data-lucide="map-pin" class="icon"></i> ${escapeHtml(e.ubicacion)}</span>`);
   if (e.instagram) items.push(`<a href="${e.instagram}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="instagram" class="icon"></i> Instagram</a>`);
   if (e.facebook) items.push(`<a href="${e.facebook}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="facebook" class="icon"></i> Facebook</a>`);
   contactos.innerHTML = items.length ? items.join("") : `<p style="font-size:.85rem;color:#888">Sin datos de contacto públicos.</p>`;

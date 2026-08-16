@@ -7,7 +7,7 @@
 const navbar = document.getElementById("navbar");
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
-const isMobileDevice = window.matchMedia("(max-width: 900px), (hover: none), (pointer: coarse)").matches;
+const isCoarseMobile = window.matchMedia("(max-width: 900px), (hover: none), (pointer: coarse)").matches;
 
 function setNavbarState() {
   navbar.classList.toggle("scrolled", window.scrollY > 40);
@@ -42,7 +42,7 @@ if (heroSlides.length > 1) {
 /* ---------- Parallax liviano ---------- */
 let ticking = false;
 function updateParallax() {
-  if (isMobileDevice) return;
+  if (isCoarseMobile) return;
   const viewportCenter = window.innerHeight / 2;
   document.querySelectorAll("[data-parallax-section]").forEach(section => {
     const rect = section.getBoundingClientRect();
@@ -53,12 +53,12 @@ function updateParallax() {
   ticking = false;
 }
 function requestParallax() {
-  if (isMobileDevice) return;
+  if (isCoarseMobile) return;
   if (ticking) return;
   ticking = true;
   requestAnimationFrame(updateParallax);
 }
-if (!isMobileDevice) {
+if (!isCoarseMobile) {
   window.addEventListener("scroll", requestParallax, { passive: true });
   window.addEventListener("resize", requestParallax);
   requestParallax();
@@ -78,7 +78,7 @@ observeReveals();
 
 /* ---------- Cards 3D sutiles ---------- */
 function enhanceProductTilt(){
-  if (isMobileDevice) return;
+  if (isCoarseMobile) return;
   document.querySelectorAll(".card-producto:not([data-tilt-ready])").forEach(card => {
     card.dataset.tiltReady = "true";
     card.addEventListener("pointermove", event => {
