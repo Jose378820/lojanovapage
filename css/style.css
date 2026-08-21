@@ -1407,7 +1407,7 @@ body.translated-rtl{
 .news-card-footer .fecha{color:#73786f}.news-card-footer strong{color:var(--verde-bosque);white-space:nowrap}.news-card-footer svg{width:14px}
 
 .news-detail-page{background:#f7f6f1}.news-detail-page .navbar{background:#fff}.news-detail-page .navbar .logo{color:var(--verde-bosque-dark)}.news-detail-page .navbar .nav-links a{color:var(--verde-bosque-dark)}
-.news-loading,.news-not-found{min-height:70vh;display:grid;place-items:center;padding:150px 20px 80px}.news-not-found[hidden],#newsArticle[hidden]{display:none!important}
+.news-loading,.news-not-found{min-height:70vh;display:grid;place-items:center;padding:150px 20px 80px}.news-loading[hidden],.news-not-found[hidden],#newsArticle[hidden]{display:none!important}
 .news-not-found .container{text-align:center}.news-not-found h1{margin-bottom:12px}.news-not-found p{margin-bottom:24px}
 .news-article-hero{position:relative;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;background:#123824}
 .news-article-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}

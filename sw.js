@@ -4,13 +4,13 @@ const APP_SHELL = [
   "/",
   "/index.html",
   "/offline.html",
-  "/css/style.css?v=20260820-noticias",
+  "/css/style.css?v=20260820-noticias-fix1",
   "/js/config.js",
   "/js/supabase-client.js?v=20260803-force-floating",
-  "/js/noticias-data.js?v=20260820-noticias",
-  "/js/main.js?v=20260820-noticias",
+  "/js/noticias-data.js?v=20260820-noticias-fix1",
+  "/js/main.js?v=20260820-noticias-fix1",
   "/noticia.html",
-  "/js/noticia.js?v=20260820-noticias",
+  "/js/noticia.js?v=20260820-noticias-fix1",
   "/assets/noticias/taller-loja-emiratos-2026.webp",
   "/js/translator.js?v=20260803-force-floating",
   "/assets/lojanova-app-icon.svg",
@@ -19,7 +19,7 @@ const APP_SHELL = [
   "/assets/logo-prefectura-loja.png"
 ];
 
-const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260820-noticias";
+const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260820-noticias-fix1";
 
 self.addEventListener("install", event => {
   self.skipWaiting();
