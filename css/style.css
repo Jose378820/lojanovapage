@@ -1410,14 +1410,14 @@ body.translated-rtl{
 .news-loading,.news-not-found{min-height:70vh;display:grid;place-items:center;padding:150px 20px 80px}.news-loading[hidden],.news-not-found[hidden],#newsArticle[hidden]{display:none!important}
 .news-not-found .container{text-align:center}.news-not-found h1{margin-bottom:12px}.news-not-found p{margin-bottom:24px}
 .news-article-hero{position:relative;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;background:#123824}
-.news-article-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.news-article-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,24,16,.12) 12%,rgba(7,24,16,.34) 48%,rgba(7,24,16,.94) 100%)}
+.news-article-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center}
+.news-article-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,20,15,.99) 0%,rgba(3,20,15,.97) 52%,rgba(3,20,15,.78) 68%,rgba(3,20,15,.28) 100%),linear-gradient(180deg,rgba(3,20,15,.08) 0%,rgba(3,20,15,.2) 55%,rgba(3,20,15,.9) 100%)}
 .news-article-heading{position:relative;z-index:2;color:#fff;padding-top:190px;padding-bottom:72px}
 .news-back{display:inline-flex;align-items:center;gap:8px;margin-bottom:42px;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.84)}
 .news-back:hover{color:var(--dorado)}.news-back svg{width:17px}
 .news-type{display:block;width:max-content;margin-bottom:18px;border-radius:999px;padding:8px 14px;background:var(--dorado);color:#123824;font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
-.news-article-heading h1{max-width:900px;color:#fff;font-size:clamp(2.7rem,6vw,5.4rem);line-height:.98;letter-spacing:-.04em;margin-bottom:20px}
-.news-article-heading>p{max-width:780px;color:rgba(255,255,255,.88);font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.55}
+.news-article-heading h1{max-width:760px;color:#fff;font-size:clamp(2.7rem,5.4vw,4.9rem);line-height:1;letter-spacing:-.04em;margin-bottom:20px;text-wrap:balance}
+.news-article-heading>p{max-width:680px;color:rgba(255,255,255,.9);font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.55;text-wrap:balance}
 .news-date-line{display:flex;align-items:center;gap:9px;margin-top:25px;color:#f2dab1;font-weight:700;text-transform:capitalize}.news-date-line svg{width:18px}
 .news-article-layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:70px;align-items:start;padding-top:80px;padding-bottom:110px}
 .news-lead{font-family:var(--f-display);font-size:clamp(1.45rem,2.2vw,2rem);line-height:1.5;color:var(--verde-bosque-dark)}
@@ -1433,7 +1433,7 @@ body.translated-rtl{
 .news-fact>svg{width:22px;color:var(--dorado)}.news-fact span,.news-fact strong{display:block}.news-fact span{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:#80867f}.news-fact strong{margin-top:3px;font-size:.86rem;color:var(--verde-bosque-dark)}
 .news-facts-card .btn{width:100%;margin-top:24px}
 .news-detail-page footer{padding-top:40px}
-@media(max-width:900px){.news-article-hero{min-height:620px}.news-article-layout{grid-template-columns:1fr;gap:44px;padding-top:55px}.news-sidebar{position:static;order:-1}.news-agenda{grid-template-columns:1fr}.news-detail-page .nav-links a{color:#fff}}
+@media(max-width:900px){.news-article-hero{min-height:620px}.news-article-overlay{background:linear-gradient(90deg,rgba(3,20,15,.96),rgba(3,20,15,.7)),linear-gradient(180deg,rgba(3,20,15,.08),rgba(3,20,15,.92))}.news-article-layout{grid-template-columns:1fr;gap:44px;padding-top:55px}.news-sidebar{position:static;order:-1}.news-agenda{grid-template-columns:1fr}.news-detail-page .nav-links a{color:#fff}}
 @media(max-width:600px){.news-article-heading{padding-bottom:46px}.news-article-heading h1{font-size:2.65rem}.news-article-hero{min-height:680px}.news-article-layout{padding-bottom:75px}.news-facts-card{padding:22px}.news-card-footer{align-items:flex-start;flex-direction:column}}
 
 /* ---------- Mobile menu fix + visible install app button ---------- */
