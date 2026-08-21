@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noticia — Lojanova</title>
+<meta name="description" content="Noticias, talleres y oportunidades para los emprendedores de Loja.">
+<link rel="stylesheet" href="css/style.css?v=20260820-noticias">
+<script src="https://unpkg.com/lucide@latest"></script>
+<meta name="theme-color" content="#1E5A3A">
+</head>
+<body class="news-detail-page">
+<header class="navbar scrolled" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">Loja<span>nova</span></a>
+    <nav class="nav-links" id="navLinks"><a href="index.html">Inicio</a><a href="index.html#catalogo">Productos</a><a href="index.html#noticias">Noticias</a></nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <div id="newsLoading" class="news-loading"><div class="loading-spinner">Cargando noticia…</div></div>
+  <section id="newsNotFound" class="news-not-found" hidden><div class="container"><h1>Noticia no encontrada</h1><p>Es posible que ya no esté disponible.</p><a href="index.html#noticias" class="btn btn-primary">Volver a noticias</a></div></section>
+  <article id="newsArticle" hidden>
+    <header class="news-article-hero">
+      <img id="newsHeroImage" src="" alt="">
+      <div class="news-article-overlay"></div>
+      <div class="container news-article-heading">
+        <a href="index.html#noticias" class="news-back"><i data-lucide="arrow-left"></i> Noticias y eventos</a>
+        <span class="news-type" id="newsType"></span>
+        <h1 id="newsTitle"></h1>
+        <p id="newsSubtitle"></p>
+        <div class="news-date-line"><i data-lucide="calendar-days"></i><span id="newsDate"></span></div>
+      </div>
+    </header>
+    <div class="container news-article-layout">
+      <div class="news-article-main">
+        <p class="news-lead" id="newsIntro"></p>
+        <section id="newsOrganizationBlock" class="news-callout"><i data-lucide="building-2"></i><p id="newsOrganization"></p></section>
+        <section id="newsAgendaBlock" class="news-agenda-section"><span class="eyebrow">Temario</span><h2>Lo que aprenderás durante el taller</h2><div id="newsAgenda" class="news-agenda"></div></section>
+      </div>
+      <aside class="news-sidebar">
+        <div class="news-facts-card"><span class="eyebrow">Información práctica</span><div id="newsFacts"></div><button id="shareNews" class="btn btn-primary"><i data-lucide="share-2"></i> Compartir evento</button></div>
+      </aside>
+    </div>
+  </article>
+</main>
+<footer><div class="container"><div class="footer-bottom"><span>© 2026 Lojanova · Prefectura de Loja.</span><a href="index.html">Volver al inicio</a></div></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script><script src="js/supabase-client.js"></script><script src="js/noticias-data.js?v=20260820-noticias"></script><script src="js/noticia.js?v=20260820-noticias"></script>
+</body>
+</html>

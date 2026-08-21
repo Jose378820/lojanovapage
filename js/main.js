@@ -288,25 +288,37 @@ async function cargarEmprendedores(){
 
 /* ---------- Noticias ---------- */
 const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
+function fechaNoticia(value){
+  return value ? new Date(value + "T12:00:00").toLocaleDateString("es-EC", { day:"numeric", month:"long", year:"numeric" }) : "";
+}
+function enlaceNoticia(n){
+  return n.slug ? `noticia.html?slug=${encodeURIComponent(n.slug)}` : `noticia.html?id=${encodeURIComponent(n.id)}`;
+}
 async function cargarNoticias(){
-  const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(6);
+  const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(8);
   const grid = document.getElementById("newsGrid");
-  if (error || !data || data.length === 0){
+  const destacadas = window.LOJANOVA_NOTICIAS_DESTACADAS || [];
+  const noticias = [...destacadas, ...(error ? [] : (data || []))]
+    .sort((a,b) => String(b.fecha_evento || "").localeCompare(String(a.fecha_evento || "")));
+  if (noticias.length === 0){
     grid.innerHTML = `<div class="empty-state">Aún no hay noticias publicadas.</div>`;
     return;
   }
-  grid.innerHTML = data.map(n => `
-    <article class="card-news reveal">
-      <div class="thumb"><img src="${urlImagen(n.imagen_url, "news")}" alt="${escapeHtml(n.titulo)}" loading="lazy"></div>
+  grid.innerHTML = noticias.map(n => {
+    const image = n.imagen_url?.startsWith("assets/") ? n.imagen_url : urlImagen(n.imagen_url, "news");
+    return `
+    <a href="${enlaceNoticia(n)}" target="_blank" rel="noopener" class="card-news news-card-link reveal" aria-label="Abrir noticia: ${escapeHtml(n.titulo)}">
+      <div class="thumb"><img src="${escapeHtml(image)}" alt="${escapeHtml(n.titulo)}" loading="lazy"><span class="news-open-icon"><i data-lucide="arrow-up-right"></i></span></div>
       <div class="card-body">
         <span class="tipo">${TIPO_LABEL[n.tipo] || 'Noticia'}</span>
         <h3>${escapeHtml(n.titulo)}</h3>
-        <p>${escapeHtml(cortar(n.resumen, 90))}</p>
-        ${n.fecha_evento ? `<div class="fecha">${new Date(n.fecha_evento).toLocaleDateString('es-EC', { day:'numeric', month:'long', year:'numeric' })}</div>` : ''}
+        <p>${escapeHtml(cortar(n.resumen || n.subtitulo, 115))}</p>
+        <div class="news-card-footer">${n.fecha_evento ? `<span class="fecha"><i data-lucide="calendar-days"></i> ${fechaNoticia(n.fecha_evento)}</span>` : ''}<strong>Leer más <i data-lucide="arrow-right"></i></strong></div>
       </div>
-    </article>
-  `).join("");
+    </a>`;
+  }).join("");
   observeReveals();
+  lucide.createIcons();
 }
 
 /* ---------- Estadísticas ---------- */
