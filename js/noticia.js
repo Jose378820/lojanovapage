@@ -18,7 +18,13 @@ async function loadNewsDetail(){
   const params = new URLSearchParams(location.search);
   const slug = params.get("slug");
   const id = params.get("id");
-  let item = (window.LOJANOVA_NOTICIAS_DESTACADAS || []).find(news => news.slug === slug);
+  let item = null;
+
+  if (slug) {
+    const { data, error } = await db.from("noticias").select("*").eq("slug", slug).eq("activo", true).maybeSingle();
+    if (!error) item = data;
+    if (error) item = (window.LOJANOVA_NOTICIAS_DESTACADAS || []).find(news => news.slug === slug);
+  }
 
   if (!item && id) {
     const { data, error } = await db.from("noticias").select("*").eq("id", id).eq("activo", true).maybeSingle();

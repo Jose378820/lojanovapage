@@ -298,7 +298,7 @@ async function cargarNoticias(){
   const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(8);
   const grid = document.getElementById("newsGrid");
   const destacadas = window.LOJANOVA_NOTICIAS_DESTACADAS || [];
-  const noticias = [...destacadas, ...(error ? [] : (data || []))]
+  const noticias = (error ? destacadas : (data || []))
     .sort((a,b) => String(b.fecha_evento || "").localeCompare(String(a.fecha_evento || "")));
   if (noticias.length === 0){
     grid.innerHTML = `<div class="empty-state">Aún no hay noticias publicadas.</div>`;

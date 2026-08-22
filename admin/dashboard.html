@@ -417,6 +417,8 @@
       <input type="hidden" id="n_id">
       <div class="form-grid">
         <div class="field full"><label>Título *</label><input type="text" id="n_titulo" required></div>
+        <div class="field full"><label>Subtítulo</label><input type="text" id="n_subtitulo" placeholder="Frase principal de la noticia"></div>
+        <div class="field full"><label>Identificador URL (slug)</label><input type="text" id="n_slug" placeholder="ejemplo: taller-emiratos-2026"></div>
         <div class="field"><label>Tipo</label>
           <select id="n_tipo">
             <option value="feria">Feria</option>
@@ -427,8 +429,13 @@
           </select>
         </div>
         <div class="field"><label>Fecha del evento</label><input type="date" id="n_fecha"></div>
-        <div class="field full"><label>Resumen</label><textarea id="n_resumen" maxlength="160"></textarea></div>
+        <div class="field"><label>Hora</label><input type="text" id="n_hora" placeholder="10:00 a. m."></div>
+        <div class="field"><label>Lugar</label><input type="text" id="n_lugar"></div>
+        <div class="field full"><label>Dirección</label><input type="text" id="n_direccion"></div>
+        <div class="field full"><label>Organización</label><textarea id="n_organizacion"></textarea></div>
+        <div class="field full"><label>Resumen</label><textarea id="n_resumen" maxlength="240"></textarea></div>
         <div class="field full"><label>Contenido completo</label><textarea id="n_contenido"></textarea></div>
+        <div class="field full"><label>Temario</label><textarea id="n_temario" placeholder="Un tema por línea: Título | Descripción"></textarea><small>Escribe un tema por línea y separa el título de la descripción con |</small></div>
         <div class="field full"><label>URL de imagen</label><input type="text" id="n_imagen" placeholder="https://..."></div>
         <div class="field full"><div class="checkbox-row"><input type="checkbox" id="n_activo" checked><label for="n_activo">Publicada</label></div></div>
       </div>
@@ -444,12 +451,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js?v=20260803-admin-polish"></script>
 <script src="/js/supabase-client.js?v=20260803-admin-polish"></script>
-<script src="/admin/js/admin.js?v=20260804-trafico-real"></script>
+<script src="/admin/js/admin.js?v=20260822-noticias-editables"></script>
 <script src="/admin/js/admin-enhancements.js?v=20260804-institucional"></script>
 </body>
 </html>
-
-
 
 
 

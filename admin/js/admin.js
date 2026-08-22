@@ -504,7 +504,7 @@ async function cargarNoticias(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Aún no hay noticias.</td></tr>`; return; }
   tbody.innerHTML = data.map(n => `
     <tr>
-      <td><img class="thumb-sm" src="${escapeHtml(n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20')}" alt=""></td>
+      <td><img class="thumb-sm" src="${escapeHtml(n.imagen_url?.startsWith('assets/') ? '/' + n.imagen_url : (n.imagen_url || 'https://placehold.co/80x80/EFE9DA/1E5A3A?text=%20'))}" alt=""></td>
       <td>${escapeHtml(n.titulo)}</td>
       <td>${TIPO_LABEL[n.tipo] || n.tipo || '—'}</td>
       <td>${n.fecha_evento || '—'}</td>
@@ -531,10 +531,17 @@ window.editarNoticia = function(id){
   document.getElementById("tituloModalNoticia").textContent = "Editar noticia";
   document.getElementById("n_id").value = n.id;
   document.getElementById("n_titulo").value = n.titulo || "";
+  document.getElementById("n_subtitulo").value = n.subtitulo || "";
+  document.getElementById("n_slug").value = n.slug || "";
   document.getElementById("n_tipo").value = n.tipo || "evento";
   document.getElementById("n_fecha").value = n.fecha_evento || "";
+  document.getElementById("n_hora").value = n.hora || "";
+  document.getElementById("n_lugar").value = n.lugar || "";
+  document.getElementById("n_direccion").value = n.direccion || "";
+  document.getElementById("n_organizacion").value = n.organizacion || "";
   document.getElementById("n_resumen").value = n.resumen || "";
   document.getElementById("n_contenido").value = n.contenido || "";
+  document.getElementById("n_temario").value = (Array.isArray(n.temario) ? n.temario : []).map(t => `${t.titulo || ""} | ${t.detalle || ""}`).join("\n");
   document.getElementById("n_imagen").value = n.imagen_url || "";
   document.getElementById("n_activo").checked = !!n.activo;
   abrirModal("modalNoticia");
@@ -550,12 +557,23 @@ window.eliminarNoticia = async function(id, titulo){
 document.getElementById("formNoticia").addEventListener("submit", async (e) => {
   e.preventDefault();
   const id = document.getElementById("n_id").value;
+  const temario = document.getElementById("n_temario").value.split("\n").map(line => line.trim()).filter(Boolean).map(line => {
+    const [titulo, ...detalle] = line.split("|");
+    return { titulo: titulo.trim(), detalle: detalle.join("|").trim() };
+  });
   const payload = {
     titulo: document.getElementById("n_titulo").value.trim(),
+    subtitulo: document.getElementById("n_subtitulo").value.trim(),
+    slug: document.getElementById("n_slug").value.trim() || null,
     tipo: document.getElementById("n_tipo").value,
     fecha_evento: document.getElementById("n_fecha").value || null,
+    hora: document.getElementById("n_hora").value.trim(),
+    lugar: document.getElementById("n_lugar").value.trim(),
+    direccion: document.getElementById("n_direccion").value.trim(),
+    organizacion: document.getElementById("n_organizacion").value.trim(),
     resumen: document.getElementById("n_resumen").value.trim(),
     contenido: document.getElementById("n_contenido").value.trim(),
+    temario,
     imagen_url: document.getElementById("n_imagen").value.trim(),
     activo: document.getElementById("n_activo").checked,
   };
@@ -656,6 +674,4 @@ async function cargarCantones(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="2">Sin datos.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.orden ?? 0}</td></tr>`).join("");
 }
-
-
 
