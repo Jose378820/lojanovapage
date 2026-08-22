@@ -34,6 +34,12 @@ window.LOJANOVA_NOTICIAS_DESTACADAS = [
     imagen_url: "assets/noticias/loja-exporta-2026/portada-productores.webp",
     organizacion: "Iniciativa impulsada por la Prefectura de Loja para acercar la oferta productiva provincial a nuevos mercados y redes de cooperación internacional.",
     introduccion: "Loja se convirtió, el 30 y 31 de julio de 2026, en un punto de encuentro entre la producción local y una red internacional de embajadas, cámaras y empresas. Más de 80 productores presentaron café, alimentos, artesanías y otras expresiones del territorio ante actores capaces de abrir conversaciones, aportar conocimiento y acercar nuevos mercados.",
+    cifras: [
+      { valor: "80+", etiqueta: "Productores participantes" },
+      { valor: "10", etiqueta: "Cooperantes internacionales" },
+      { valor: "1.234", etiqueta: "Visitas en el periodo analizado" },
+      { valor: "209", etiqueta: "Visitas en el día de mayor actividad" }
+    ],
     secciones: [
       { titulo: "Una rueda de negocios con acento internacional", contenido: "La representación internacional incluyó a las embajadas de India, Corea del Sur, China, Italia y Bulgaria; a las Eurocámaras de Italia, Francia, Alemania y Bulgaria; y a la Cámara de Shanghái. Cada mercado aportó requisitos, lenguajes comerciales y oportunidades distintas para la oferta lojana." },
       { titulo: "La conducción detrás del encuentro", contenido: "Loja Exporta 2026 fue impulsada por el prefecto Mario Mancino y dirigida por el Mgs. Santiago Idrobo, coordinador de Cooperación Internacional. La coordinación permitió reunir a diez cooperantes internacionales planteados como aliados para acompañar procesos posteriores al evento." },
@@ -48,18 +54,18 @@ window.LOJANOVA_NOTICIAS_DESTACADAS = [
     ],
     galeria: [
       { url: "assets/noticias/loja-exporta-2026/encuentro-institucional.webp", descripcion: "La jornada institucional reunió a delegaciones, autoridades, productores y aliados en el Teatro Benjamín Carrión." },
-      { url: "assets/noticias/loja-exporta-2026/artesania-lojana.webp", descripcion: "La artesanía mostró tradición, oficio e identidad territorial." },
+      { url: "assets/noticias/loja-exporta-2026/delegaciones-participantes.webp", descripcion: "Delegaciones, autoridades y productores al cierre de la jornada." },
       { url: "assets/noticias/loja-exporta-2026/productos-lojanos.webp", descripcion: "Productos lojanos formaron parte de la vitrina comercial del encuentro." },
       { url: "assets/noticias/loja-exporta-2026/degustacion-productos.webp", descripcion: "Las degustaciones acercaron la oferta productiva a visitantes y delegaciones." },
-      { url: "assets/noticias/loja-exporta-2026/delegaciones-participantes.webp", descripcion: "Delegaciones, autoridades y productores al cierre de la jornada." },
       { url: "assets/noticias/loja-exporta-2026/mision-shanghai.webp", descripcion: "La agenda posterior llevó una muestra de la oferta lojana hasta Shanghái." },
+      { url: "assets/noticias/loja-exporta-2026/plataforma-lojanova.webp", descripcion: "Lojanova prolonga digitalmente la visibilidad de la oferta productiva provincial." },
+      { url: "assets/noticias/loja-exporta-2026/jose-valverde.webp", descripcion: "José Valverde, experto en Negocios Internacionales e impulsor del desarrollo de Lojanova." },
+      { url: "assets/noticias/loja-exporta-2026/visitas-diarias.webp", descripcion: "Serie visible de visitas diarias entre el 25 de julio y el 8 de agosto de 2026." },
+      { url: "assets/noticias/loja-exporta-2026/respuesta-publica.webp", descripcion: "Respuesta pública observable en cuatro publicaciones verificadas." },
       { url: "assets/noticias/loja-exporta-2026/consulado-shanghai.webp", descripcion: "La misión incluyó una visita al Consulado General del Ecuador en Shanghái." },
-      { url: "assets/noticias/loja-exporta-2026/plataforma-lojanova.webp", descripcion: "Lojanova prolonga digitalmente la visibilidad de la oferta productiva provincial." }
-      ,{ url: "assets/noticias/loja-exporta-2026/jose-valverde.webp", descripcion: "José Valverde, experto en Negocios Internacionales e impulsor del desarrollo de Lojanova." }
-      ,{ url: "assets/noticias/loja-exporta-2026/visitas-diarias.webp", descripcion: "Serie visible de visitas diarias entre el 25 de julio y el 8 de agosto de 2026." }
-      ,{ url: "assets/noticias/loja-exporta-2026/visitantes-pais.webp", descripcion: "Visitantes por país en las filas visibles del panel analizado." }
-      ,{ url: "assets/noticias/loja-exporta-2026/visitantes-ciudad.webp", descripcion: "Visitantes por ciudad en las filas visibles del panel analizado." }
-      ,{ url: "assets/noticias/loja-exporta-2026/respuesta-publica.webp", descripcion: "Respuesta pública observable en cuatro publicaciones verificadas." }
+      { url: "assets/noticias/loja-exporta-2026/artesania-lojana.webp", descripcion: "La artesanía mostró tradición, oficio e identidad territorial." },
+      { url: "assets/noticias/loja-exporta-2026/visitantes-pais.webp", descripcion: "Visitantes por país en las filas visibles del panel analizado." },
+      { url: "assets/noticias/loja-exporta-2026/visitantes-ciudad.webp", descripcion: "Visitantes por ciudad en las filas visibles del panel analizado." }
     ],
     temario: []
   }

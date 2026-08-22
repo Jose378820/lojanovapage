@@ -541,6 +541,7 @@ window.editarNoticia = function(id){
   document.getElementById("n_organizacion").value = n.organizacion || "";
   document.getElementById("n_resumen").value = n.resumen || "";
   document.getElementById("n_contenido").value = n.contenido || "";
+  document.getElementById("n_cifras").value = (Array.isArray(n.cifras) ? n.cifras : []).map(c => `${c.valor || ""} | ${c.etiqueta || ""}`).join("\n");
   document.getElementById("n_secciones").value = (Array.isArray(n.secciones) ? n.secciones : []).map(s => `${s.titulo || ""} | ${s.contenido || ""}`).join("\n");
   document.getElementById("n_temario").value = (Array.isArray(n.temario) ? n.temario : []).map(t => `${t.titulo || ""} | ${t.detalle || ""}`).join("\n");
   document.getElementById("n_galeria").value = (Array.isArray(n.galeria) ? n.galeria : []).map(i => `${i.url || ""} | ${i.descripcion || ""}`).join("\n");
@@ -567,6 +568,10 @@ document.getElementById("formNoticia").addEventListener("submit", async (e) => {
     const [titulo, ...contenido] = line.split("|");
     return { titulo: titulo.trim(), contenido: contenido.join("|").trim() };
   });
+  const cifras = document.getElementById("n_cifras").value.split("\n").map(line => line.trim()).filter(Boolean).map(line => {
+    const [valor, ...etiqueta] = line.split("|");
+    return { valor: valor.trim(), etiqueta: etiqueta.join("|").trim() };
+  });
   const galeria = document.getElementById("n_galeria").value.split("\n").map(line => line.trim()).filter(Boolean).map(line => {
     const [url, ...descripcion] = line.split("|");
     return { url: url.trim(), descripcion: descripcion.join("|").trim() };
@@ -583,6 +588,7 @@ document.getElementById("formNoticia").addEventListener("submit", async (e) => {
     organizacion: document.getElementById("n_organizacion").value.trim(),
     resumen: document.getElementById("n_resumen").value.trim(),
     contenido: document.getElementById("n_contenido").value.trim(),
+    cifras,
     secciones,
     temario,
     galeria,

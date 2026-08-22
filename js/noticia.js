@@ -13,7 +13,8 @@ const normalizeNews = item => ({
   introduccion: item.introduccion || item.contenido || item.resumen || "",
   temario: item.temario || [],
   secciones: item.secciones || [],
-  galeria: item.galeria || []
+  galeria: item.galeria || [],
+  cifras: item.cifras || []
 });
 
 async function loadNewsDetail(){
@@ -50,6 +51,12 @@ async function loadNewsDetail(){
   $("newsHeroImage").alt = news.titulo;
   $("newsIntro").textContent = news.introduccion;
 
+  if (news.cifras.length) {
+    $("newsStats").innerHTML = news.cifras.map(cifra => `<article><strong>${escapeNewsHtml(cifra.valor)}</strong><span>${escapeNewsHtml(cifra.etiqueta)}</span></article>`).join("");
+  } else {
+    $("newsStats").hidden = true;
+  }
+
   const facts = [
     ["calendar-days", "Fecha", newsDate(news.fecha_evento)],
     ["clock-3", "Hora", news.hora],
@@ -64,14 +71,20 @@ async function loadNewsDetail(){
     $("newsOrganizationBlock").hidden = true;
   }
 
+  const inlinePhotos = news.galeria.slice(0, news.secciones.length);
   if (news.secciones.length) {
-    $("newsSections").innerHTML = news.secciones.map(section => `<section><h2>${escapeNewsHtml(section.titulo)}</h2><p>${escapeNewsHtml(section.contenido)}</p></section>`).join("");
+    $("newsSections").innerHTML = news.secciones.map((section,index) => {
+      const photo = inlinePhotos[index];
+      const src = photo ? (photo.url?.startsWith("assets/") ? photo.url : urlImagen(photo.url, "news")) : "";
+      return `<section class="news-story-block ${photo ? "has-image" : "text-only"}"><div class="news-story-copy"><span class="news-section-number">${String(index+1).padStart(2,"0")}</span><h2>${escapeNewsHtml(section.titulo)}</h2><p>${escapeNewsHtml(section.contenido)}</p></div>${photo ? `<figure class="${/visitas-|visitantes-|respuesta-/.test(photo.url || "") ? "is-data" : ""}"><img src="${escapeNewsHtml(src)}" alt="${escapeNewsHtml(photo.descripcion || section.titulo)}" loading="lazy"><figcaption>${escapeNewsHtml(photo.descripcion || "Archivo institucional")}</figcaption></figure>` : ""}</section>`;
+    }).join("");
   } else {
     $("newsSections").hidden = true;
   }
 
-  if (news.galeria.length) {
-    $("newsGallery").innerHTML = news.galeria.map((photo,index) => {
+  const remainingPhotos = news.galeria.slice(inlinePhotos.length);
+  if (remainingPhotos.length) {
+    $("newsGallery").innerHTML = remainingPhotos.map((photo,index) => {
       const src = photo.url?.startsWith("assets/") ? photo.url : urlImagen(photo.url, "news");
       return `<figure class="${index === 0 ? "featured" : ""}"><img src="${escapeNewsHtml(src)}" alt="${escapeNewsHtml(photo.descripcion || news.titulo)}" loading="lazy"><figcaption>${escapeNewsHtml(photo.descripcion || "Archivo institucional")}</figcaption></figure>`;
     }).join("");
