@@ -546,6 +546,7 @@ window.editarNoticia = function(id){
   document.getElementById("n_temario").value = (Array.isArray(n.temario) ? n.temario : []).map(t => `${t.titulo || ""} | ${t.detalle || ""}`).join("\n");
   document.getElementById("n_galeria").value = (Array.isArray(n.galeria) ? n.galeria : []).map(i => `${i.url || ""} | ${i.descripcion || ""}`).join("\n");
   document.getElementById("n_imagen").value = n.imagen_url || "";
+  document.getElementById("n_inscripcion").value = n.inscripcion_url || "";
   document.getElementById("n_activo").checked = !!n.activo;
   abrirModal("modalNoticia");
 };
@@ -593,6 +594,7 @@ document.getElementById("formNoticia").addEventListener("submit", async (e) => {
     temario,
     galeria,
     imagen_url: document.getElementById("n_imagen").value.trim(),
+    inscripcion_url: document.getElementById("n_inscripcion").value.trim() || null,
     activo: document.getElementById("n_activo").checked,
   };
   const query = id ? db.from("noticias").update(payload).eq("id", id) : db.from("noticias").insert(payload);

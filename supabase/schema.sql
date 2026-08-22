@@ -145,6 +145,7 @@ create table if not exists noticias (
   secciones jsonb not null default '[]'::jsonb,
   galeria jsonb not null default '[]'::jsonb,
   cifras jsonb not null default '[]'::jsonb,
+  inscripcion_url text,
   activo boolean default true,
   created_at timestamptz default now()
 );

@@ -1,6 +1,10 @@
 "use strict";
 const $ = id => document.getElementById(id);
 const escapeNewsHtml = value => String(value || "").replace(/[&<>"']/g, char => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[char]));
+const safeExternalUrl = value => {
+  try { const parsed = new URL(value); return ["http:","https:"].includes(parsed.protocol) ? parsed.href : ""; }
+  catch (_) { return ""; }
+};
 const newsDate = value => value ? new Date(value + "T12:00:00").toLocaleDateString("es-EC", { weekday:"long", day:"numeric", month:"long", year:"numeric" }) : "";
 const normalizeNews = item => ({
   ...item,
@@ -50,6 +54,12 @@ async function loadNewsDetail(){
   $("newsHeroImage").src = image;
   $("newsHeroImage").alt = news.titulo;
   $("newsIntro").textContent = news.introduccion;
+
+  const registrationUrl = safeExternalUrl(news.inscripcion_url);
+  if (registrationUrl) {
+    $("newsRegistration").href = registrationUrl;
+    $("newsRegistration").hidden = false;
+  }
 
   if (news.cifras.length) {
     $("newsStats").innerHTML = news.cifras.map(cifra => `<article><strong>${escapeNewsHtml(cifra.valor)}</strong><span>${escapeNewsHtml(cifra.etiqueta)}</span></article>`).join("");
