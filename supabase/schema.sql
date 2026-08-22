@@ -130,11 +130,20 @@ create table if not exists producto_imagenes (
 create table if not exists noticias (
   id uuid primary key default uuid_generate_v4(),
   titulo text not null,
+  slug text unique,
+  subtitulo text,
   resumen text,
   contenido text,
   imagen_url text,
   tipo text,                 -- feria | rueda_negocios | capacitacion | convocatoria | evento
   fecha_evento date,
+  hora text,
+  lugar text,
+  direccion text,
+  organizacion text,
+  temario jsonb not null default '[]'::jsonb,
+  secciones jsonb not null default '[]'::jsonb,
+  galeria jsonb not null default '[]'::jsonb,
   activo boolean default true,
   created_at timestamptz default now()
 );

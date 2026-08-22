@@ -11,7 +11,9 @@ const normalizeNews = item => ({
   direccion: item.direccion || "",
   organizacion: item.organizacion || "",
   introduccion: item.introduccion || item.contenido || item.resumen || "",
-  temario: item.temario || []
+  temario: item.temario || [],
+  secciones: item.secciones || [],
+  galeria: item.galeria || []
 });
 
 async function loadNewsDetail(){
@@ -60,6 +62,21 @@ async function loadNewsDetail(){
     $("newsOrganization").textContent = news.organizacion;
   } else {
     $("newsOrganizationBlock").hidden = true;
+  }
+
+  if (news.secciones.length) {
+    $("newsSections").innerHTML = news.secciones.map(section => `<section><h2>${escapeNewsHtml(section.titulo)}</h2><p>${escapeNewsHtml(section.contenido)}</p></section>`).join("");
+  } else {
+    $("newsSections").hidden = true;
+  }
+
+  if (news.galeria.length) {
+    $("newsGallery").innerHTML = news.galeria.map((photo,index) => {
+      const src = photo.url?.startsWith("assets/") ? photo.url : urlImagen(photo.url, "news");
+      return `<figure class="${index === 0 ? "featured" : ""}"><img src="${escapeNewsHtml(src)}" alt="${escapeNewsHtml(photo.descripcion || news.titulo)}" loading="lazy"><figcaption>${escapeNewsHtml(photo.descripcion || "Archivo institucional")}</figcaption></figure>`;
+    }).join("");
+  } else {
+    $("newsGalleryBlock").hidden = true;
   }
 
   if (news.temario.length) {
