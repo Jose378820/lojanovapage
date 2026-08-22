@@ -42,7 +42,7 @@ async function loadNewsDetail(){
   document.title = news.titulo + " — Lojanova";
   $("newsTitle").textContent = news.titulo;
   $("newsSubtitle").textContent = news.subtitulo || news.resumen;
-  $("newsType").textContent = ({capacitacion:"Capacitación",evento:"Evento",feria:"Feria",convocatoria:"Convocatoria",rueda_negocios:"Rueda de negocios"})[news.tipo] || "Noticia";
+  $("newsType").textContent = ({capacitacion:"Capacitación",evento:"Evento",feria:"Feria",convocatoria:"Convocatoria",rueda_negocios:"Rueda de negocios",taller:"Taller",seminario:"Seminario",conferencia:"Conferencia",lanzamiento:"Lanzamiento",festival:"Festival",otro:"Otro"})[news.tipo] || "Noticia";
   $("newsDate").textContent = newsDate(news.fecha_evento);
   $("newsHeroImage").src = image;
   $("newsHeroImage").alt = news.titulo;

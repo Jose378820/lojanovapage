@@ -496,7 +496,7 @@ document.getElementById("formCategoria").addEventListener("submit", async (e) =>
 /* =========================================================
    NOTICIAS
    ========================================================= */
-const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
+const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento", taller:"Taller", seminario:"Seminario", conferencia:"Conferencia", lanzamiento:"Lanzamiento", festival:"Festival", otro:"Otro" };
 
 async function cargarNoticias(){
   const { data, error } = await db.from("noticias").select("*").order("created_at", { ascending:false });
@@ -674,4 +674,3 @@ async function cargarCantones(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="2">Sin datos.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.orden ?? 0}</td></tr>`).join("");
 }
-

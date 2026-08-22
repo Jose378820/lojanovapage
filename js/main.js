@@ -287,12 +287,21 @@ async function cargarEmprendedores(){
 }
 
 /* ---------- Noticias ---------- */
-const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento" };
+const TIPO_LABEL = { feria:"Feria", rueda_negocios:"Rueda de negocios", capacitacion:"Capacitación", convocatoria:"Convocatoria", evento:"Evento", taller:"Taller", seminario:"Seminario", conferencia:"Conferencia", lanzamiento:"Lanzamiento", festival:"Festival", otro:"Otro" };
 function fechaNoticia(value){
   return value ? new Date(value + "T12:00:00").toLocaleDateString("es-EC", { day:"numeric", month:"long", year:"numeric" }) : "";
 }
 function enlaceNoticia(n){
   return n.slug ? `noticia.html?slug=${encodeURIComponent(n.slug)}` : `noticia.html?id=${encodeURIComponent(n.id)}`;
+}
+function estadoEvento(fecha){
+  if (!fecha) return null;
+  const hoy = new Date();
+  const hoyLocal = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,"0")}-${String(hoy.getDate()).padStart(2,"0")}`;
+  if (fecha === hoyLocal) return { texto:"Hoy", clase:"hoy" };
+  return fecha > hoyLocal
+    ? { texto:"Próximo evento", clase:"proximo" }
+    : { texto:"Evento finalizado", clase:"finalizado" };
 }
 async function cargarNoticias(){
   const { data, error } = await db.from("noticias").select("*").eq("activo", true).order("fecha_evento", { ascending: false }).limit(8);
@@ -306,9 +315,10 @@ async function cargarNoticias(){
   }
   grid.innerHTML = noticias.map(n => {
     const image = n.imagen_url?.startsWith("assets/") ? n.imagen_url : urlImagen(n.imagen_url, "news");
+    const estado = estadoEvento(n.fecha_evento);
     return `
     <a href="${enlaceNoticia(n)}" target="_blank" rel="noopener" class="card-news news-card-link reveal" aria-label="Abrir noticia: ${escapeHtml(n.titulo)}">
-      <div class="thumb"><img src="${escapeHtml(image)}" alt="${escapeHtml(n.titulo)}" loading="lazy"><span class="news-open-icon"><i data-lucide="arrow-up-right"></i></span></div>
+      <div class="thumb"><img src="${escapeHtml(image)}" alt="${escapeHtml(n.titulo)}" loading="lazy">${estado ? `<span class="news-event-status ${estado.clase}">${estado.texto}</span>` : ""}<span class="news-open-icon"><i data-lucide="arrow-up-right"></i></span></div>
       <div class="card-body">
         <span class="tipo">${TIPO_LABEL[n.tipo] || 'Noticia'}</span>
         <h3>${escapeHtml(n.titulo)}</h3>
