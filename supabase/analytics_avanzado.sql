@@ -25,14 +25,14 @@ create index if not exists idx_analytics_pais on analytics_eventos(pais);
 -- VISTAS adicionales
 -- ---------------------------------------------------------
 
-create or replace view vista_paises as
+create or replace view vista_paises with (security_invoker = true) as
 select coalesce(pais, 'Desconocido') as pais, count(distinct session_id) as visitantes
 from analytics_eventos
 where creado_en > now() - interval '30 days'
 group by pais
 order by visitantes desc;
 
-create or replace view vista_ciudades as
+create or replace view vista_ciudades with (security_invoker = true) as
 select coalesce(ciudad, 'Desconocida') as ciudad, coalesce(pais,'') as pais, count(distinct session_id) as visitantes
 from analytics_eventos
 where creado_en > now() - interval '30 days' and ciudad is not null
@@ -40,28 +40,28 @@ group by ciudad, pais
 order by visitantes desc
 limit 15;
 
-create or replace view vista_navegadores as
+create or replace view vista_navegadores with (security_invoker = true) as
 select coalesce(navegador,'Desconocido') as navegador, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
 group by navegador
 order by visitas desc;
 
-create or replace view vista_sistemas_operativos as
+create or replace view vista_sistemas_operativos with (security_invoker = true) as
 select coalesce(so,'Desconocido') as so, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
 group by so
 order by visitas desc;
 
-create or replace view vista_idiomas as
+create or replace view vista_idiomas with (security_invoker = true) as
 select coalesce(idioma,'Desconocido') as idioma, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
 group by idioma
 order by visitas desc;
 
-create or replace view vista_origenes_trafico as
+create or replace view vista_origenes_trafico with (security_invoker = true) as
 select
   case
     when utm_source is not null then utm_source
@@ -75,14 +75,14 @@ group by origen
 order by visitas desc
 limit 15;
 
-create or replace view vista_utm_campanas as
+create or replace view vista_utm_campanas with (security_invoker = true) as
 select utm_source, utm_medium, utm_campaign, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and utm_source is not null and creado_en > now() - interval '30 days'
 group by utm_source, utm_medium, utm_campaign
 order by visitas desc;
 
-create or replace view vista_terminos_busqueda as
+create or replace view vista_terminos_busqueda with (security_invoker = true) as
 select metadata->>'termino' as termino, count(*) as veces
 from analytics_eventos
 where tipo = 'busqueda' and metadata->>'termino' is not null and creado_en > now() - interval '30 days'
@@ -90,7 +90,7 @@ group by termino
 order by veces desc
 limit 20;
 
-create or replace view vista_filtros_usados as
+create or replace view vista_filtros_usados with (security_invoker = true) as
 select metadata->>'filtro' as filtro, metadata->>'valor' as valor, count(*) as veces
 from analytics_eventos
 where tipo = 'filtro' and creado_en > now() - interval '30 days'
@@ -98,14 +98,14 @@ group by filtro, valor
 order by veces desc
 limit 20;
 
-create or replace view vista_clics_cta as
+create or replace view vista_clics_cta with (security_invoker = true) as
 select metadata->>'elemento' as elemento, count(*) as clics
 from analytics_eventos
 where tipo = 'click' and creado_en > now() - interval '30 days'
 group by elemento
 order by clics desc;
 
-create or replace view vista_productos_mas_vistos as
+create or replace view vista_productos_mas_vistos with (security_invoker = true) as
 select
   split_part(split_part(pagina, 'slug=', 2), '&', 1) as slug,
   count(*) as vistas
@@ -115,7 +115,7 @@ group by slug
 order by vistas desc
 limit 15;
 
-create or replace view vista_tiempo_por_pagina as
+create or replace view vista_tiempo_por_pagina with (security_invoker = true) as
 select
   pagina,
   round(avg((metadata->>'tiempo_en_pagina')::numeric)) as segundos_promedio,
@@ -128,7 +128,7 @@ order by sesiones desc
 limit 15;
 
 -- Tasa de rebote: % de sesiones que solo vieron 1 página
-create or replace view vista_tasa_rebote as
+create or replace view vista_tasa_rebote with (security_invoker = true) as
 with por_sesion as (
   select session_id, count(*) as paginas_vistas
   from analytics_eventos
@@ -140,6 +140,13 @@ select
   count(*) as sesiones_totales,
   round(100.0 * count(*) filter (where paginas_vistas = 1) / nullif(count(*),0), 1) as tasa_rebote_pct
 from por_sesion;
+
+revoke all on
+  vista_paises, vista_ciudades, vista_navegadores, vista_sistemas_operativos,
+  vista_idiomas, vista_origenes_trafico, vista_utm_campanas, vista_terminos_busqueda,
+  vista_filtros_usados, vista_clics_cta, vista_productos_mas_vistos,
+  vista_tiempo_por_pagina, vista_tasa_rebote
+from anon;
 
 grant select on
   vista_paises, vista_ciudades, vista_navegadores, vista_sistemas_operativos,

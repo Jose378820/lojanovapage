@@ -32,7 +32,7 @@ create policy "admin lee eventos" on analytics_eventos
 -- ---------------------------------------------------------
 
 -- Visitas y visitantes únicos por día (últimos 30 días)
-create or replace view vista_visitas_diarias as
+create or replace view vista_visitas_diarias with (security_invoker = true) as
 select
   date(creado_en) as dia,
   count(*) filter (where tipo = 'pageview') as visitas,
@@ -43,7 +43,7 @@ group by date(creado_en)
 order by dia;
 
 -- Páginas más visitadas (últimos 30 días)
-create or replace view vista_paginas_top as
+create or replace view vista_paginas_top with (security_invoker = true) as
 select pagina, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
@@ -52,7 +52,7 @@ order by visitas desc
 limit 10;
 
 -- Distribución por hora del día (últimos 30 días) — para ver patrones de conexión
-create or replace view vista_horas_pico as
+create or replace view vista_horas_pico with (security_invoker = true) as
 select extract(hour from creado_en)::int as hora, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
@@ -60,14 +60,14 @@ group by hora
 order by hora;
 
 -- Dispositivos (últimos 30 días)
-create or replace view vista_dispositivos as
+create or replace view vista_dispositivos with (security_invoker = true) as
 select coalesce(dispositivo, 'desconocido') as dispositivo, count(*) as visitas
 from analytics_eventos
 where tipo = 'pageview' and creado_en > now() - interval '30 days'
 group by dispositivo;
 
 -- Duración de sesión estimada (última actividad - primera actividad por sesión)
-create or replace view vista_duracion_sesiones as
+create or replace view vista_duracion_sesiones with (security_invoker = true) as
 select
   session_id,
   min(creado_en) as inicio,
@@ -77,5 +77,6 @@ from analytics_eventos
 where creado_en > now() - interval '30 days'
 group by session_id;
 
--- Permitir que el admin consulte las vistas (heredan RLS de la tabla base)
+-- Las vistas respetan el RLS de analytics_eventos y solo se conceden a usuarios autenticados.
+revoke all on vista_visitas_diarias, vista_paginas_top, vista_horas_pico, vista_dispositivos, vista_duracion_sesiones from anon;
 grant select on vista_visitas_diarias, vista_paginas_top, vista_horas_pico, vista_dispositivos, vista_duracion_sesiones to authenticated;
