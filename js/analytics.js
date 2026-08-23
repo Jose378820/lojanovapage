@@ -2,7 +2,8 @@
 // Conserva la compatibilidad histórica y mejora la medición de eventos nuevos.
 (function () {
   "use strict";
-  if (!window.db || location.pathname.startsWith("/admin")) return;
+  const analyticsDb = typeof db !== "undefined" ? db : window.db;
+  if (!analyticsDb || location.pathname.startsWith("/admin")) return;
 
   const SESSION_KEY = "lojanova_visit_session_id";
   const SESSION_ACTIVITY_KEY = "lojanova_visit_session_activity";
@@ -113,7 +114,7 @@
 
   async function insertSafely(table, payload) {
     try {
-      const { error } = await window.db.from(table).insert(payload);
+      const { error } = await analyticsDb.from(table).insert(payload);
       if (error) console.warn(`No se pudo registrar en ${table}:`, error.message);
       return !error;
     } catch (error) {
