@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Panel de administración — Lojanova</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/admin/css/admin.css?v=20260804-trafico-real">
+<link rel="stylesheet" href="/admin/css/admin.css?v=20260823-analytics-visual">
 <link rel="stylesheet" href="/admin/css/admin-enhancements.css?v=20260804-institucional">
 <script src="https://unpkg.com/lucide@1.26.0"></script>
 </head>
@@ -87,20 +87,21 @@
     </section>
 
     <!-- ============ ANALITICAS ============ -->
-    <section id="view-analiticas" class="view" style="display:none">
-      <div class="main-header">
-        <div><h1>Analíticas</h1><p>Patrones de tráfico real de los últimos 30 días · Hora de Ecuador</p><small id="analyticsDataStatus" class="kpi-help">Verificando datos…</small></div>
+    <section id="view-analiticas" class="view analytics-view" style="display:none">
+      <div class="main-header analytics-hero">
+        <div><span class="analytics-eyebrow">Inteligencia digital</span><h1>Analíticas</h1><p>Una lectura clara del rendimiento de Lojanova durante los últimos 30 días.</p><small id="analyticsDataStatus" class="analytics-data-status">Verificando datos…</small></div>
         <button class="btn btn-outline auto-width" id="btnRefreshAnalytics" type="button">Actualizar métricas</button>
       </div>
-      <div class="kpi-grid">
-        <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div><small class="kpi-help">Suma automática de todas las visitas del mes.</small></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos (30d)</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiPaginaTop">—</div><div class="kpi-label">Página más visitada</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiTasaRebote">—</div><div class="kpi-label">Tasa de rebote</div></div>
-        <div class="kpi-card"><div class="kpi-num" id="kpiScrollProm">—</div><div class="kpi-label">Scroll promedio</div></div>
+      <div class="kpi-grid analytics-kpis">
+        <div class="kpi-card kpi-traffic-month"><span class="analytics-kpi-index">01</span><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div><small class="kpi-help">Visitas acumuladas en 30 días</small></div>
+        <div class="kpi-card"><span class="analytics-kpi-index">02</span><div class="kpi-num" id="kpiVisitasHoy">—</div><div class="kpi-label">Visitas hoy</div><small class="kpi-help">Actividad de la jornada</small></div>
+        <div class="kpi-card"><span class="analytics-kpi-index">03</span><div class="kpi-num" id="kpiVisitantesUnicos">—</div><div class="kpi-label">Visitantes únicos</div><small class="kpi-help">Audiencia diferenciada · 30 días</small></div>
+        <div class="kpi-card"><span class="analytics-kpi-index">04</span><div class="kpi-num" id="kpiDuracionProm">—</div><div class="kpi-label">Duración promedio</div><small class="kpi-help">Tiempo de atención por sesión</small></div>
+        <div class="kpi-card analytics-kpi-wide"><span class="analytics-kpi-index">05</span><div class="kpi-num" id="kpiPaginaTop">—</div><div class="kpi-label">Página más visitada</div><small class="kpi-help">Contenido con mayor alcance</small></div>
+        <div class="kpi-card"><span class="analytics-kpi-index">06</span><div class="kpi-num" id="kpiTasaRebote">—</div><div class="kpi-label">Tasa de rebote</div><small class="kpi-help">Sesiones sin interacción</small></div>
+        <div class="kpi-card"><span class="analytics-kpi-index">07</span><div class="kpi-num" id="kpiScrollProm">—</div><div class="kpi-label">Scroll promedio</div><small class="kpi-help">Profundidad de lectura</small></div>
       </div>
+      <div class="analytics-layout">
       <div class="panel">
         <div class="panel-title"><h3>Visitas por día</h3></div>
         <canvas id="chartVisitasDiarias" height="90"></canvas>
@@ -169,6 +170,7 @@
           <thead><tr><th>Elemento</th><th>Clics</th></tr></thead>
           <tbody id="tablaClics"><tr class="empty-row"><td colspan="2">Cargando…</td></tr></tbody>
         </table>
+      </div>
       </div>
     </section>
 
