@@ -246,13 +246,15 @@ function renderProductos(){
 
 /* ---------- Emprendedores ---------- */
 async function cargarEmprendedores(){
+  const grid = document.getElementById("empGrid");
+  if (!grid) return;
+
   const { data, error } = await db
     .from("emprendedores")
     .select("*, cantones(nombre)")
     .eq("activo", true)
     .order("created_at", { ascending: false })
     .limit(6);
-  const grid = document.getElementById("empGrid");
   if (error || !data || data.length === 0){
     grid.innerHTML = `<div class="empty-state">Aún no hay marcas publicadas.</div>`;
     return;

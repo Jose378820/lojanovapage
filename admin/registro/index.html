@@ -18,7 +18,7 @@
     <div class="error-msg" id="errorMsg" style="display:none"></div>
     <div class="success-msg" id="successMsg" style="display:none"></div>
 
-    <form id="authForm">
+    <form id="authForm" data-mode="registro">
       <div class="field">
         <label>Nombre completo</label>
         <input type="text" id="nombre" required>
@@ -36,7 +36,12 @@
 
       <div class="field">
         <label>Contraseña</label>
-        <input type="password" id="password" required minlength="6">
+        <input type="password" id="password" required autocomplete="new-password" minlength="6">
+      </div>
+
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="confirmPassword" required autocomplete="new-password" minlength="6">
       </div>
 
       <button type="submit" class="btn btn-primary" id="submitBtn">Crear cuenta</button>
@@ -49,92 +54,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://pfdyxxavadiyoaxduibp.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_sz0f8pdxD7zLaKqx1xykfQ_MGZN7h6y";
-
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const form = document.getElementById("authForm");
-const errorMsg = document.getElementById("errorMsg");
-const successMsg = document.getElementById("successMsg");
-const submitBtn = document.getElementById("submitBtn");
-
-function showError(message) {
-  errorMsg.textContent = message;
-  errorMsg.style.display = "block";
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  errorMsg.style.display = "none";
-  successMsg.style.display = "none";
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Creando cuenta...";
-
-  const nombre = document.getElementById("nombre").value.trim();
-  const emprendimiento = document.getElementById("emprendimiento").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  try {
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          rol: "productor",
-          nombre,
-          emprendimiento
-        }
-      }
-    });
-
-    if (error) {
-      showError(error.message || "No se pudo crear el usuario.");
-      return;
-    }
-
-    const session = data.session;
-    const user = data.user;
-
-    if (!user) {
-      showError("No se pudo obtener el usuario creado.");
-      return;
-    }
-
-    if (!session) {
-      showError("Cuenta creada, pero requiere confirmar correo. Desactiva Confirm email en Supabase para pruebas.");
-      return;
-    }
-
-    const { error: perfilError } = await db.from("emprendedores").insert({
-      auth_user_id: user.id,
-      nombre: nombre,
-      emprendimiento: emprendimiento,
-      correo: email,
-      activo: true
-    });
-
-    if (perfilError) {
-      showError("Usuario creado, pero falló el perfil: " + perfilError.message);
-      return;
-    }
-
-    successMsg.textContent = "Cuenta creada correctamente. Ya puedes iniciar sesión.";
-    successMsg.style.display = "block";
-    form.reset();
-
-  } catch (error) {
-    showError(error.message || "No se pudo conectar con Supabase.");
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Crear cuenta";
-  }
-});
-</script>
+<script src="/js/config.js?v=20260823-auditoria"></script>
+<script src="/js/supabase-client.js?v=20260823-auditoria"></script>
+<script src="/js/productor-auth.js?v=20260823-auditoria"></script>
 
 </body>
 </html>

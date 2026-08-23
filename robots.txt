@@ -5,4 +5,4 @@ Disallow: /mi-panel.html
 Disallow: /login.html
 Disallow: /registro.html
 
-Sitemap: https://lojanova.gob.ec/sitemap.xml
+Sitemap: https://prefecturalojanova.com/sitemap.xml

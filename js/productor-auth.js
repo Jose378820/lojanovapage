@@ -81,7 +81,7 @@ async function redirectIfProducer() {
     .eq("auth_user_id", session.user.id)
     .maybeSingle();
 
-  if (emprendedor) location.href = "mi-panel.html";
+  if (emprendedor) location.href = "/mi-panel.html";
 }
 
 redirectIfProducer();
@@ -144,7 +144,7 @@ form.addEventListener("submit", async (event) => {
       }
 
       if (data.session) {
-        location.href = "mi-panel.html";
+        location.href = "/mi-panel.html";
         return;
       }
 
@@ -222,5 +222,5 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  location.href = "mi-panel.html";
+  location.href = "/mi-panel.html";
 });

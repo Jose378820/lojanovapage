@@ -20,6 +20,10 @@ const normalizeNews = item => ({
   galeria: item.galeria || [],
   cifras: item.cifras || []
 });
+const setNewsMeta = (id, value, attribute = "content") => {
+  const element = $(id);
+  if (element && value) element.setAttribute(attribute, value);
+};
 
 async function loadNewsDetail(){
   const params = new URLSearchParams(location.search);
@@ -47,6 +51,15 @@ async function loadNewsDetail(){
   const news = normalizeNews(item);
   const image = news.imagen_url?.startsWith("assets/") ? news.imagen_url : urlImagen(news.imagen_url, "news");
   document.title = news.titulo + " — Lojanova";
+  const canonicalUrl = `${location.origin}${location.pathname}?slug=${encodeURIComponent(news.slug || slug || "")}`;
+  const metaDescription = (news.subtitulo || news.resumen || news.introduccion || "Noticias y oportunidades para los emprendedores de Loja.").slice(0, 160);
+  const absoluteImage = new URL(image, location.href).href;
+  document.querySelector('meta[name="description"]')?.setAttribute("content", metaDescription);
+  setNewsMeta("newsCanonical", canonicalUrl, "href");
+  setNewsMeta("newsOgTitle", document.title);
+  setNewsMeta("newsOgDescription", metaDescription);
+  setNewsMeta("newsOgImage", absoluteImage);
+  setNewsMeta("newsOgUrl", canonicalUrl);
   $("newsTitle").textContent = news.titulo;
   $("newsSubtitle").textContent = news.subtitulo || news.resumen;
   $("newsType").textContent = ({capacitacion:"Capacitación",evento:"Evento",feria:"Feria",convocatoria:"Convocatoria",rueda_negocios:"Rueda de negocios",taller:"Taller",seminario:"Seminario",conferencia:"Conferencia",lanzamiento:"Lanzamiento",festival:"Festival",otro:"Otro"})[news.tipo] || "Noticia";

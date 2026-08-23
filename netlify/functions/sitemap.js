@@ -1,13 +1,13 @@
 // =========================================================
 // LOJANOVA — Sitemap dinámico
-// Se sirve en https://lojanova.gob.ec/sitemap.xml (ver redirect en netlify.toml)
+// Se sirve en https://prefecturalojanova.com/sitemap.xml (ver redirect en netlify.toml)
 // Consulta Supabase en cada request para incluir todos los
 // productos activos, sin necesidad de regenerar nada manualmente.
 // =========================================================
 
 const SUPABASE_URL = "https://pfdyxxavadiyoaxduibp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_sz0f8pdxD7zLaKqx1xykfQ_MGZN7h6y";
-const SITE_URL = "https://lojanova.gob.ec";
+const SITE_URL = "https://prefecturalojanova.com";
 
 function escapeXml(str) {
   return String(str).replace(/[<>&'"]/g, (c) => ({

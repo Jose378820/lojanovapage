@@ -5,6 +5,7 @@
   if (!window.db || location.pathname.startsWith("/admin")) return;
 
   const SESSION_KEY = "lojanova_visit_session_id";
+  const GEO_CACHE_KEY = "lojanova_visit_geo";
   const PAGE_HIT_KEY = `lojanova_last_hit_${location.pathname || "/"}`;
   const now = Date.now();
   const lastSamePageHit = Number(sessionStorage.getItem(PAGE_HIT_KEY) || 0);
@@ -37,15 +38,22 @@
 
   async function getGeo() {
     try {
+      const cached = JSON.parse(sessionStorage.getItem(GEO_CACHE_KEY) || "null");
+      if (cached?.pais) return cached;
+    } catch (_) {}
+
+    try {
       const response = await fetch("https://ipapi.co/json/", { cache: "no-store" });
       if (!response.ok) throw new Error("geo unavailable");
       const data = await response.json();
-      return {
+      const geo = {
         pais: data.country_name || "No identificado",
         codigo_pais: data.country_code || null,
         ciudad: data.city || "No identificada",
         region: data.region || null,
       };
+      sessionStorage.setItem(GEO_CACHE_KEY, JSON.stringify(geo));
+      return geo;
     } catch (error) {
       return { pais: "No identificado", codigo_pais: null, ciudad: "No identificada", region: null };
     }

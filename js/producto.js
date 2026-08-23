@@ -26,6 +26,11 @@ function agregarDato(dl, label, valor){
   dl.appendChild(div);
 }
 
+function setProductMeta(id, value, attribute = "content"){
+  const element = document.getElementById(id);
+  if (element && value) element.setAttribute(attribute, value);
+}
+
 async function cargarProducto(){
   const params = new URLSearchParams(location.search);
   const slug = params.get("slug");
@@ -42,17 +47,26 @@ async function cargarProducto(){
     .eq("activo", true)
     .single();
 
-  const { data: imagenes } = await db
-    .from("producto_imagenes")
-    .select("*")
-    .eq("producto_id", p?.id)
-    .order("orden");
-
   loading.style.display = "none";
 
   if (error || !p){ notFound.style.display = "block"; return; }
 
+  const { data: imagenes } = await db
+    .from("producto_imagenes")
+    .select("*")
+    .eq("producto_id", p.id)
+    .order("orden");
+
   document.title = `${p.nombre} — Lojanova`;
+  const canonicalUrl = `${location.origin}${location.pathname}?slug=${encodeURIComponent(p.slug || slug)}`;
+  const metaDescription = (p.descripcion_corta || p.descripcion_larga || `Conoce ${p.nombre} en Lojanova.`).slice(0, 160);
+  const socialImage = urlImagen(p.imagen_principal_url);
+  setProductMeta("productMetaDescription", metaDescription);
+  setProductMeta("productCanonical", canonicalUrl, "href");
+  setProductMeta("productOgTitle", document.title);
+  setProductMeta("productOgDescription", metaDescription);
+  setProductMeta("productOgImage", socialImage);
+  setProductMeta("productOgUrl", canonicalUrl);
   document.getElementById("bcNombre").textContent = p.nombre;
   document.getElementById("metaCategoria").textContent = p.categorias?.nombre || "";
   document.getElementById("metaCanton").textContent = p.cantones?.nombre || "";
