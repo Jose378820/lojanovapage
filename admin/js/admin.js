@@ -38,13 +38,15 @@ document.querySelectorAll(".sidebar nav button[data-view]").forEach(btn => {
    ========================================================= */
 
 async function cargarAnaliticas(){
-  const [diarias, horas, top, dispositivos, duraciones, hoy, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
+  const status = document.getElementById("analyticsDataStatus");
+  if (status) status.textContent = "Actualizando métricas…";
+  const [resumen, diarias, horas, top, dispositivos, duraciones, navegadores, sos, paises, ciudades, origenes, busquedas, clics, productos, tiempoPag, rebote] = await Promise.all([
+    db.from("vista_resumen_analiticas").select("*").maybeSingle(),
     db.from("vista_visitas_diarias").select("*"),
     db.from("vista_horas_pico").select("*"),
     db.from("vista_paginas_top").select("*"),
     db.from("vista_dispositivos").select("*"),
     db.from("vista_duracion_sesiones").select("duracion_segundos"),
-    db.from("analytics_eventos").select("id", { count: "exact", head: true }).eq("tipo", "pageview").gte("creado_en", new Date().toISOString().slice(0,10)),
     db.from("vista_navegadores").select("*"),
     db.from("vista_sistemas_operativos").select("*"),
     db.from("vista_paises").select("*"),
@@ -57,22 +59,28 @@ async function cargarAnaliticas(){
     db.from("vista_tasa_rebote").select("*").maybeSingle(),
   ]);
 
-  document.getElementById("kpiVisitasHoy").textContent = hoy.count ?? 0;
+  const critical = [resumen, diarias, top].find(result => result.error);
+  if (critical) {
+    console.error("No se pudieron cargar las analíticas:", critical.error);
+    if (status) status.textContent = "No se pudieron verificar los datos. Revisa la migración de analíticas.";
+  } else if (status) {
+    const last = resumen.data?.ultima_visita ? new Date(resumen.data.ultima_visita).toLocaleString("es-EC") : "sin visitas registradas";
+    status.textContent = `Datos verificados · Último registro: ${last}`;
+  }
 
-  const traficoMensualTotal = (origenes.data || []).reduce((sum, row) => {
-    const visitas = Number(row.visitas ?? row.total ?? row.count ?? row.conteo ?? row.cantidad ?? 0);
-    return sum + (Number.isFinite(visitas) ? visitas : 0);
-  }, 0);
+  document.getElementById("kpiVisitasHoy").textContent = Number(resumen.data?.visitas_hoy || 0).toLocaleString("es-EC");
+
+  const traficoMensualTotal = Number(resumen.data?.visitas_30d || 0);
   ["kpiTraficoMensual", "kpiTraficoMensualAnaliticas"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = traficoMensualTotal.toLocaleString("es-EC");
   });
 
 
-  const totalUnicos = (diarias.data || []).reduce((acc, d) => acc + (d.visitantes_unicos || 0), 0);
-  document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos;
+  const totalUnicos = Number(resumen.data?.visitantes_unicos_30d || 0);
+  document.getElementById("kpiVisitantesUnicos").textContent = totalUnicos.toLocaleString("es-EC");
 
-  const dur = (duraciones.data || []).map(d => d.duracion_segundos || 0);
+  const dur = (duraciones.data || []).map(d => Number(d.duracion_segundos || 0)).filter(value => value > 0 && value <= 7200);
   const promedio = dur.length ? Math.round(dur.reduce((a,b) => a+b, 0) / dur.length) : 0;
   document.getElementById("kpiDuracionProm").textContent = promedio > 60 ? `${Math.floor(promedio/60)} min ${promedio%60}s` : `${promedio}s`;
 
@@ -85,7 +93,10 @@ async function cargarAnaliticas(){
   document.getElementById("kpiTasaRebote").textContent = rebote.data?.tasa_rebote_pct != null ? `${rebote.data.tasa_rebote_pct}%` : "—";
 
   const tp = tiempoPag.data || [];
-  const scrollProm = tp.length ? Math.round(tp.reduce((a,d) => a + (d.scroll_promedio_pct||0), 0) / tp.length) : 0;
+  const scrollSessions = tp.reduce((sum, row) => sum + Number(row.sesiones || 0), 0);
+  const scrollProm = scrollSessions
+    ? Math.round(tp.reduce((sum, row) => sum + Number(row.scroll_promedio_pct || 0) * Number(row.sesiones || 0), 0) / scrollSessions)
+    : 0;
   document.getElementById("kpiScrollProm").textContent = tp.length ? `${scrollProm}%` : "—";
 
   renderChart("chartVisitasDiarias", "line", {
@@ -209,15 +220,9 @@ async function cargarTraficoMensualTotalKpi(){
   });
 
   try{
-    const { data, error } = await db.from("vista_origenes_trafico").select("*");
+    const { data, error } = await db.from("vista_resumen_analiticas").select("visitas_30d").maybeSingle();
     if (error) throw error;
-
-    const total = (data || []).reduce((sum, row) => {
-      const raw = row.visitas ?? row.total ?? row.count ?? row.conteo ?? row.cantidad ?? 0;
-      const visitas = Number(raw);
-      return sum + (Number.isFinite(visitas) ? visitas : 0);
-    }, 0);
-
+    const total = Number(data?.visitas_30d || 0);
     pintar(total.toLocaleString("es-EC"));
   }catch(error){
     console.warn("No se pudo calcular el tráfico mensual total:", error);
@@ -228,7 +233,7 @@ async function cargarTraficoMensualTotalKpi(){
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(cargarTraficoMensualTotalKpi, 600);
 });
-document.getElementById("btnRefreshAnalytics")?.addEventListener("click", cargarTraficoMensualTotalKpi);
+document.getElementById("btnRefreshAnalytics")?.addEventListener("click", cargarAnaliticas);
 /* Fin KPI tráfico mensual total */
 
 /* =========================================================

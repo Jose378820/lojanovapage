@@ -89,7 +89,8 @@
     <!-- ============ ANALITICAS ============ -->
     <section id="view-analiticas" class="view" style="display:none">
       <div class="main-header">
-        <div><h1>Analíticas</h1><p>Patrones de tráfico de los últimos 30 días</p></div>
+        <div><h1>Analíticas</h1><p>Patrones de tráfico real de los últimos 30 días · Hora de Ecuador</p><small id="analyticsDataStatus" class="kpi-help">Verificando datos…</small></div>
+        <button class="btn btn-outline auto-width" id="btnRefreshAnalytics" type="button">Actualizar métricas</button>
       </div>
       <div class="kpi-grid">
         <div class="kpi-card kpi-traffic-month"><div class="kpi-num" id="kpiTraficoMensualAnaliticas">—</div><div class="kpi-label">Tráfico mensual total</div><small class="kpi-help">Suma automática de todas las visitas del mes.</small></div>
@@ -462,7 +463,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/config.js?v=20260803-admin-polish"></script>
 <script src="/js/supabase-client.js?v=20260803-admin-polish"></script>
-<script src="/admin/js/admin.js?v=20260822-inscripcion-emiratos"></script>
+<script src="/admin/js/admin.js?v=20260823-analiticas-robustas"></script>
 <script src="/admin/js/admin-enhancements.js?v=20260804-institucional"></script>
 </body>
 </html>

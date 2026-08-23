@@ -9,6 +9,7 @@ const APP_SHELL = [
   "/js/supabase-client.js?v=20260803-force-floating",
   "/js/noticias-data.js?v=20260822-inscripcion-emiratos",
   "/js/main.js?v=20260822-loja-exporta",
+  "/js/analytics.js?v=20260823-analiticas-robustas",
   "/noticia.html",
   "/js/noticia.js?v=20260822-inscripcion-emiratos",
   "/assets/noticias/taller-loja-emiratos-2026.webp",
@@ -20,7 +21,7 @@ const APP_SHELL = [
   "/assets/logo-prefectura-loja.png"
 ];
 
-const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260822-inscripcion-emiratos";
+const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260823-analiticas-robustas";
 
 self.addEventListener("install", event => {
   self.skipWaiting();

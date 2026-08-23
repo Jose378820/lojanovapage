@@ -17,6 +17,20 @@ Se revisaron la página pública, catálogo y fichas, noticias, autenticación, 
 
 ## Verificaciones realizadas
 
+## Auditoría especializada de analíticas
+
+- Los eventos históricos permanecen intactos: la migración no contiene borrados ni actualizaciones de filas.
+- Las sesiones nuevas rotan después de 30 minutos de inactividad, evitando duraciones artificiales de varios días.
+- Productos y noticias registran su identificador (`slug`) y las noticias ya participan en la medición.
+- Los eventos nuevos incluyen dispositivo, navegador, sistema operativo, idioma, resolución, conexión, origen y campañas UTM.
+- Se incorporan búsquedas, filtros, contactos, inscripción, compartir, instalación, tiempo activo y profundidad de scroll.
+- Las recargas inmediatas de una misma página se deduplican durante 10 segundos.
+- Los cortes diarios y horarios usan la zona `America/Guayaquil`.
+- Visitantes únicos de 30 días usa sesiones distintas y no suma nuevamente a quienes regresan otro día.
+- Tiempo y scroll se consolidan por sesión y página para no inflar la muestra.
+- La tasa de rebote considera una sola página sin al menos 10 segundos de interacción ni 50 % de scroll.
+- La inserción pública valida tamaño, tipo y longitud del evento, sin conceder lectura pública.
+
 - Sintaxis de todos los archivos JavaScript activos.
 - Referencias a archivos CSS, JavaScript, imágenes y páginas locales.
 - IDs HTML duplicados.
