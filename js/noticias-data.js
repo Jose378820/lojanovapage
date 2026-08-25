@@ -9,10 +9,13 @@ window.LOJANOVA_NOTICIAS_DESTACADAS = [
     hora: "10:00 a. m.",
     lugar: "Salón de la Provincia, Prefectura de Loja",
     direccion: "Bernardo Valdivieso y José Antonio Eguiguren, Loja",
-    imagen_url: "assets/noticias/taller-loja-emiratos-2026.webp",
+    imagen_url: "assets/noticias/taller-emiratos-portada.webp",
     inscripcion_url: "https://docs.google.com/forms/d/e/1FAIpQLScs0-jxauSPpBxFOszFK_l-cK4yXTSqL0FfeGmSsnDICZ8x2w/viewform",
     organizacion: "Capacitación presencial organizada por la Prefectura de Loja, a través de la Cámara de Comercio de Emiratos Árabes Unidos.",
     introduccion: "Durante el taller conoceremos el mercado emiratí, los productos ecuatorianos con potencial, las claves de negociación, la búsqueda de compradores y la preparación del producto para ingresar a este mercado.",
+    galeria: [
+      { url: "assets/noticias/taller-emiratos-temario.webp", descripcion: "Temario oficial del taller Ecuador hacia Emiratos Árabes Unidos." }
+    ],
     temario: [
       { titulo: "Conozca el mercado", detalle: "¿Por qué Emiratos Árabes Unidos?" },
       { titulo: "Identifique la oportunidad", detalle: "¿Qué productos ecuatorianos tienen potencial?" },

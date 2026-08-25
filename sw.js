@@ -4,15 +4,16 @@ const APP_SHELL = [
   "/",
   "/index.html",
   "/offline.html",
-  "/css/style.css?v=20260822-inscripcion-emiratos",
+  "/css/style.css?v=20260824-imagenes-emiratos",
   "/js/config.js",
   "/js/supabase-client.js?v=20260803-force-floating",
-  "/js/noticias-data.js?v=20260822-inscripcion-emiratos",
+  "/js/noticias-data.js?v=20260824-imagenes-emiratos",
   "/js/main.js?v=20260822-loja-exporta",
   "/js/analytics.js?v=20260823-fix-cliente-db",
   "/noticia.html",
-  "/js/noticia.js?v=20260822-inscripcion-emiratos",
-  "/assets/noticias/taller-loja-emiratos-2026.webp",
+  "/js/noticia.js?v=20260824-imagenes-emiratos",
+  "/assets/noticias/taller-emiratos-portada.webp",
+  "/assets/noticias/taller-emiratos-temario.webp",
   "/assets/noticias/loja-exporta-2026/portada-productores.webp",
   "/js/translator.js?v=20260803-force-floating",
   "/assets/lojanova-app-icon.svg",
@@ -21,7 +22,7 @@ const APP_SHELL = [
   "/assets/logo-prefectura-loja.png"
 ];
 
-const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260823-fix-cliente-db";
+const ACTIVE_CACHE_VERSION = "lojanova-pwa-v20260824-imagenes-emiratos";
 
 self.addEventListener("install", event => {
   self.skipWaiting();

@@ -1646,3 +1646,47 @@ body.translated-rtl{
 @media (min-width:901px) and (hover:hover) and (pointer:fine){
   .mobile-app-download{display:none!important;}
 }
+
+/* Imágenes específicas del taller Ecuador hacia Emiratos Árabes Unidos */
+.news-card-link[href*="loja-hacia-emiratos-arabes-unidos-2026"] .thumb img{
+  object-position:center 48%;
+}
+.news-featured-visual{
+  position:relative;
+  margin:4px 0 48px;
+  padding:14px;
+  border:1px solid #dce5de;
+  border-radius:28px;
+  background:linear-gradient(145deg,#fff,#edf5f0);
+  box-shadow:0 24px 64px rgba(15,68,44,.14);
+}
+.news-featured-visual[hidden]{display:none!important}
+.news-featured-visual-frame{overflow:hidden;border-radius:19px;background:#fff}
+.news-featured-visual img{
+  display:block;
+  width:100%;
+  max-height:900px;
+  object-fit:contain;
+  background:#fff;
+}
+.news-featured-visual figcaption{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:15px 10px 4px;
+  color:#617067;
+  font-size:.78rem;
+  line-height:1.5;
+}
+.news-featured-visual figcaption::before{
+  content:"";
+  width:28px;
+  height:2px;
+  flex:0 0 auto;
+  background:var(--dorado);
+}
+@media(max-width:600px){
+  .news-featured-visual{margin-bottom:34px;padding:8px;border-radius:19px}
+  .news-featured-visual-frame{border-radius:13px}
+  .news-featured-visual figcaption{padding:12px 6px 3px}
+}

@@ -74,6 +74,16 @@ async function loadNewsDetail(){
     $("newsRegistration").hidden = false;
   }
 
+  const featuredPhoto = news.slug === "loja-hacia-emiratos-arabes-unidos-2026" ? news.galeria[0] : null;
+  const contentGallery = featuredPhoto ? news.galeria.slice(1) : news.galeria;
+  if (featuredPhoto) {
+    const featuredSrc = featuredPhoto.url?.startsWith("assets/") ? featuredPhoto.url : urlImagen(featuredPhoto.url, "news");
+    $("newsFeaturedVisualImage").src = featuredSrc;
+    $("newsFeaturedVisualImage").alt = featuredPhoto.descripcion || "Temario del taller Ecuador hacia Emiratos Árabes Unidos";
+    $("newsFeaturedVisualCaption").textContent = featuredPhoto.descripcion || "Temario oficial de la capacitación";
+    $("newsFeaturedVisual").hidden = false;
+  }
+
   if (news.cifras.length) {
     $("newsStats").innerHTML = news.cifras.map(cifra => `<article><strong>${escapeNewsHtml(cifra.valor)}</strong><span>${escapeNewsHtml(cifra.etiqueta)}</span></article>`).join("");
   } else {
@@ -94,7 +104,7 @@ async function loadNewsDetail(){
     $("newsOrganizationBlock").hidden = true;
   }
 
-  const inlinePhotos = news.galeria.slice(0, news.secciones.length);
+  const inlinePhotos = contentGallery.slice(0, news.secciones.length);
   if (news.secciones.length) {
     $("newsSections").innerHTML = news.secciones.map((section,index) => {
       const photo = inlinePhotos[index];
@@ -105,7 +115,7 @@ async function loadNewsDetail(){
     $("newsSections").hidden = true;
   }
 
-  const remainingPhotos = news.galeria.slice(inlinePhotos.length);
+  const remainingPhotos = contentGallery.slice(inlinePhotos.length);
   if (remainingPhotos.length) {
     $("newsGallery").innerHTML = remainingPhotos.map((photo,index) => {
       const src = photo.url?.startsWith("assets/") ? photo.url : urlImagen(photo.url, "news");
