@@ -1651,6 +1651,9 @@ body.translated-rtl{
 .news-card-link[href*="loja-hacia-emiratos-arabes-unidos-2026"] .thumb img{
   object-position:center 48%;
 }
+.news-card-link[href*="loja-exporta-2026-ruta-hacia-el-mundo"] .thumb img{
+  object-position:center 43%;
+}
 .news-featured-visual{
   position:relative;
   margin:4px 0 48px;

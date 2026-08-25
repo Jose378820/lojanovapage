@@ -316,7 +316,9 @@ async function cargarNoticias(){
     return;
   }
   grid.innerHTML = noticias.map(n => {
-    const image = n.imagen_url?.startsWith("assets/") ? n.imagen_url : urlImagen(n.imagen_url, "news");
+    const image = n.slug === "loja-exporta-2026-ruta-hacia-el-mundo"
+      ? "assets/noticias/loja-exporta-2026/portada-tarjeta-autoridades.webp"
+      : (n.imagen_url?.startsWith("assets/") ? n.imagen_url : urlImagen(n.imagen_url, "news"));
     const estado = estadoEvento(n.fecha_evento);
     return `
     <a href="${enlaceNoticia(n)}" target="_blank" rel="noopener" class="card-news news-card-link reveal" aria-label="Abrir noticia: ${escapeHtml(n.titulo)}">
