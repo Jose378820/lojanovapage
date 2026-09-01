@@ -11,6 +11,43 @@ function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
 
+function safePhone(value){
+  const normalized = String(value || "").trim().replace(/[^\d+]/g, "");
+  const digits = normalized.replace(/\D/g, "");
+  return digits.length >= 7 && digits.length <= 15 ? normalized : "";
+}
+
+function safeEmail(value){
+  const email = String(value || "").trim();
+  return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "";
+}
+
+function safeSocialUrl(value, allowedDomain){
+  try {
+    const url = new URL(String(value || "").trim());
+    const host = url.hostname.toLowerCase();
+    if (!['http:', 'https:'].includes(url.protocol)) return "";
+    if (host !== allowedDomain && !host.endsWith(`.${allowedDomain}`)) return "";
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function contactElement({ tag = "a", href = "", icon, label }){
+  const element = document.createElement(tag);
+  if (tag === "a") element.href = href;
+  if (tag === "a" && /^https?:/i.test(href)) {
+    element.target = "_blank";
+    element.rel = "noopener noreferrer";
+  }
+  const iconElement = document.createElement("i");
+  iconElement.dataset.lucide = icon;
+  iconElement.className = "icon";
+  element.append(iconElement, document.createTextNode(` ${label}`));
+  return element;
+}
+
 function setBloque(id, valor){
   const el = document.getElementById(id);
   const bloque = el.closest(".pd-block");
@@ -117,19 +154,24 @@ async function cargarProducto(){
 
     const contactos = document.getElementById("empContactos");
     const items = [];
-    if (e.telefono) items.push(`<a href="tel:${e.telefono}"><i data-lucide="phone" class="icon"></i> ${escapeHtml(e.telefono)}</a>`);
-    if (e.correo) items.push(`<a href="mailto:${e.correo}"><i data-lucide="mail" class="icon"></i> ${escapeHtml(e.correo)}</a>`);
-    if (e.facebook) items.push(`<a href="${e.facebook}" target="_blank" rel="noopener"><i data-lucide="facebook" class="icon"></i> Facebook</a>`);
-    if (e.instagram) items.push(`<a href="${e.instagram}" target="_blank" rel="noopener"><i data-lucide="instagram" class="icon"></i> Instagram</a>`);
-    if (e.ubicacion) items.push(`<a href="#"><i data-lucide="map-pin" class="icon"></i> ${escapeHtml(e.ubicacion)}</a>`);
-    contactos.innerHTML = items.join("");
+    const telefono = safePhone(e.telefono);
+    const correo = safeEmail(e.correo);
+    const facebook = safeSocialUrl(e.facebook, "facebook.com");
+    const instagram = safeSocialUrl(e.instagram, "instagram.com");
+    if (telefono) items.push(contactElement({ href: `tel:${telefono}`, icon: "phone", label: e.telefono }));
+    if (correo) items.push(contactElement({ href: `mailto:${encodeURIComponent(correo)}`, icon: "mail", label: correo }));
+    if (facebook) items.push(contactElement({ href: facebook, icon: "facebook", label: "Facebook" }));
+    if (instagram) items.push(contactElement({ href: instagram, icon: "instagram", label: "Instagram" }));
+    if (e.ubicacion) items.push(contactElement({ tag: "span", icon: "map-pin", label: String(e.ubicacion) }));
+    contactos.replaceChildren(...items);
 
     const btn = document.getElementById("btnContactar");
-    if (e.whatsapp){
-      const num = e.whatsapp.replace(/\D/g,"");
+    const whatsapp = safePhone(e.whatsapp);
+    if (whatsapp){
+      const num = whatsapp.replace(/\D/g,"");
       btn.href = `https://wa.me/${num}?text=${encodeURIComponent("Hola, me interesa el producto " + p.nombre + " que vi en Lojanova.")}`;
-    } else if (e.correo){
-      btn.href = `mailto:${e.correo}?subject=${encodeURIComponent("Interés en " + p.nombre + " — Lojanova")}`;
+    } else if (correo){
+      btn.href = `mailto:${encodeURIComponent(correo)}?subject=${encodeURIComponent("Interés en " + p.nombre + " — Lojanova")}`;
     } else {
       btn.style.display = "none";
     }

@@ -251,8 +251,8 @@ async function cargarProductos(){
       <td>${escapeHtml(p.cantones?.nombre || '—')}</td>
       <td><span class="status-pill ${p.activo ? 'on':'off'}">${p.activo ? 'Publicado':'Oculto'}</span></td>
       <td class="row-actions">
-        <button class="btn btn-outline btn-sm" onclick="editarProducto('${p.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminarProducto('${p.id}','${escapeHtml(p.nombre)}')">Eliminar</button>
+        <button class="btn btn-outline btn-sm" data-admin-action="editar-producto" data-id="${escapeHtml(p.id)}">Editar</button>
+        <button class="btn btn-danger btn-sm" data-admin-action="eliminar-producto" data-id="${escapeHtml(p.id)}">Eliminar</button>
       </td>
     </tr>
   `).join("");
@@ -362,8 +362,8 @@ async function cargarEmprendedores(){
       <td>${escapeHtml(e.cantones?.nombre || '—')}</td>
       <td><span class="status-pill ${e.activo ? 'on':'off'}">${e.activo ? 'Publicado':'Oculto'}</span></td>
       <td class="row-actions">
-        <button class="btn btn-outline btn-sm" onclick="editarEmprendedor('${e.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminarEmprendedor('${e.id}','${escapeHtml(e.nombre)}')">Eliminar</button>
+        <button class="btn btn-outline btn-sm" data-admin-action="editar-emprendedor" data-id="${escapeHtml(e.id)}">Editar</button>
+        <button class="btn btn-danger btn-sm" data-admin-action="eliminar-emprendedor" data-id="${escapeHtml(e.id)}">Eliminar</button>
       </td>
     </tr>
   `).join("");
@@ -444,8 +444,8 @@ async function cargarCategorias(){
       <td>${escapeHtml(c.slug)}</td>
       <td>${c.orden ?? 0}</td>
       <td class="row-actions">
-        <button class="btn btn-outline btn-sm" onclick="editarCategoria('${c.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminarCategoria('${c.id}','${escapeHtml(c.nombre)}')">Eliminar</button>
+        <button class="btn btn-outline btn-sm" data-admin-action="editar-categoria" data-id="${escapeHtml(c.id)}">Editar</button>
+        <button class="btn btn-danger btn-sm" data-admin-action="eliminar-categoria" data-id="${escapeHtml(c.id)}">Eliminar</button>
       </td>
     </tr>
   `).join("");
@@ -515,8 +515,8 @@ async function cargarNoticias(){
       <td>${n.fecha_evento || '—'}</td>
       <td><span class="status-pill ${n.activo ? 'on':'off'}">${n.activo ? 'Publicada':'Oculta'}</span></td>
       <td class="row-actions">
-        <button class="btn btn-outline btn-sm" onclick="editarNoticia('${n.id}')">Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="eliminarNoticia('${n.id}','${escapeHtml(n.titulo)}')">Eliminar</button>
+        <button class="btn btn-outline btn-sm" data-admin-action="editar-noticia" data-id="${escapeHtml(n.id)}">Editar</button>
+        <button class="btn btn-danger btn-sm" data-admin-action="eliminar-noticia" data-id="${escapeHtml(n.id)}">Eliminar</button>
       </td>
     </tr>
   `).join("");
@@ -639,6 +639,7 @@ async function cargarSolicitudes(){
 
   const pendientes = data.filter(e => e.estado === "pendiente" || !e.estado);
   const historial = data.filter(e => e.estado === "aprobado" || e.estado === "rechazado");
+  window.__solicitudesCache = data;
 
   tPend.innerHTML = pendientes.length ? pendientes.map(e => `
     <tr>
@@ -648,8 +649,8 @@ async function cargarSolicitudes(){
       <td>${escapeHtml(e.correo || '—')}</td>
       <td>${new Date(e.created_at).toLocaleDateString('es-EC')}</td>
       <td class="row-actions">
-        <button class="btn btn-primary btn-sm" onclick="aprobarSolicitud('${e.id}')">Aprobar</button>
-        <button class="btn btn-outline btn-sm" onclick="rechazarSolicitud('${e.id}')">Rechazar</button>
+        <button class="btn btn-primary btn-sm" data-admin-action="aprobar-solicitud" data-id="${escapeHtml(e.id)}">Aprobar</button>
+        <button class="btn btn-outline btn-sm" data-admin-action="rechazar-solicitud" data-id="${escapeHtml(e.id)}">Rechazar</button>
       </td>
     </tr>
   `).join("") : `<tr class="empty-row"><td colspan="6">No hay solicitudes pendientes.</td></tr>`;
@@ -661,7 +662,7 @@ async function cargarSolicitudes(){
       <td>${escapeHtml(e.emprendimiento)}</td>
       <td><span class="status-pill ${e.estado === 'aprobado' ? 'on' : 'off'}">${e.estado === 'aprobado' ? 'Aprobado' : 'Rechazado'}</span></td>
       <td class="row-actions">
-        <button class="btn btn-danger btn-sm" onclick="eliminarSolicitud('${e.id}','${escapeHtml(e.nombre)}')">Eliminar cuenta</button>
+        <button class="btn btn-danger btn-sm" data-admin-action="eliminar-solicitud" data-id="${escapeHtml(e.id)}">Eliminar cuenta</button>
       </td>
     </tr>
   `).join("") : `<tr class="empty-row"><td colspan="5">Aún no hay historial.</td></tr>`;
@@ -699,3 +700,44 @@ async function cargarCantones(){
   if (error || !data || data.length === 0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="2">Sin datos.</td></tr>`; return; }
   tbody.innerHTML = data.map(c => `<tr><td>${escapeHtml(c.nombre)}</td><td>${c.orden ?? 0}</td></tr>`).join("");
 }
+
+/* ---------- Acciones seguras de tablas ----------
+   Los nombres procedentes de Supabase nunca se insertan dentro de JavaScript
+   en atributos onclick. Se recuperan desde la caché por un UUID validado. */
+document.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-admin-action]");
+  if (!button) return;
+
+  const id = button.dataset.id || "";
+  if (!/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) return;
+
+  const action = button.dataset.adminAction;
+  const findById = (cacheName) => (window[cacheName] || []).find(item => item.id === id);
+
+  if (action === "editar-producto") return window.editarProducto(id);
+  if (action === "eliminar-producto") {
+    const item = findById("__productosCache");
+    if (item) return window.eliminarProducto(id, item.nombre || "este producto");
+  }
+  if (action === "editar-emprendedor") return window.editarEmprendedor(id);
+  if (action === "eliminar-emprendedor") {
+    const item = findById("__empCache");
+    if (item) return window.eliminarEmprendedor(id, item.nombre || "este emprendedor");
+  }
+  if (action === "editar-categoria") return window.editarCategoria(id);
+  if (action === "eliminar-categoria") {
+    const item = findById("__catCache");
+    if (item) return window.eliminarCategoria(id, item.nombre || "esta categoría");
+  }
+  if (action === "editar-noticia") return window.editarNoticia(id);
+  if (action === "eliminar-noticia") {
+    const item = findById("__newsCache");
+    if (item) return window.eliminarNoticia(id, item.titulo || "esta noticia");
+  }
+  if (action === "aprobar-solicitud") return window.aprobarSolicitud(id);
+  if (action === "rechazar-solicitud") return window.rechazarSolicitud(id);
+  if (action === "eliminar-solicitud") {
+    const item = findById("__solicitudesCache");
+    if (item) return window.eliminarSolicitud(id, item.nombre || "este productor");
+  }
+});

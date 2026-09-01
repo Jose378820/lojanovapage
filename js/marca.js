@@ -10,6 +10,44 @@ document.getElementById("navToggle")?.addEventListener("click", () => document.g
 function escapeHtml(str){
   return (str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
 }
+
+function safePhone(value){
+  const normalized = String(value || "").trim().replace(/[^\d+]/g, "");
+  const digits = normalized.replace(/\D/g, "");
+  return digits.length >= 7 && digits.length <= 15 ? normalized : "";
+}
+
+function safeEmail(value){
+  const email = String(value || "").trim();
+  return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "";
+}
+
+function safeSocialUrl(value, allowedDomain){
+  try {
+    const url = new URL(String(value || "").trim());
+    const host = url.hostname.toLowerCase();
+    if (!['http:', 'https:'].includes(url.protocol)) return "";
+    if (host !== allowedDomain && !host.endsWith(`.${allowedDomain}`)) return "";
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function contactElement({ tag = "a", href = "", icon, label }){
+  const element = document.createElement(tag);
+  element.className = "marca-contact-btn";
+  if (tag === "a") element.href = href;
+  if (tag === "a" && /^https?:/i.test(href)) {
+    element.target = "_blank";
+    element.rel = "noopener noreferrer";
+  }
+  const iconElement = document.createElement("i");
+  iconElement.dataset.lucide = icon;
+  iconElement.className = "icon";
+  element.append(iconElement, document.createTextNode(` ${label}`));
+  return element;
+}
 function cortar(str, n){ if(!str) return ""; return str.length > n ? str.slice(0,n).trim() + "…" : str; }
 function lnTexto(es, en){
   const lang = localStorage.getItem("ln_lang") || "es";
@@ -65,16 +103,31 @@ async function cargarMarca(){
 
   const contactos = document.getElementById("marcaContactos");
   const items = [];
-  if (e.whatsapp){
-    const num = e.whatsapp.replace(/\D/g,"");
-    items.push(`<a href="https://wa.me/${num}" target="_blank" rel="noopener" class="marca-contact-btn" data-track="contactar_whatsapp_marca"><i data-lucide="message-circle" class="icon"></i> WhatsApp</a>`);
+  const whatsapp = safePhone(e.whatsapp);
+  const telefono = safePhone(e.telefono);
+  const correo = safeEmail(e.correo);
+  const instagram = safeSocialUrl(e.instagram, "instagram.com");
+  const facebook = safeSocialUrl(e.facebook, "facebook.com");
+
+  if (whatsapp) {
+    const link = contactElement({ href: `https://wa.me/${whatsapp.replace(/\D/g, "")}`, icon: "message-circle", label: "WhatsApp" });
+    link.dataset.track = "contactar_whatsapp_marca";
+    items.push(link);
   }
-  if (e.telefono) items.push(`<a href="tel:${e.telefono}" class="marca-contact-btn"><i data-lucide="phone" class="icon"></i> ${escapeHtml(e.telefono)}</a>`);
-  if (e.correo) items.push(`<a href="mailto:${e.correo}" class="marca-contact-btn"><i data-lucide="mail" class="icon"></i> Enviar correo</a>`);
-  if (e.ubicacion) items.push(`<span class="marca-contact-btn"><i data-lucide="map-pin" class="icon"></i> ${escapeHtml(e.ubicacion)}</span>`);
-  if (e.instagram) items.push(`<a href="${e.instagram}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="instagram" class="icon"></i> Instagram</a>`);
-  if (e.facebook) items.push(`<a href="${e.facebook}" target="_blank" rel="noopener" class="marca-contact-btn"><i data-lucide="facebook" class="icon"></i> Facebook</a>`);
-  contactos.innerHTML = items.length ? items.join("") : `<p style="font-size:.85rem;color:#888">Sin datos de contacto públicos.</p>`;
+  if (telefono) items.push(contactElement({ href: `tel:${telefono}`, icon: "phone", label: e.telefono }));
+  if (correo) items.push(contactElement({ href: `mailto:${encodeURIComponent(correo)}`, icon: "mail", label: "Enviar correo" }));
+  if (e.ubicacion) items.push(contactElement({ tag: "span", icon: "map-pin", label: String(e.ubicacion) }));
+  if (instagram) items.push(contactElement({ href: instagram, icon: "instagram", label: "Instagram" }));
+  if (facebook) items.push(contactElement({ href: facebook, icon: "facebook", label: "Facebook" }));
+
+  if (items.length) {
+    contactos.replaceChildren(...items);
+  } else {
+    const empty = document.createElement("p");
+    empty.style.cssText = "font-size:.85rem;color:#888";
+    empty.textContent = "Sin datos de contacto públicos.";
+    contactos.replaceChildren(empty);
+  }
 
   document.getElementById("btnCompartir")?.addEventListener("click", async () => {
     const shareData = { title: e.emprendimiento, text: `Descubre ${e.emprendimiento} en Lojanova`, url: location.href };
