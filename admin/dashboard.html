@@ -8,6 +8,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/admin/css/admin.css?v=20260823-analytics-visual">
 <link rel="stylesheet" href="/admin/css/admin-enhancements.css?v=20260804-institucional">
+<link rel="stylesheet" href="/admin/css/visitas-globales.css?v=20260912-1">
 <script src="https://unpkg.com/lucide@1.26.0"></script>
 </head>
 <body>
@@ -23,6 +24,7 @@
     <nav>
       <button data-view="resumen" class="active"><i data-lucide="layout-dashboard" class="icon"></i> Resumen</button>
       <button data-view="analiticas"><i data-lucide="bar-chart-3" class="icon"></i> Analíticas</button>
+      <button data-view="globales"><i data-lucide="globe" class="icon"></i> Visitas globales</button>
       <button data-view="solicitudes"><i data-lucide="user-check" class="icon"></i> Solicitudes</button>
       <button data-view="productos"><i data-lucide="package" class="icon"></i> Productos</button>
       <button data-view="emprendedores"><i data-lucide="users" class="icon"></i> Emprendedores</button>
@@ -84,6 +86,12 @@
           Los cambios aparecen de inmediato en el sitio público.
         </p>
       </div>
+    </section>
+
+    <section id="view-globales" class="view vg" style="display:none" aria-labelledby="vg-title">
+      <header class="vg-hero"><div><span class="vg-eyebrow">HISTÓRICO REGISTRADO</span><h1 id="vg-title">Visitas globales</h1><p>Toda la actividad conservada, organizada por meses.</p></div><button id="vg-refresh" class="btn btn-primary auto-width" type="button">Actualizar histórico</button></header>
+      <p id="vg-status" role="status" aria-live="polite">Abre este apartado para consultar el histórico.</p>
+      <div id="vg-content"></div>
     </section>
 
     <!-- ============ ANALITICAS ============ -->
@@ -467,5 +475,7 @@
 <script src="/js/supabase-client.js?v=20260803-admin-polish"></script>
 <script src="/admin/js/admin.js?v=20260823-analiticas-robustas"></script>
 <script src="/admin/js/admin-enhancements.js?v=20260804-institucional"></script>
+<script src="/admin/js/metricas-core.js?v=20260912-1"></script>
+<script src="/admin/js/visitas-globales.js?v=20260912-1"></script>
 </body>
 </html>
