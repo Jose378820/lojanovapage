@@ -1,0 +1,36 @@
+/* Lojanova · Ruta del café: estilos limitados a esta incorporación. */
+#sobre .about-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start}
+#sobre .about-media{aspect-ratio:16/7;margin-bottom:28px;border-radius:22px}
+#sobre .about-media img{transform:none!important;animation:none!important}
+#sobre .about-text h2{font-size:clamp(30px,3vw,48px);line-height:1.14}
+#sobre .stats-grid{gap:12px;margin-top:28px}
+#sobre .stat-card{padding:22px 10px}
+#sobre .stat-num{font-size:clamp(28px,3vw,40px)}
+.ruta-card{position:relative;overflow:hidden;background:#113c2d;color:#fff;border:1px solid #456350;border-radius:28px;box-shadow:0 24px 60px #12382c20}
+.ruta-art{background:radial-gradient(ellipse at 50% 60%,#426651,#183d30 70%);padding:26px 30px 0}
+.ruta-art svg{display:block;width:100%;max-height:300px;height:auto}
+.ruta-copy{padding:30px clamp(24px,3vw,44px) 40px}
+.ruta-card .eyebrow{color:#e5c68b;font-size:12px;letter-spacing:.16em}
+.ruta-card h2{color:#fff;font-size:clamp(36px,4vw,58px);line-height:1.08;margin:18px 0}
+.ruta-card p{color:#dbe6df;line-height:1.75;margin:0 0 22px;font-size:17px}
+.ruta-tags{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 28px}
+.ruta-tags span{border:1px solid #ffffff35;border-radius:100px;padding:7px 12px;color:#e5eade;font-size:12px}
+.ruta-link{display:inline-flex;align-items:center;justify-content:space-between;gap:24px;background:#e7c98d;color:#123a2b!important;padding:16px 24px;border-radius:12px;font-weight:700;text-decoration:none}
+.ruta-link:hover{background:#f5dcaa}
+.ruta-link:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.ruta-card small{display:block;color:#c7d7cd;margin-top:16px;line-height:1.5}
+.ruta-metrics{margin:28px 0;padding:28px;border:1px solid #dbe3db;border-radius:24px;background:#fff;color:#173e2b}
+.ruta-metrics header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.ruta-metrics h3{margin:0;font-size:24px}
+.ruta-metrics button{padding:10px 16px;border:1px solid #bccfc2;border-radius:10px;background:#173e2b;color:#fff;cursor:pointer}
+.ruta-metrics button:disabled{opacity:.6;cursor:wait}
+.ruta-metrics .ruta-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+.ruta-counts article{padding:20px;background:#f2f5ef;border-radius:14px}
+.ruta-counts strong{display:block;font-size:34px;font-variant-numeric:tabular-nums}
+.ruta-metrics p,.ruta-metrics small{line-height:1.6}
+.ruta-metrics details{padding:14px 0;border-bottom:1px solid #dbe3db}
+.ruta-metrics summary{cursor:pointer;font-weight:700}
+.ruta-metrics .ruta-table{overflow:auto}
+.ruta-metrics table{width:100%;border-collapse:collapse;margin-top:12px}
+.ruta-metrics td,.ruta-metrics th{text-align:left;padding:10px;border-bottom:1px solid #eee}
+@media(max-width:850px){#sobre .about-grid{grid-template-columns:1fr}#sobre .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ruta-art svg{max-height:250px}.ruta-metrics .ruta-counts{grid-template-columns:1fr}.ruta-metrics{padding:20px}}

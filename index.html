@@ -34,6 +34,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lojanova">
 <link rel="apple-touch-icon" href="/assets/lojanova-app-icon.svg">
+<link rel="stylesheet" href="css/ruta-cafe.css?v=20260915-1">
 </head>
 <body>
 <button class="mobile-app-download notranslate" id="mobileAppDownload" type="button" aria-label="Descargar Lojanova como app">
@@ -47,6 +48,7 @@
     <a href="index.html" class="logo">Loja<span>nova</span></a>
     <nav class="nav-links" id="navLinks">
       <a href="#sobre">Sobre el proyecto</a>
+      <a href="https://prefecturaloja.gob.ec/turismo/ruta-del-cafe/" target="_blank" rel="noopener noreferrer" data-analytics="ruta_cafe_menu">Ruta del café ↗</a>
       <a href="#categorias">Categorías</a>
       <a href="#catalogo">Productos</a>
       <a href="#loja">Loja</a>
@@ -160,10 +162,11 @@
 <!-- ===================== SOBRE EL PROYECTO ===================== -->
 <section id="sobre" class="about" data-parallax-section>
   <div class="container about-grid">
+
+    <div class="about-text reveal">
     <div class="about-media reveal">
       <img src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?q=80&w=1200" alt="Paisaje agrícola de la provincia de Loja">
     </div>
-    <div class="about-text reveal">
       <span class="eyebrow">Sobre el proyecto</span>
       <h2>Una iniciativa de la Prefectura de Loja</h2>
       <p>Lojanova es la plataforma oficial que conecta la riqueza productiva de la provincia con compradores, distribuidores, turistas y público general, a nivel nacional e internacional.</p>
@@ -175,6 +178,33 @@
         <div class="stat-card"><div class="stat-num" data-stat="categorias">—</div><div class="stat-label">Categorías</div></div>
       </div>
     </div>
+    <aside class="ruta-card" id="ruta-del-cafe" aria-labelledby="ruta-cafe-title">
+      <div class="ruta-art" aria-hidden="true">
+        <svg viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <circle cx="300" cy="162" r="136" stroke="#dfc38e" stroke-opacity=".25"/>
+          <circle cx="300" cy="162" r="118" stroke="#dfc38e" stroke-opacity=".15" stroke-dasharray="3 10"/>
+          <path d="M35 279 Q130 200 228 256 T570 260M20 299 Q170 246 330 280 T580 278" stroke="#86a58b" stroke-width="2"/>
+          <ellipse cx="300" cy="266" rx="132" ry="20" fill="#09291f"/>
+          <path d="M211 149h177v55a74 74 0 0 1-74 74h-29a74 74 0 0 1-74-74z" fill="#f4e9cf"/>
+          <path d="M388 165h16a34 34 0 0 1 0 68h-29" stroke="#f4e9cf" stroke-width="15"/>
+          <ellipse cx="299" cy="149" rx="89" ry="22" fill="#dfc38e"/>
+          <ellipse cx="299" cy="149" rx="76" ry="15" fill="#593525"/>
+          <path d="M268 112c-27-24 24-36 0-63M308 104c-25-26 24-39 0-65M345 113c-21-22 19-33 0-53" stroke="#e4cb9b" stroke-width="5" stroke-linecap="round"/>
+          <path d="M115 239q45-49 37-108M479 245q-34-52-21-113" stroke="#a3b88b" stroke-width="3"/>
+          <path d="M147 184q-42-4-42-34 37 4 42 34M151 161q32-15 27-44-31 13-27 44M469 186q39-7 38-35-34 5-38 35M459 162q-31-15-24-43 30 12 24 43" fill="#6f926e"/>
+          <circle cx="137" cy="206" r="8" fill="#d0a265"/><circle cx="476" cy="208" r="8" fill="#d0a265"/>
+        </svg>
+      </div>
+      <div class="ruta-copy">
+        <span class="eyebrow">Loja se vive y se descubre</span>
+        <h2 id="ruta-cafe-title">La ruta del café</h2>
+        <p>El café también nos conecta. Descubre la iniciativa de la Prefectura de Loja y encuentra más información para explorar el mundo del café en nuestra provincia.</p>
+        <div class="ruta-tags"><span>Café</span><span>Turismo</span><span>Experiencias</span></div>
+        <a class="ruta-link" href="https://prefecturaloja.gob.ec/turismo/ruta-del-cafe/" target="_blank" rel="noopener noreferrer" data-analytics="ruta_cafe_tarjeta">Explorar la ruta del café <span aria-hidden="true">↗</span></a>
+        <small>Más información en el portal de la Prefectura de Loja.<br>Se abre en una nueva pestaña.</small>
+      </div>
+    </aside>
+
   </div>
 </section>
 
