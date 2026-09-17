@@ -1,0 +1,73 @@
+/* Extensión de los componentes existentes, limitada a LOJANOVA 16/16. */
+#lojanova-1616{padding:32px 0 36px;background:linear-gradient(180deg,#f7f5ed,#f1f3eb);scroll-margin-top:100px}
+#lojanova-1616 *{box-sizing:border-box}
+#lojanova-1616 .territorio-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:20px}
+#lojanova-1616 .territorio-heading .eyebrow{font-size:11px;letter-spacing:.16em}
+#lojanova-1616 h2{font-size:clamp(32px,3vw,42px);line-height:1.04;letter-spacing:-.025em;margin:10px 0 0}
+#lojanova-1616 h2 em{font-weight:inherit;color:#658063}
+#lojanova-1616 .territorio-intro{max-width:370px;font-size:15px;line-height:1.65;color:#606c60;margin:0 0 4px;text-align:left}
+#lojanova-1616 .territorio-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;align-items:start}
+#lojanova-1616 .territorio-map-card{min-width:0;padding:22px 24px 16px;border:1px solid #d8decb;border-radius:26px;background:radial-gradient(ellipse at 50% 46%,#fffdf4,#edeedf);overflow:hidden}
+#lojanova-1616 .territorio-map-top{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#57664e;font-size:10px;letter-spacing:.12em;font-weight:700;min-height:24px}
+#lojanova-1616 #territorio-hover{font-size:12px;letter-spacing:0;background:#ffffffaa;padding:5px 10px;border-radius:30px;color:#214c38}
+#lojanova-1616 .territorio-map svg{display:block;width:100%;height:365px;overflow:visible}
+#lojanova-1616 .territorio-region{cursor:pointer;outline:none}
+#lojanova-1616 .territorio-region path{fill:#9eb793;stroke:#f9f7eb;stroke-width:1.3;stroke-linejoin:round;vector-effect:non-scaling-stroke;transition:fill 180ms ease}
+#lojanova-1616 .territorio-region:nth-of-type(3n) path{fill:#b3c2a0}
+#lojanova-1616 .territorio-region:nth-of-type(3n + 1) path{fill:#86a580}
+#lojanova-1616 .territorio-region:hover path,#lojanova-1616 .territorio-region:focus-visible path{fill:#d3b16d;stroke:#655631;stroke-width:2}
+#lojanova-1616 .territorio-region[aria-pressed="true"] path{fill:#1d583a;stroke:#c5a159;stroke-width:2}
+#lojanova-1616 .territorio-region text{fill:#193b29;font:600 9px Arial,sans-serif;pointer-events:none;text-anchor:middle;paint-order:stroke;stroke:#ffffff66;stroke-width:1.5px}
+#lojanova-1616 .territorio-region[aria-pressed="true"] text{fill:#fff;stroke:#1d583a}
+#lojanova-1616 .territorio-map-bottom{display:flex;align-items:center;gap:12px;border-top:1px solid #d5dcc7;padding-top:12px}
+#lojanova-1616 .territorio-map-bottom label{font-size:12px;font-weight:600;color:#3f533a;flex:1}
+#lojanova-1616 select{max-width:220px;width:55%;min-height:42px;border:1px solid #bcc8ad;border-radius:10px;background:#fffdf5;color:#21412b;padding:8px 12px;font:inherit;font-size:13px}
+#lojanova-1616 .territorio-source{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:10px;color:#66755d;margin-top:13px;line-height:1.5}
+#lojanova-1616 .territorio-source a{color:#52694c;text-decoration:underline}
+#lojanova-1616 .territorio-panel{background:#fff;border:1px solid #e5e8dc;border-radius:26px;padding:16px 20px;box-shadow:0 10px 32px #143b2710;min-width:0;min-height:510px;line-height:1.4}
+#lojanova-1616 .territorio-status{font-size:11px;line-height:1.5;color:#657464;margin:0 0 10px;min-height:17px}
+#lojanova-1616 .territorio-welcome{min-height:410px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:18px}
+#lojanova-1616 .territorio-seal{font-family:Georgia,serif;font-size:52px;letter-spacing:-.08em;color:#b3924e;background:#f5f2e7;border-radius:50%;width:112px;height:112px;display:grid;place-items:center;margin-bottom:28px}
+#lojanova-1616 .territorio-welcome .eyebrow{font-size:9px;letter-spacing:.12em}
+#lojanova-1616 .territorio-welcome h3{font-size:34px;line-height:1.1;margin:14px 0}
+#lojanova-1616 .territorio-welcome p{font-size:15px;line-height:1.65;margin:0 0 20px;color:#677163;text-align:left}
+#lojanova-1616 .territorio-hint{font-size:11px;color:#74816a;border-top:1px solid #e6e9df;padding-top:18px;width:100%}
+#lojanova-1616 .territorio-canton-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#lojanova-1616 .territorio-canton-head h3{font-size:32px;line-height:1.1;margin:0;color:#173f2b}
+#lojanova-1616 .territorio-counts{font-size:12px;line-height:1.4;color:#66725f;margin:6px 0 8px}
+#lojanova-1616 .territorio-reset{background:#f4f5ec;border:1px solid #e0e5d6;border-radius:50%;width:34px;height:34px;cursor:pointer;color:#244a32;font-size:20px}
+#lojanova-1616 .territorio-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+#lojanova-1616 .territorio-chip{border:1px solid #dce3d1;background:#f7f8f1;color:#3d583a;border-radius:24px;padding:5px 9px;font:inherit;font-size:10px;cursor:pointer;min-height:28px}
+#lojanova-1616 .territorio-chip[aria-pressed="true"]{background:#1f5539;color:#fff;border-color:#1f5539}
+#lojanova-1616 .territorio-label{font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6d7e60;margin:8px 0 6px}
+#lojanova-1616 .territorio-products{display:grid;gap:8px}
+#lojanova-1616 .card-producto{display:grid;grid-template-columns:74px minmax(0,1fr);border:1px solid #e6e9de;border-radius:13px;box-shadow:none;overflow:hidden;min-width:0;color:inherit;text-decoration:none;transform:none;transition:background 160ms ease}
+#lojanova-1616 .card-producto:hover{background:#f7f8f0;box-shadow:none;transform:none}
+#lojanova-1616 .card-producto .thumb{height:66px;min-height:0;aspect-ratio:auto;display:grid;place-items:center;background:#f6f5ef;border-radius:0}
+#lojanova-1616 .card-producto .thumb img{width:100%;height:66px;object-fit:contain;padding:5px;transform:none;animation:none}
+#lojanova-1616 .card-producto .card-body{padding:6px 10px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:0}
+#lojanova-1616 .card-producto .card-meta{font-size:9px;margin:0 0 3px;line-height:1.3;color:#9a7435}
+#lojanova-1616 .card-producto h4{font-family:inherit;font-size:12px;line-height:1.4;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#lojanova-1616 .territorio-brand{font-size:10px;color:#74816d;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;margin-top:3px}
+#lojanova-1616 .territorio-producers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#lojanova-1616 .card-emp{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;border:1px solid #e6e9de;border-radius:12px;padding:9px;box-shadow:none;transform:none;min-width:0;background:#fff}
+#lojanova-1616 .card-emp:hover{background:#f7f8f0;transform:none}
+#lojanova-1616 .card-emp .thumb{width:36px;height:36px;min-width:36px;border-radius:50%;background:#f5f3e9;aspect-ratio:1;overflow:hidden}
+#lojanova-1616 .card-emp .thumb img{width:100%;height:100%;object-fit:contain;transform:none;animation:none}
+#lojanova-1616 .card-emp .card-body{padding:0;min-width:0;gap:0}
+#lojanova-1616 .card-emp h4{font-family:inherit;font-size:11px;line-height:1.3;margin:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#lojanova-1616 .card-emp .card-meta{font-size:9px;margin:4px 0 0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;color:#74816d}
+#lojanova-1616 .territorio-more{font:inherit;font-size:11px;color:#245439;background:transparent;border:0;padding:6px 0;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:28px}
+#lojanova-1616 .territorio-pager{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;font-size:10px;color:#62765b}
+#lojanova-1616 .territorio-pager button,#lojanova-1616 .territorio-retry{font:inherit;font-size:11px;min-height:32px;padding:6px 10px;border:1px solid #cad7c2;background:#f6f8ee;border-radius:8px;cursor:pointer;color:#23482f}
+#lojanova-1616 button:disabled{opacity:.45;cursor:default}
+#lojanova-1616 :is(button,select,a):focus-visible{outline:3px solid #b18b3e;outline-offset:3px}
+#lojanova-1616 .territorio-empty{font-size:13px;color:#66735e;line-height:1.7;background:#f6f7ef;border-radius:12px;padding:15px;margin:8px 0}
+#lojanova-1616 .territorio-skeleton{height:70px;background:linear-gradient(90deg,#f1f3eb,#e8ede0,#f1f3eb);background-size:200% 100%;border-radius:12px;margin:10px 0;animation:territorio-shimmer 1.2s ease infinite}
+#lojanova-1616.t-preparado .territorio-step{opacity:0;transform:translateY(10px);transition:opacity 460ms ease var(--t-delay,0ms),transform 460ms ease var(--t-delay,0ms)}
+#lojanova-1616.t-visible .territorio-step{opacity:1;transform:none}
+#lojanova-1616 .territorio-swap{animation:territorio-fade 240ms ease}
+@keyframes territorio-fade{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes territorio-shimmer{to{background-position:-200% 0}}
+@media(max-width:850px){#lojanova-1616{padding:38px 0}#lojanova-1616 .territorio-layout{grid-template-columns:1fr;gap:18px}#lojanova-1616 .territorio-heading{display:block;margin-bottom:22px}#lojanova-1616 .territorio-intro{margin-top:14px;max-width:500px;font-size:13px}#lojanova-1616 .territorio-map-card{padding:16px}#lojanova-1616 .territorio-map svg{height:auto;max-height:360px}#lojanova-1616 .territorio-panel{min-height:0;padding:18px}#lojanova-1616 .territorio-welcome{min-height:230px;padding:12px}#lojanova-1616 .territorio-seal{width:64px;height:64px;font-size:32px;margin-bottom:15px}#lojanova-1616 .territorio-welcome h3{font-size:27px}#lojanova-1616 .territorio-region text{font-size:10px}#lojanova-1616 .territorio-chip{min-height:36px}#lojanova-1616 .territorio-more{min-height:42px}}
+@media(prefers-reduced-motion:reduce){#lojanova-1616 .territorio-step,#lojanova-1616 .territorio-swap,#lojanova-1616 .territorio-skeleton{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}#lojanova-1616 .territorio-region path{transition:none}}
