@@ -1,0 +1,102 @@
+/* LOJANOVA 16/16 · estilos aislados de la portada y de las fichas cantonales. */
+#lojanova-1616{--tv-ink:#153f2c;--tv-sage:#658260;--tv-gold:#b68d45;position:relative;padding:100px 24px 70px;background:#f7f6ef;color:var(--tv-ink);scroll-margin-top:100px}
+#lojanova-1616 *{box-sizing:border-box}
+#lojanova-1616 .tv-heading{max-width:1500px;margin:0 auto 40px;padding:0 2%;display:flex;justify-content:space-between;align-items:end;gap:36px}
+#lojanova-1616 .tv-kicker,.canton-page .ct-kicker{font:600 11px/1.5 var(--f-body,'Inter',sans-serif);letter-spacing:.18em;text-transform:uppercase;color:#856733}
+#lojanova-1616 h2{font:500 clamp(38px,4.5vw,78px)/1.06 var(--f-display,'Playfair Display',serif);letter-spacing:-.045em;margin:17px 0 0}
+#lojanova-1616 h2 em{color:var(--tv-sage);font-weight:500}
+#lojanova-1616 .tv-instruction{max-width:245px;font-size:14px;line-height:1.8;color:#5c6e60;margin:0 0 5px}
+#lojanova-1616 .tv-stage{position:relative;border:1px solid #d8ddca;border-radius:38px;background:radial-gradient(ellipse at 48% 40%,#fffef5 0%,#f2f2e5 58%,#e9eedf 100%);box-shadow:0 24px 65px -40px #183e304d,inset 0 0 0 8px #ffffff50;overflow:hidden;isolation:isolate}
+#lojanova-1616 .tv-stage::before{content:'';position:absolute;inset:22px;border:1px solid #c9d1bd66;border-radius:23px;pointer-events:none}
+#lojanova-1616 .tv-topline{display:flex;justify-content:space-between;gap:16px;padding:35px 40px 0;align-items:center;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase}
+#lojanova-1616 #tv-hover{letter-spacing:0;text-transform:none;font-size:14px;border:1px solid #d8dfcd;background:#fffdf5;border-radius:30px;padding:10px 18px;min-width:180px;text-align:center}
+#lojanova-1616 .tv-map{position:relative;width:100%;padding:0 4%;margin:0 auto}
+#lojanova-1616 .tv-map svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 10px 8px #17362615)}
+#lojanova-1616 .tv-region{cursor:pointer;outline:none}
+#lojanova-1616 .tv-region path{fill:#96af89;stroke:#fffef5;stroke-width:1.3;stroke-linejoin:round;transition:fill .28s ease,stroke .28s ease;}
+#lojanova-1616 .tv-region:nth-of-type(3n) path{fill:#acc09b}
+#lojanova-1616 .tv-region:nth-of-type(3n + 1) path{fill:#829f7a}
+#lojanova-1616 .tv-region text{font:600 5.8px var(--f-body,'Inter',sans-serif);fill:#143b28;paint-order:stroke;stroke:#f5f6ea;stroke-width:.9px;stroke-linejoin:round;text-anchor:middle;pointer-events:none}
+#lojanova-1616 .tv-region:hover path,#lojanova-1616 .tv-region:focus-visible path{fill:#365f45;stroke:#cba76c;stroke-width:1.9}
+#lojanova-1616 .tv-region:hover text,#lojanova-1616 .tv-region:focus-visible text{fill:#fff;stroke:#244b34}
+#lojanova-1616 .tv-compass{position:absolute;left:8%;top:12%;color:#6a7b61;font:italic 20px var(--f-display,serif);text-align:center;pointer-events:none}
+#lojanova-1616 .tv-compass span{display:block;font:normal 35px serif;color:#a18a59}
+#lojanova-1616 .tv-signature{position:absolute;left:7%;bottom:15%;font:italic 500 clamp(25px,3.5vw,62px)/1.1 var(--f-display,serif);color:#658260;pointer-events:none}
+#lojanova-1616 .tv-signature small{display:block;font:500 10px var(--f-body,sans-serif);letter-spacing:.18em;margin-top:14px;text-transform:uppercase}
+#lojanova-1616 .tv-bottom{padding:0 40px 30px;display:flex;justify-content:space-between;gap:20px;color:#66775f;font-size:12px}
+#lojanova-1616 .tv-bottom a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+#lojanova-1616 .tv-directory{margin:26px auto 0;max-width:1500px;border-top:1px solid #d8ddcd;padding-top:18px}
+#lojanova-1616 .tv-directory summary{cursor:pointer;font-size:14px;padding:10px 0;width:fit-content}
+#lojanova-1616 .tv-directory nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+#lojanova-1616 .tv-directory a{padding:14px 17px;border-radius:12px;border:1px solid #d8ddcd;color:var(--tv-ink);display:flex;justify-content:space-between;gap:8px;font-size:14px;text-decoration:none;background:#fcfbf6}
+#lojanova-1616 .tv-directory a:hover{background:#e8ecdf}
+@keyframes tv-arrive{from{opacity:.45;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+#lojanova-1616 .tv-arrive{animation:tv-arrive .85s cubic-bezier(.22,1,.36,1) both}
+/* La animación de scroll no oculta contenido ni captura el desplazamiento. */
+@supports (animation-timeline:view()){
+ @keyframes tv-depth{from{transform:translateY(28px) scale(.975)}to{transform:translateY(0) scale(1)}}
+ #lojanova-1616 .tv-map svg{animation:tv-depth linear both;animation-timeline:view();animation-range:entry 0% entry 80%}
+}
+.canton-page{--ct-accent:#315c49;--ct-ink:#173c2b;background:#f8f7f1;color:var(--ct-ink);margin:0;font-family:var(--f-body,'Inter',sans-serif)}
+.canton-page *{box-sizing:border-box}
+.canton-page [hidden]{display:none!important}
+.canton-page .ct-shell{width:min(1400px,calc(100% - 80px));margin-inline:auto}
+.canton-page .ct-nav{position:sticky;top:0;z-index:20;background:#fafaf6f2;backdrop-filter:blur(14px);border-bottom:1px solid #dfe4da}
+.canton-page .ct-nav-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:84px}
+.canton-page .ct-nav .logo{color:var(--ct-ink)!important}
+.canton-page .ct-nav nav{display:flex;gap:24px;align-items:center}
+.canton-page .ct-nav nav a{font-size:13px;color:#244c38;text-decoration:none}
+.canton-page .ct-back{display:inline-block;margin:30px 0 26px;font-size:12px;color:#5d6d60;text-decoration:none}
+.canton-page .ct-hero{display:grid;grid-template-columns:1.05fr 1fr;gap:65px;align-items:center;padding:15px 0 65px}
+.canton-page h1{font:500 clamp(42px,6.5vw,100px)/1.13 var(--f-display,'Playfair Display',serif);letter-spacing:-.05em;margin:19px 0;color:var(--ct-accent);overflow-wrap:anywhere}
+.canton-page h1 em{font-weight:500}
+.canton-page .ct-lead{font:500 clamp(23px,2.5vw,33px)/1.35 var(--f-display,serif);margin:0 0 25px}
+.canton-page .ct-history{font-size:15px;line-height:1.95;color:#526153;text-align:justify;hyphens:auto;max-width:620px}
+.canton-page .ct-source{display:inline-block;margin:15px 0 25px;font-size:11px;color:#5a6d5f;text-decoration:underline;text-underline-offset:4px}
+.canton-page .ct-explore{display:table;padding:14px 24px;background:var(--ct-accent);color:#fff;border-radius:30px;text-decoration:none;font-size:13px;font-weight:600}
+.canton-page .ct-visual{position:relative;padding:20px 0 30px}
+.canton-page .ct-visual figure{margin:0;border-radius:130px 130px 25px 25px;overflow:hidden;position:relative;background:#e3e9dc;aspect-ratio:1/1.04;border:1px solid #cdd6c7}
+.canton-page .ct-visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s ease}
+.canton-page .ct-visual figure:hover img{transform:scale(1.025)}
+.canton-page .ct-visual figcaption{position:absolute;bottom:0;left:0;right:0;padding:45px 32% 22px 24px;background:linear-gradient(transparent,#0a251ad9);font-size:11px;line-height:1.6;color:white}
+.canton-page .ct-outline{position:absolute;width:30%;aspect-ratio:1;right:-12px;bottom:8px;padding:18px;border-radius:50%;background:#faf9f2;box-shadow:0 8px 35px #153e2620;border:1px solid #d5dfce;display:grid;place-items:center}
+.canton-page .ct-outline svg{width:100%;height:100%;fill:var(--ct-accent)}
+.canton-page .ct-visual .ct-no-photo{position:absolute;inset:0;display:grid;place-items:center;font:italic 55px var(--f-display,serif);color:var(--ct-accent)}
+.canton-page .ct-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#d7decf;border:1px solid #d7decf;border-radius:22px;overflow:hidden;margin:0 0 70px}
+.canton-page .ct-metrics div{padding:23px 30px;background:#fdfdf8;display:flex;gap:17px;align-items:center}
+.canton-page .ct-metrics strong{font:500 38px var(--f-display,serif);color:var(--ct-accent)}
+.canton-page .ct-metrics span{font-size:12px;color:#586859}
+.canton-page .ct-section{padding:0 0 65px;scroll-margin-top:110px}
+.canton-page .ct-section-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
+.canton-page h2{font:500 clamp(29px,3.5vw,46px)/1.2 var(--f-display,serif);margin:10px 0 0;letter-spacing:-.025em}
+.canton-page h2 em{color:var(--ct-accent);font-weight:500}
+.canton-page #ct-status{font-size:12px;color:#5b6d5d;max-width:450px;line-height:1.7;margin:0}
+.canton-page .ct-chips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:28px}
+.canton-page .ct-chips button,.canton-page .ct-pager button,.canton-page #ct-retry{cursor:pointer;border:1px solid #cdd8c7;border-radius:24px;background:#fffef8;color:#214b36;padding:11px 17px;font:500 12px var(--f-body,sans-serif)}
+.canton-page .ct-chips button[aria-pressed=true]{background:var(--ct-accent);color:white;border-color:var(--ct-accent)}
+.canton-page .ct-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.canton-page .ct-card{display:flex;flex-direction:column;color:inherit;text-decoration:none;border:1px solid #dee3d8;border-radius:20px;background:white;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.canton-page .ct-card:hover{transform:translateY(-5px);box-shadow:0 15px 28px -15px #243e3040}
+.canton-page .ct-thumb{aspect-ratio:1.15;position:relative;display:grid;place-items:center;padding:18px;background:linear-gradient(145deg,#f4f4ec,#fdfdf9);overflow:hidden}
+.canton-page .ct-thumb img{width:100%;height:100%;position:absolute;inset:0;object-fit:contain;padding:16px}
+.canton-page .ct-thumb span{font:italic 18px var(--f-display,serif);color:#75816e}
+.canton-page .ct-card-body{padding:21px;display:flex;flex-direction:column;gap:11px;flex:1}
+.canton-page .ct-card h3{font:500 21px/1.35 var(--f-display,serif);margin:0;overflow-wrap:anywhere}
+.canton-page .ct-category{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:#7c653a}
+.canton-page .ct-brand{font-size:12px;color:#697461;line-height:1.5}
+.canton-page .ct-card-cta{font-size:12px;font-weight:600;margin-top:auto;padding-top:12px;color:var(--ct-accent)}
+.canton-page .ct-pager{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:28px;font-size:12px;color:#5c6b5d}
+.canton-page button:disabled{opacity:.45;cursor:default}
+.canton-page .ct-empty{padding:38px;border:1px dashed #c8d2bf;border-radius:18px;background:#f1f3e9;font-size:14px;line-height:1.8;grid-column:1/-1}
+.canton-page .ct-loading{height:260px;border:1px solid #dfe4d8;border-radius:20px;background:linear-gradient(110deg,#e9eddf 25%,#f9faf3 40%,#e9eddf 60%);background-size:250% 100%;animation:ct-shimmer 1.8s linear infinite}
+@keyframes ct-shimmer{to{background-position:-170% 0}}
+.canton-page .ct-footer{border-top:1px solid #dce1d5;padding:30px 0;background:#eff1e8;font-size:12px}
+.canton-page .ct-footer .ct-shell{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.canton-page .ct-footer a{color:#31583f}
+.canton-page :focus-visible,#lojanova-1616 :focus-visible{outline:3px solid #b38a45;outline-offset:5px}
+.canton-page .ct-grid{scroll-margin-top:110px}
+.canton-page .ct-grid:focus{outline:none}
+@media(min-width:1600px){#lojanova-1616 .tv-map{padding:0 7%}}
+@media(max-width:950px){.canton-page .ct-hero{gap:30px}.canton-page .ct-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.canton-page .ct-shell{width:calc(100% - 48px)}.canton-page .ct-metrics div{padding:20px 16px;gap:10px}#lojanova-1616 .tv-heading{align-items:start;flex-direction:column;gap:20px}#lojanova-1616 .tv-instruction{max-width:none}}
+@media(max-width:600px){#lojanova-1616{padding:60px 10px 45px}#lojanova-1616 .tv-heading{padding:0 12px;margin-bottom:26px}#lojanova-1616 .tv-stage{border-radius:25px}#lojanova-1616 .tv-stage::before{inset:9px;border-radius:18px}#lojanova-1616 .tv-topline{padding:24px 20px 5px;font-size:9px;gap:9px;flex-wrap:wrap}#lojanova-1616 #tv-hover{font-size:11px;padding:7px 12px;min-width:0}#lojanova-1616 .tv-map{padding:12px 0}#lojanova-1616 .tv-map svg{min-height:310px}#lojanova-1616 .tv-region text{font-size:6.3px}#lojanova-1616 .tv-signature{font-size:23px;bottom:10%;left:8%}#lojanova-1616 .tv-signature small{font-size:7px;letter-spacing:.06em;margin-top:6px}#lojanova-1616 .tv-bottom{padding:10px 20px 25px;font-size:10px;flex-direction:column;gap:10px}#lojanova-1616 .tv-directory{padding-inline:12px}#lojanova-1616 .tv-directory nav{grid-template-columns:repeat(2,minmax(0,1fr))}#lojanova-1616 .tv-directory a{font-size:12px;padding:13px 10px}.canton-page .ct-shell{width:calc(100% - 36px)}.canton-page .ct-nav-inner{min-height:70px}.canton-page .logo{font-size:24px}.canton-page .ct-nav nav{gap:15px}.canton-page .ct-nav nav a{font-size:11px}.canton-page .ct-hero{grid-template-columns:1fr;gap:0;padding-bottom:30px}.canton-page h1{font-size:clamp(40px,11vw,64px)}.canton-page .ct-visual{margin-top:15px}.canton-page .ct-visual figure{aspect-ratio:1.2}.canton-page .ct-metrics{margin-bottom:45px}.canton-page .ct-metrics div{flex-direction:column;align-items:start;gap:7px;padding:16px 12px}.canton-page .ct-metrics strong{font-size:30px}.canton-page .ct-metrics span{font-size:10px}.canton-page .ct-section-heading{align-items:start;flex-direction:column;gap:12px}.canton-page .ct-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.canton-page .ct-card-body{padding:14px}.canton-page .ct-card h3{font-size:18px}.canton-page .ct-brand{font-size:11px}.canton-page .ct-thumb{aspect-ratio:.9}.canton-page .ct-pager{gap:6px;font-size:10px}.canton-page .ct-pager button{font-size:11px;padding:10px 13px}.canton-page .ct-empty{padding:25px}.canton-page .ct-loading{height:210px}}
+@media(prefers-reduced-motion:reduce){#lojanova-1616 *, .canton-page *{animation:none!important;transition:none!important;scroll-behavior:auto!important}#lojanova-1616 .tv-map svg{transform:none!important}.canton-page .ct-card:hover{transform:none}}
